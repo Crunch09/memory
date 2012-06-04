@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="hello">Hello World, SelectUserActivity!</string>
     <string name="app_name">Memory</string>
+    <string name="addnametext">UserName:</string>
+    <string name="btnadduser">Create User</string>
+    <string name="btnstart">Start</string>
 
 </resources>
