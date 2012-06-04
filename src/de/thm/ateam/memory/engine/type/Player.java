@@ -7,16 +7,29 @@
  */
 package de.thm.ateam.memory.engine.type;
 
+import android.database.Cursor;
 import android.util.Log;
 
 /**
  * @author Frank Kevin Zey
  * 
  */
-public abstract class Player {
+public class Player {
 	private int id;
 	protected String nick;
 	private int win, lose, draw, hit, shot;
+	
+	public Player(Cursor c) {
+		this.id = c.getInt(0);
+		this.nick = c.getString(1);
+		this.win = c.getInt(2);
+		this.lose = c.getInt(3);
+		this.draw = c.getInt(4);
+		this.hit = c.getInt(5);
+		this.shot = c.getInt(6);
+	}
+	
+	protected Player(){}
 
 	/**
 	 * newPlayer erzeugt eine neue Instanz von Player. Der Nick wird gesetzt.

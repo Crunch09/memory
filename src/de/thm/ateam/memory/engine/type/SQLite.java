@@ -5,9 +5,8 @@
  *
  * by Frank Kevin Zey
  */
-package de.thm.ateam.memory.engine;
+package de.thm.ateam.memory.engine.type;
 
-import de.thm.ateam.memory.engine.type.PlayerDB;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
