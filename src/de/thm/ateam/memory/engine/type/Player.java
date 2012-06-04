@@ -7,9 +7,6 @@
  */
 package de.thm.ateam.memory.engine.type;
 
-import java.io.File;
-import java.io.PrintStream;
-
 import android.util.Log;
 
 /**
@@ -140,10 +137,19 @@ public abstract class Player {
 	protected final int getID() {
 		return this.id;
 	}
-
+	
+	/**
+	 * hashCode generiert einen Hashcode des Objekts anhand der ID und des Nicks. Sollte
+	 * der Nick 'null' oder ein leerer String sein, wird stattdessen 0 gewählt.
+	 * 
+	 * @return int Generierter Hash
+	 */
 	@Override
 	public int hashCode() {
-		int result = 13;
+		/* this should be sufficiently enough
+		 * result = 42
+		 */
+		int result = 42;
 
 		result = 31 * result + this.getID();
 		result = 31 * result
