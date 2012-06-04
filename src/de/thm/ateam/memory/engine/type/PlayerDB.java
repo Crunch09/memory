@@ -15,14 +15,14 @@ import android.content.ContentValues;
  */
 public class PlayerDB {
 
-	public static final String TABLE_NAME 	= "gamer";
-	public static final String ID 			= "_id";
-	public static final String NICK 		= "_nick";
-	public static final String WIN 			= "_win";
-	public static final String LOSE 		= "_lose";
-	public static final String DRAW 		= "_draw";
-	public static final String HIT 			= "_hit";
-	public static final String SHOT 		= "_shot";
+	public static final String TABLE_NAME = "gamer";
+	public static final String ID 		  = "_id";
+	public static final String NICK 	  = "_nick";
+	public static final String WIN 		  = "_win";
+	public static final String LOSE 	  = "_lose";
+	public static final String DRAW 	  = "_draw";
+	public static final String HIT 		  = "_hit";
+	public static final String SHOT 	  = "_shot";
 	
 	/**
 	 * Erzeugt ein neues ContentValues-Objekt mit dem Inhalt des übergebenen
@@ -30,7 +30,7 @@ public class PlayerDB {
 	 * 
 	 * @param player Spieler, dessen Informationen gespeichert werden sollen
 	 * 
-	 * @return Gibt ein ContentValues-Objekt zurück mit Inhalt des Spielers, wenn
+	 * @return ContentValues Gibt ein ContentValues-Objekt zurück mit Inhalt des Spielers, wenn
 	 *    gamer==null, Rückgabe = null
 	 */
 	protected final ContentValues createContentValues(Player player) {

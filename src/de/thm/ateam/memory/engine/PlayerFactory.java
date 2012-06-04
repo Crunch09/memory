@@ -18,10 +18,24 @@ import de.thm.ateam.memory.engine.type.Player;
  */
 public class PlayerFactory {
 
+	private static boolean instance = false;
+	
 	public static final int LOCALPLAYER = 0;
-	public static final int JOINPLAYER = 1;
-	public static final int HOSTPLAYER = 2;
+	public static final int JOINPLAYER  = 1;
+	public static final int HOSTPLAYER  = 2;
 
+	private PlayerFactory() {
+	}
+	
+	public static PlayerFactory newInstance() {
+		if (!instance) {
+			instance = true;
+			return new PlayerFactory();
+		}
+		
+		return null;
+	}
+	
 	public Player getPlayer(String nick, int TYPE) {
 		Player p;
 
