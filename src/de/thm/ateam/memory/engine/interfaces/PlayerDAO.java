@@ -18,9 +18,9 @@ public interface PlayerDAO {
 	static final String LOG_TAG = "MemoryPlayerDAO";
 	
 	/**
-	 * getAllPlayers gibt alle gespeicherten Spieler zurück
+	 * getAllPlayers returns all stored players
 	 * 
-	 * @return sequence(Player) Alle Spieler
+	 * @return sequence(Player) All players, otherwise null
 	 */
 	Player[] getAllPlayers();
 	

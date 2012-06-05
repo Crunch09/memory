@@ -32,26 +32,29 @@ public class MemoryPlayerDAO extends PlayerDB implements PlayerDAO {
 	 */
 	public Player[] getAllPlayers() {
 		int i = 0, j = 0;
+		Player []p = null;
 		SQLiteDatabase db = sql.getReadableDatabase();
 		String[] projection = new String[] {
 			ID, NICK, WIN, LOSE, DRAW, HIT, SHOT
 		};
 		
 		Cursor c = db.query(TABLE_NAME, projection, null, null, null, null, ID);
-		Player []p = new Player[c.getCount()];
+		if (c.getCount() > 0) {
+			p = new Player[c.getCount()];
 		
-		while(c.moveToNext()) {
-			int id = c.getInt(0);
-			p[i++] = new Player(c);
+			while(c.moveToNext()) {
+				int id = c.getInt(0);
+				p[i++] = new Player(c);
+				
+				if (j < id)
+					j = id;
+				else
+					j++;
+			}
 			
-			if (j < id)
-				j = id;
-			else
-				j++;
+			c.close();
+			db.close();
 		}
-		
-		c.close();
-		db.close();
 		
 		return p;
 	}
@@ -70,6 +73,9 @@ public class MemoryPlayerDAO extends PlayerDB implements PlayerDAO {
 		if (c.moveToFirst())
 			return new Player(c);
 		
+		c.close();
+		db.close();
+		
 		return null;
 	}
 
@@ -87,6 +93,9 @@ public class MemoryPlayerDAO extends PlayerDB implements PlayerDAO {
 		if (c.moveToFirst())
 			return new Player(c);
 		
+		c.close();
+		db.close();
+		
 		return null;
 	}
 
@@ -101,6 +110,7 @@ public class MemoryPlayerDAO extends PlayerDB implements PlayerDAO {
 			return false;
 		
 		p.setID(r);
+		db.close();
 		return true;
 	}
 
@@ -110,7 +120,8 @@ public class MemoryPlayerDAO extends PlayerDB implements PlayerDAO {
 	public boolean updatePlayer(Player p) {
 		SQLiteDatabase db = sql.getWritableDatabase();
 		int r = db.update(TABLE_NAME, this.createContentValues(p), ID, new String[] {String.valueOf(p.getID())});
-		
+
+		db.close();
 		if (r > 0)
 			return true;
 		else
@@ -124,6 +135,7 @@ public class MemoryPlayerDAO extends PlayerDB implements PlayerDAO {
 		SQLiteDatabase db = sql.getWritableDatabase();
 		int r = db.delete(TABLE_NAME, ID, new String[] {String.valueOf(p.getID())});
 		
+		db.close();
 		if (r > 0)
 			return true;
 		else
@@ -137,6 +149,7 @@ public class MemoryPlayerDAO extends PlayerDB implements PlayerDAO {
 		SQLiteDatabase db = sql.getWritableDatabase();
 		int r = db.delete(TABLE_NAME, ID, new String[] {String.valueOf(id)});
 		
+		db.close();
 		if (r > 0)
 			return true;
 		else
