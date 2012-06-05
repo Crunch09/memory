@@ -27,24 +27,13 @@ public class Memory extends Game{
 	
 	private int ROW_COUNT;
 	private int COL_COUNT;
+	
+	private int card = -1; /*should better be an object of card*/
 
 	public Memory(Context ctx, MemoryAttributes attr){
 		super(ctx,attr);
 		this.attr = attr;
 	}
-
-	private void generatePairs(){
-		int []field = new int [attr.getRows() * attr.getColumns()]; //eg. 8*8
-		//Random r = new Random();
-		Log.i("test", "test");
-		for (int i = 0; i < field.length/2; i++) { 
-			field[i] = i;
-			field[(field.length -1) - i] = i;		
-			Log.i("Field", "field "+i+" field "+((field.length -1)-i)+" value " +field[i]+":"+field[(field.length -1) - i]);
-		}	
-	}
-
-	
 	
 	private void newGame(){
 		ROW_COUNT = attr.getRows();
@@ -108,7 +97,35 @@ public class Memory extends Game{
 
 		mainView.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-				Toast.makeText(ctx, "" + position, Toast.LENGTH_SHORT).show();
+				
+				//calculate to array.
+				int row, col;
+				row = position % ROW_COUNT;
+				col = position / ROW_COUNT;
+				
+				int select = cards[row][col];
+				
+				
+				/*
+				 * simple recognition of hits or misses,
+				 * must be overridden by a round-based player system
+				 * 
+				 */
+				if(card == -1){
+					card = cards[row][col];
+					Toast.makeText(ctx,"select " +select+ " first move", Toast.LENGTH_SHORT).show();
+				}else{ 
+					if(card == select){	
+					Toast.makeText(ctx,"card "+ " select " +select+ " hit, next player", Toast.LENGTH_SHORT).show();
+					card = -1;
+					}else{
+						Toast.makeText(ctx,"card "+ " select " +select+ "miss, next player", Toast.LENGTH_SHORT).show();
+						card = -1;
+					}
+				}
+				
+				//Toast.makeText(ctx, "pos: " + position + "= ["+row+"]["+col+"]", Toast.LENGTH_SHORT).show();
+				
 			}
 		});
 		return mainView;
