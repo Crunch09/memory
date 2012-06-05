@@ -7,6 +7,7 @@
  */
 package de.thm.ateam.memory.engine.type;
 
+import de.thm.ateam.memory.engine.interfaces.PlayerDAO;
 import android.database.Cursor;
 import android.util.Log;
 
@@ -15,7 +16,7 @@ import android.util.Log;
  * 
  */
 public class Player {
-	private int id;
+	private long id;
 	protected String nick;
 	private int win, lose, draw, hit, shot;
 	
@@ -55,13 +56,20 @@ public class Player {
 	 * @params shot - Anzahl der gesamten Kartenzüge
 	 */
 	public final void updatePlayer(String nick, int win, int lose, int draw,
-			int hit, int shot/* , MemoryDB database */) {
+			int hit, int shot , PlayerDAO database) {
 		/* Übertragung aller benötigten Informationen in lokalen Variablen */
 		// MemoryDB db = database;
-		int u_win = win, u_shot = shot, u_draw = draw, u_lose = lose, u_hit = hit;
-		String u_nick = (nick == null ? this.nick : nick);
+		this.win = win;
+		this.shot = shot;
+		this.draw = draw;
+		this.lose = lose;
+		this.hit = hit;
+		this.nick = (nick == null ? this.nick : nick);
 
-		Log.i("db.LOG_TAG", "Database updated");
+		if (database.updatePlayer(this))
+			Log.i(PlayerDAO.LOG_TAG, "Database updated");
+		else
+			Log.i(PlayerDAO.LOG_TAG, "Database not updated");
 	}
 
 	/**
@@ -147,7 +155,7 @@ public class Player {
 	 * 
 	 * @return int Die ID des Spielers, gleich der in der Datenbank
 	 */
-	protected final int getID() {
+	public final long getID() {
 		return this.id;
 	}
 	
@@ -163,12 +171,22 @@ public class Player {
 		 * result = 42
 		 */
 		int result = 42;
-
-		result = 31 * result + this.getID();
+		
+		/* using only the lowest 32 bit of ID */
+		result = 31 * result + (int) this.getID();
 		result = 31 * result
 				+ (( this.getNick() == null || this.getNick().equals("") ) ? 0 : this.getNick().hashCode());
 
 		return result;
+	}
+	
+	/**
+	 * setID setzt die ID des Spielers
+	 * 
+	 * @param id Die neue ID des Spielers
+	 */
+	public void setID(long id) {
+		this.id = id;
 	}
 
 }
