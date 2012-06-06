@@ -7,9 +7,9 @@
  */
 package de.thm.ateam.memory.engine.type;
 
-import de.thm.ateam.memory.engine.interfaces.PlayerDAO;
 import android.database.Cursor;
 import android.util.Log;
+import de.thm.ateam.memory.engine.interfaces.PlayerDAO;
 
 /**
  * @author Frank Kevin Zey
@@ -31,39 +31,34 @@ public class Player {
 	}
 	
 	protected Player(){}
-
-	/**
-	 * newPlayer erzeugt eine neue Instanz von Player. Der Nick wird gesetzt.
-	 * Wenn ein neuer Player erzeugt wird, wird dieser direkt in die Datenbank
-	 * geschrieben und seine ID entnommen.
-	 * 
-	 * @params nick - Der Nick des neuen Spielers
-	 * 
-	 * @return Player - Rückgabe der neu erzeugten Playerinstanz
-	 */
-	public static Player newPlayer(String nick) {
-		return null;
+	
+	public Player(String nick) {
+		this.nick = nick;
+		this.win  = 0;
+		this.lose = 0;
+		this.draw = 0;
+		this.hit  = 0;
+		this.shot = 0;
 	}
 
 	/**
 	 * updatePlayer verändert die Angaben des Spielers in der Datenbank.
 	 * 
-	 * @params nick - neuer nick, wenn nick == null, wird dieser nicht verändert
-	 * @params win - Anzahl der aktuellen Siege
-	 * @params lose - Anzahl der aktuellen Niederlagen
-	 * @params draw - Anzahl der aktuellen Unentschieden
-	 * @params hit - Anzahl der getroffenen Kartenpaaren
-	 * @params shot - Anzahl der gesamten Kartenzüge
+	 * @param nick - neuer nick, wenn nick == null, wird dieser nicht verändert
+	 * @param win - Anzahl der aktuellen Siege
+	 * @param lose - Anzahl der aktuellen Niederlagen
+	 * @param draw - Anzahl der aktuellen Unentschieden
+	 * @param hit - Anzahl der getroffenen Kartenpaaren
+	 * @param shot - Anzahl der gesamten Kartenzüge
 	 */
 	public final void updatePlayer(String nick, int win, int lose, int draw,
 			int hit, int shot , PlayerDAO database) {
-		/* Übertragung aller benötigten Informationen in lokalen Variablen */
-		// MemoryDB db = database;
-		this.win = win;
-		this.shot = shot;
-		this.draw = draw;
-		this.lose = lose;
-		this.hit = hit;
+		/* calculation new information for THIS player */
+		this.win += win;
+		this.shot += shot;
+		this.draw += draw;
+		this.lose += lose;
+		this.hit += hit;
 		this.nick = (nick == null ? this.nick : nick);
 
 		if (database.updatePlayer(this))

@@ -25,50 +25,50 @@ public interface PlayerDAO {
 	Player[] getAllPlayers();
 	
 	/**
-	 * getPlayer gibt einen Spieler mit gegebener ID zurück
+	 * getPlayer gives a specified player with given ID
 	 * 
-	 * @param id Spezifizierte ID eines Spielers
-	 * @return Player Gibt Spieler mit ID id zurück, falls kein Spieler vorhanden null
+	 * @param id Specified ID of a player
+	 * @return Player Returns player with specified ID, if not exists null
 	 */
 	Player getPlayer(int id);
 	
 	/**
-	 * getPlayer gibt eine Spieler mit gegebenem Nick zurück
+	 * getPlayer returns player with specified nickname
 	 * 
-	 * @param nick Der Nickname des gesuchten Spielers
-	 * @return Player Gibt Spieler mit dem Nick nick zurück, falls kein Spieler vorhanden null
+	 * @param nick Nickname of player
+	 * @return Player Returns player of specified nickname 'nick', if not exists null
 	 */
 	Player getPlayer(String nick);
 	
 	/**
-	 * storePlayer speichert einen Spieler in der Datenbank
+	 * storePlayer stores a new player object to database
 	 * 
-	 * @param p Spieler, welcher in die Datenbank geschrieben werden soll
-	 * @return boolean Gibt true zurück, wenn Speichern in der Datenbank erfolgreich war, andernfalls false
+	 * @param p Player to be stored in database
+	 * @return boolean Returns true, if Player is stored, otherwise false
 	 */
 	boolean storePlayer(Player p);
 	
 	/**
-	 * updatePlayer bringt die Daten eines Spielers auf den aktuellen Stand
+	 * updatePlayer updates informations of a player in the database
 	 * 
-	 * @param p Spieler, dessen Informationen aktualisiert werden sollen
-	 * @return boolean Gibt true zurück, wenn das Update erfolgreich war, andernfalls false
+	 * @param p Player, this information have to updated
+	 * @return boolean returns true, if update success, otherwise false
 	 */
 	boolean updatePlayer(Player p);
 	
 	/**
-	 * removePlayer löscht einen Spieler aus der Datenbank mit Informationen direkt aus dem Spieler
+	 * removePlayer deletes player from database, by given player
 	 * 
-	 * @param p Spieler, der gelöscht werden soll
-	 * @return boolean true, wenn Spieler gelöscht wurde, andernfalls false
+	 * @param p Player, which be deleted
+	 * @return boolean Returns true, if player deleted, otherwise false
 	 */
 	boolean removePlayer(Player p);
 	
 	/**
-	 * removePlayer löscht einen Spieler aus der Datenbank anhand der übergebenen ID
+	 * removePlayer deletes Player by given ID of player
 	 * 
-	 * @param id Die ID des Spielers
-	 * @return boolean true, wenn Spieler gelöscht wurde, andernfalls false
+	 * @param id ID of the player to be deleted
+	 * @return boolean Returns true, if player with id ID deleted, otherwise false
 	 */
 	boolean removePlayer(int id);
 
