@@ -54,7 +54,7 @@ public class PlayerFactory {
 			break;
 
 		default:
-			return null;
+			return new Player(nick);
 
 		}
 
