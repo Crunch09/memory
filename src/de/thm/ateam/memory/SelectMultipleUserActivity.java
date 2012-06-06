@@ -3,6 +3,8 @@ package de.thm.ateam.memory;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.thm.ateam.memory.game.GameActivity;
+
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -80,7 +82,7 @@ public class SelectMultipleUserActivity extends ListActivity {
 			break;
 		// Start the game
 		case R.id.start:
-			intent = new Intent(getApplicationContext(), MemoryShow.class);
+			intent = new Intent(getApplicationContext(), GameActivity.class);
 			startActivity(intent);
 			break;
 		}
