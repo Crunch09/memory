@@ -17,7 +17,7 @@ public class Game {
 	}
 	
 	public Player next(){
-		return list.get((current++)%list.size());
+		return list.get((++current)%list.size());
 	}
 	
 	public int add(Player player){
