@@ -6,6 +6,7 @@ import java.util.List;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -29,13 +30,13 @@ public class ImageAdapter extends BaseAdapter {
 	 * 
 	 * @param c
 	 */
-	public ImageAdapter(Context c) {
+	public ImageAdapter(Context c, int row, int col) {
 		mContext = c;
 		listImageView = new ArrayList<ImageView>();
 
 		theme = new Theme(c);
 
-		for (int i = 0; i < theme.getCount(); i++) {
+		for (int i = 0; i < row*col/2; i++) {
 			ImageView imageView;
 			int size = (int) (maxSize() / (Math.ceil(Math.sqrt(theme.getCount() * 2))+1));
 
@@ -119,4 +120,15 @@ public class ImageAdapter extends BaseAdapter {
 		    .getDefaultDisplay().getHeight(), ((Activity) mContext).getWindow()
 		    .getWindowManager().getDefaultDisplay().getWidth());
 	}
+	
+	@Override
+	public boolean areAllItemsEnabled() {
+		return false;
+	}
+	
+	@Override
+	public boolean isEnabled(int position) {
+		return listImageView.get(position).isEnabled();
+	}
+	
 }

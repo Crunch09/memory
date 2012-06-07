@@ -30,6 +30,10 @@
             android:name=".SelectMultipleUserActivity"
             android:label="@string/app_name" >
         </activity>
+        <activity 
+            android:name="de.thm.ateam.memory.game.GameActivity"
+            android:label="@string/app_name" >
+        </activity>
     </application>
 
 </manifest>
