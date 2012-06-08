@@ -52,7 +52,7 @@ public class Memory extends Game{
 		handler = new UpdateCardsHandler();
 	}
 
-	private void newGame(){
+	public void newGame(){
 		ROW_COUNT = attr.getRows();
 		COL_COUNT = attr.getColumns();
 	}
@@ -82,7 +82,7 @@ public class Memory extends Game{
 				 * 
 				 */
 
-				synchronized (lock) {
+				synchronized (lock) { //just to avoid unwanted behaviour
 					if(card == -1){
 						flip(position);
 						card = position;

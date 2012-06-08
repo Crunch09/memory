@@ -1,6 +1,10 @@
 package de.thm.ateam.memory.game;
 
+import android.util.Log;
+
 public class Player {
+	
+	private final String TAG = "Player";
 	
 	long id;
 	String name;
@@ -10,8 +14,9 @@ public class Player {
 		this.name = name;
 	}
 	
-	public void myTurn(){
-		
+	public Player myTurn(){
+		Log.i(TAG, name+": it's your turn!");
+		return this;
 	}
 	
 	public void onChange(){
