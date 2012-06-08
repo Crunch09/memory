@@ -30,6 +30,9 @@ import android.widget.AdapterView.OnItemClickListener;
 
 public class Memory extends Game{
 
+	/*environement stuff*/
+	private static final String TAG = Memory.class.getSimpleName();
+	
 	private MemoryAttributes attr;
 	private GridView mainView;
 	private Theme theme;
@@ -38,23 +41,31 @@ public class Memory extends Game{
 	private UpdateCardsHandler handler;
 	private static Object lock = new Object(); //sperrobjekt
 
+	private Activity envActivity;
 
-
+	
+	/*game function related stuff*/
 	private int ROW_COUNT;
 	private int COL_COUNT;
+	private int left; //how many cards are left
+	private int card = -1; //should better be an object of card
+	
+	private Player current;
 
-	private int card = -1; /*should better be an object of card*/
-
+	
+	
 	public Memory(Context ctx, MemoryAttributes attr){
 		super(ctx,attr);
 		this.attr = attr;
-
+		this.envActivity = (Activity)ctx; // just a funny cast, that will let us access more functionality
 		handler = new UpdateCardsHandler();
 	}
 
 	public void newGame(){
 		ROW_COUNT = attr.getRows();
 		COL_COUNT = attr.getColumns();
+		left = ROW_COUNT * COL_COUNT;
+		current = turn();
 	}
 
 
@@ -86,19 +97,36 @@ public class Memory extends Game{
 					if(card == -1){
 						flip(position);
 						card = position;
-						Toast.makeText(ctx,"select " +position+ " first move", Toast.LENGTH_SHORT).show();
+						//Toast.makeText(ctx,"select " +position+ " first move", Toast.LENGTH_SHORT).show();
 					}else{ 
 						if(card != position) {
 							flip(position);
 							if(imageAdapter.getItemId(card) == imageAdapter.getItemId(position)){
 								delete(position, card);
-								Toast.makeText(ctx,"card "+ " select " +position+ " hit, next player", Toast.LENGTH_SHORT).show();
+								//Toast.makeText(ctx,"card "+ " select " +position+ " hit, next player", Toast.LENGTH_SHORT).show();
 								card = -1;
+								
+								current.hit();
+								
+								left -= 2;
+								if(left<=0){
+									//TODO do stats
+									
+									for (Player p : attr.getPlayers()) {
+										Log.i(TAG,p.name+" turns: "+p.matchturn+" hits: "+p.matchhit);
+									}
+									
+									envActivity.finish();
+								}
+								
+								
 							}else{
-								Toast.makeText(ctx,"card "+ " select " +position+ "miss, next player", Toast.LENGTH_SHORT).show();
+								//Toast.makeText(ctx,"card "+ " select " +position+ "miss, next player", Toast.LENGTH_SHORT).show();
 								reset(position);
 								reset(card);
 								card = -1;
+								current.turn();
+								current = turn();
 							}
 						}
 					}

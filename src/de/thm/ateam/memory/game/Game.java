@@ -31,9 +31,11 @@ public class Game {
 		return list.add(player)?list.indexOf(player):-1;
 	}
 
-	public void turn(){
+	public Player turn(){
 		Log.i(TAG, "turn()");
-		Toast.makeText(ctx, next().myTurn().name+", your turn!",Toast.LENGTH_SHORT).show();
+		Player temp = next().myTurn();
+		Toast.makeText(ctx, temp.name+", your turn!",Toast.LENGTH_SHORT).show();
+		return temp;
 	}
 
 	public View assembleLayout(){
