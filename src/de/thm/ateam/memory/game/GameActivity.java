@@ -27,7 +27,7 @@ public class GameActivity extends Activity{
 		 * 
 		 */
 		
-		setContentView(new Memory(this,new MemoryAttributes(players, 6, 6)).assembleLayout());
+		setContentView(new Memory(this,new MemoryAttributes(players, 2, 2)).assembleLayout());
 	}
 	
 	
