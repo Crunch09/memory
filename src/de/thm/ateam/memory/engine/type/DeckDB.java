@@ -23,10 +23,6 @@ public class DeckDB {
 	public static final String CARD_ID			= "_id";
 	public static final String CARD_DECK_ID		= "_deck_id";
 	public static final String CARD_BLOB		= "card_image";
-
-	protected ContentValues createContentValuesTheme(Deck d) {
-		
-	}
 	
 	
 }
