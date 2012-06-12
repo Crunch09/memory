@@ -7,6 +7,8 @@
  */
 package de.thm.ateam.memory.engine.type;
 
+import android.content.ContentValues;
+
 /**
  * @author Frank Kevin Zey
  *
@@ -22,4 +24,9 @@ public class DeckDB {
 	public static final String CARD_DECK_ID		= "_deck_id";
 	public static final String CARD_BLOB		= "card_image";
 
+	protected ContentValues createContentValuesTheme(Deck d) {
+		
+	}
+	
+	
 }

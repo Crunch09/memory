@@ -183,5 +183,13 @@ public class Player {
 	public void setID(long id) {
 		this.id = id;
 	}
-
+	
+  /**
+   * for printing the object
+   * 
+   * @return The nickname of the user
+   */
+	 public String toString(){
+	   return this.nick;
+	 }
 }

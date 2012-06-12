@@ -30,14 +30,13 @@ public class SQLite extends SQLiteOpenHelper {
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		db.execSQL("CREATE TABLE " + PlayerDB.TABLE_NAME + "("
-				+ PlayerDB.ID + " INTEGER AUTOINCREMENT,"
+				+ PlayerDB.ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
 				+ PlayerDB.NICK + " VARCHAR(42),"
 				+ PlayerDB.WIN + " INTEGER,"
 				+ PlayerDB.LOSE + " INTEGER,"
 				+ PlayerDB.DRAW + " INTEGER,"
 				+ PlayerDB.HIT + " INTEGER,"
 				+ PlayerDB.SHOT + " INTEGER,"
-				+ "PRIMARY KEY (" + PlayerDB.ID + "),"
 				+ "UNIQUE (" + PlayerDB.NICK + "));");
 	}
 
@@ -46,7 +45,7 @@ public class SQLite extends SQLiteOpenHelper {
 	 */
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		db.needUpgrade(newVersion);
+		//db.needUpgrade(newVersion);
 	}
 
 }
