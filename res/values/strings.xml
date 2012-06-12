@@ -2,7 +2,7 @@
 <resources>
 
     <string name="app_name">Memory</string>
-    <string name="addnametext">UserName:</string>
+    <string name="addnametext">Username:</string>
     <string name="btnadduser">Create User</string>
     <string name="btnstart">Start</string>
 

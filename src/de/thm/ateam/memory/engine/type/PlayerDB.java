@@ -15,14 +15,14 @@ import android.content.ContentValues;
  */
 public class PlayerDB {
 
-	public static final String TABLE_NAME = "gamer";
+	public static final String TABLE_NAME = "player";
 	public static final String ID 		  = "_id";
-	public static final String NICK 	  = "_nick";
-	public static final String WIN 		  = "_win";
-	public static final String LOSE 	  = "_lose";
-	public static final String DRAW 	  = "_draw";
-	public static final String HIT 		  = "_hit";
-	public static final String SHOT 	  = "_shot";
+	public static final String NICK 	  = "nick";
+	public static final String WIN 		  = "win";
+	public static final String LOSE 	  = "lose";
+	public static final String DRAW 	  = "draw";
+	public static final String HIT 		  = "hit";
+	public static final String SHOT 	  = "shot";
 	
 	/**
 	 * Erzeugt ein neues ContentValues-Objekt mit dem Inhalt des übergebenen

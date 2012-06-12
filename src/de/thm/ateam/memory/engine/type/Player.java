@@ -30,20 +30,12 @@ public class Player {
 		this.shot = c.getInt(6);
 	}
 	
+	public Player(String nick){
+	  this.nick = nick;
+	}
+	
 	protected Player(){}
 
-	/**
-	 * newPlayer erzeugt eine neue Instanz von Player. Der Nick wird gesetzt.
-	 * Wenn ein neuer Player erzeugt wird, wird dieser direkt in die Datenbank
-	 * geschrieben und seine ID entnommen.
-	 * 
-	 * @params nick - Der Nick des neuen Spielers
-	 * 
-	 * @return Player - Rückgabe der neu erzeugten Playerinstanz
-	 */
-	public static Player newPlayer(String nick) {
-		return null;
-	}
 
 	/**
 	 * updatePlayer verändert die Angaben des Spielers in der Datenbank.
@@ -188,5 +180,13 @@ public class Player {
 	public void setID(long id) {
 		this.id = id;
 	}
-
+	
+  /**
+   * for printing the object
+   * 
+   * @return The nickname of the user
+   */
+	 public String toString(){
+	   return this.nick;
+	 }
 }

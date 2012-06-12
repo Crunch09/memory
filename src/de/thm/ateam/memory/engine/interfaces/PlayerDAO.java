@@ -7,6 +7,9 @@
  */
 package de.thm.ateam.memory.engine.interfaces;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import de.thm.ateam.memory.engine.type.Player;
 
 /**
@@ -22,7 +25,7 @@ public interface PlayerDAO {
 	 * 
 	 * @return sequence(Player) All players, otherwise null
 	 */
-	Player[] getAllPlayers();
+	List<Player> getAllPlayers();
 	
 	/**
 	 * getPlayer gibt einen Spieler mit gegebener ID zurück

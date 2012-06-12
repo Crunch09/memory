@@ -7,6 +7,10 @@
  */
 package de.thm.ateam.memory.engine;
 
+import java.util.ArrayList;
+import java.util.List;
+
+
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -23,16 +27,25 @@ public class MemoryPlayerDAO extends PlayerDB implements PlayerDAO {
 	
 	private SQLite sql;
 	
-	public MemoryPlayerDAO(Context ctx) {
-		sql = new SQLite(ctx);
-	}
+  private Context ctx = null;
+  private static MemoryPlayerDAO instance = null;
+  
+  private MemoryPlayerDAO(Context ctx){this.ctx = ctx;}
+  
+  public static MemoryPlayerDAO getInstance(Context ctx){
+    if(instance == null){
+      instance = new MemoryPlayerDAO(ctx);
+      instance.sql = new SQLite(ctx);
+    }
+    return instance;
+  }
 
 	/* (non-Javadoc)
 	 * @see de.thm.ateam.memory.engine.interfaces.PlayerDAO#getAllPlayers()
 	 */
-	public Player[] getAllPlayers() {
-		int i = 0, j = 0;
-		Player []p = null;
+	public List<Player> getAllPlayers() {
+		int j = 0;
+		List<Player> p = new ArrayList<Player>();
 		SQLiteDatabase db = sql.getReadableDatabase();
 		String[] projection = new String[] {
 			ID, NICK, WIN, LOSE, DRAW, HIT, SHOT
@@ -40,21 +53,19 @@ public class MemoryPlayerDAO extends PlayerDB implements PlayerDAO {
 		
 		Cursor c = db.query(TABLE_NAME, projection, null, null, null, null, ID);
 		if (c.getCount() > 0) {
-			p = new Player[c.getCount()];
 		
 			while(c.moveToNext()) {
 				int id = c.getInt(0);
-				p[i++] = new Player(c);
+				p.add(new Player(c));
 				
 				if (j < id)
 					j = id;
 				else
 					j++;
 			}
-			
-			c.close();
-			db.close();
 		}
+		c.close();
+    db.close();
 		
 		return p;
 	}

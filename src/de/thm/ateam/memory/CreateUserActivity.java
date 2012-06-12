@@ -1,5 +1,9 @@
 package de.thm.ateam.memory;
 
+import java.util.ArrayList;
+
+import de.thm.ateam.memory.engine.MemoryPlayerDAO;
+import de.thm.ateam.memory.engine.type.Player;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
@@ -34,6 +38,8 @@ public class CreateUserActivity extends Activity {
 		/*
 		 * Create User
 		 */
+		MemoryPlayerDAO playerDAO = MemoryPlayerDAO.getInstance(this);
+    playerDAO.storePlayer(new Player(userName));
 		finish();
   }
 
