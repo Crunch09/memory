@@ -19,22 +19,32 @@ import de.thm.ateam.memory.engine.MemoryDeckDAO;
  */
 public class Deck {
 
+	private String name;
+	private long ID;
 	private Bitmap backSide;
 	private Bitmap frontSide[];
 	private MemoryDeckDAO dao;
 	
-	public Deck(Context ctx, long DECK_ID) {
+	public Deck(Context ctx, long DECK_ID) throws NullPointerException {
 		dao = new MemoryDeckDAO(ctx);
 		Deck t = dao.getDeck(DECK_ID);
+		
+		if (t == null)
+			throw new NullPointerException("no deck found");
+		
+		this.ID = t.getID();
+		this.name = t.getName();
 		backSide = t.getBackSide();
 		frontSide = t.getFrontSide();
 	}
 	
-	public Deck(Cursor cv) {
+	public Deck(Cursor cv, String name) {
 		boolean b = true;
 		int i = 0;
 		
-		do {
+		this.name = name;
+		
+		while(cv.moveToNext()) {
 			if (b)
 				backSide = BitmapFactory.decodeByteArray(cv.getBlob(2), 0, cv.getBlob(2).length);
 			
@@ -42,7 +52,7 @@ public class Deck {
 				frontSide[i++] = BitmapFactory.decodeByteArray(cv.getBlob(2), 0, cv.getBlob(2).length);
 			
 			b = false;
-		} while(cv.moveToNext());
+		}
 	}
 	
 	public Bitmap[] getFrontSide() {
@@ -51,6 +61,18 @@ public class Deck {
 	
 	public Bitmap getBackSide() {
 		return this.backSide;
+	}
+	
+	public String getName() {
+		return this.name;
+	}
+	
+	public long getID() {
+		return this.ID;
+	}
+	
+	public void setID(long ID) {
+		this.ID = ID;
 	}
 	
 }

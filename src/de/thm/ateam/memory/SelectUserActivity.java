@@ -12,13 +12,11 @@ import android.app.ListActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.ListView;
 
 /**
@@ -60,12 +58,8 @@ public class SelectUserActivity extends ListActivity {
 	@Override
   protected void onResume() {
     super.onResume();
-    BaseAdapter base = (BaseAdapter) getListAdapter();
-    Log.i("info", base.getCount() + "");
-    if(base != null){
-      players = MemoryPlayerDAO.getInstance(this).getAllPlayers();
-      base.notifyDataSetChanged();
-    }
+    players = MemoryPlayerDAO.getInstance(this).getAllPlayers();
+    setListAdapter(new ArrayAdapter<Player>(this, android.R.layout.simple_list_item_1, players));
   }
 
 	/**

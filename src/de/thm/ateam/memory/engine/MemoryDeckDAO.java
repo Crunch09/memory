@@ -7,10 +7,14 @@
  */
 package de.thm.ateam.memory.engine;
 
+import java.io.ByteArrayOutputStream;
+
+import android.content.ContentValues;
 import android.content.Context;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
 
 import de.thm.ateam.memory.engine.interfaces.DeckDAO;
 
@@ -60,15 +64,39 @@ public class MemoryDeckDAO extends DeckDB implements DeckDAO {
 	 * @see de.thm.ateam.memory.engine.interfaces.DeckDAO#storeDeck(de.thm.ateam.memory.engine.type.Deck)
 	 */
 	public boolean storeDeck(Deck d) {
+		SQLiteDatabase db = sql.getWritableDatabase();
+		ContentValues cv = new ContentValues();
+		cv.put(NAME, d.getName());
+		long r = db.insert(TABLE_NAME, null, cv);
 		
-		return false;
+		if (r < 0)
+			return false;
+		
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+        cv = new ContentValues();
+		cv.put(CARD_DECK_ID, r);
+		d.getBackSide().compress(Bitmap.CompressFormat.JPEG, 100, out);
+		cv.put(CARD_BLOB, out.toByteArray());
+		db.insert(CARD_TABLE_NAME, null, cv);
+		
+		for (Bitmap b : d.getFrontSide()) {
+			out = new ByteArrayOutputStream();
+	        cv = new ContentValues();
+			cv.put(CARD_DECK_ID, r);
+			b.compress(Bitmap.CompressFormat.JPEG, 100, out);
+			cv.put(CARD_BLOB, out.toByteArray());
+			db.insert(CARD_TABLE_NAME, null, cv);
+		}
+		
+		d.setID(r);
+		db.close();
+		return true;
 	}
 
 	/* (non-Javadoc)
 	 * @see de.thm.ateam.memory.engine.interfaces.DeckDAO#updateDeck(de.thm.ateam.memory.engine.type.Deck)
 	 */
 	public boolean updateDeck(Deck d) {
-		
 		return false;
 	}
 
@@ -77,7 +105,7 @@ public class MemoryDeckDAO extends DeckDB implements DeckDAO {
 	 */
 	public Deck getDeck(long id) {
 		SQLiteDatabase db = sql.getReadableDatabase();
-		String[] projection = new String[] { ID };
+		String[] projection = new String[] { ID, NAME };
 		
 		Cursor c = db.query(TABLE_NAME, projection, ID, new String[]{String.valueOf(id)}, null, null, ID);
 		c.moveToFirst();
@@ -85,12 +113,13 @@ public class MemoryDeckDAO extends DeckDB implements DeckDAO {
 		String[] projectionCards = new String[] { CARD_ID, CARD_DECK_ID, CARD_BLOB };
 		
 		Cursor cc = db.query(CARD_TABLE_NAME, projectionCards, CARD_DECK_ID, new String[] { String.valueOf(c.getInt(0)) }, null, null, CARD_ID);
+		db.close();
 		
 		if (cc.moveToFirst())
-			return new Deck(c);
+			return new Deck(cc, c.getString(1));
 		
 		c.close();
-		db.close();
+		cc.close();
 		
 		return null;
 	}
