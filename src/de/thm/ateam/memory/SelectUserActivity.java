@@ -63,6 +63,7 @@ public class SelectUserActivity extends ListActivity {
     BaseAdapter base = (BaseAdapter) getListAdapter();
     Log.i("info", base.getCount() + "");
     if(base != null){
+      players = MemoryPlayerDAO.getInstance(this).getAllPlayers();
       base.notifyDataSetChanged();
     }
   }

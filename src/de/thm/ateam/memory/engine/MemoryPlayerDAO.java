@@ -25,12 +25,13 @@ import de.thm.ateam.memory.engine.type.SQLite;
  */
 public class MemoryPlayerDAO extends PlayerDB implements PlayerDAO {
 	
-	private SQLite sql;
-	
+  private SQLite sql;
   private Context ctx = null;
   private static MemoryPlayerDAO instance = null;
   
-  private MemoryPlayerDAO(Context ctx){this.ctx = ctx;}
+  private MemoryPlayerDAO(Context ctx){
+	  this.ctx = ctx;
+  }
   
   public static MemoryPlayerDAO getInstance(Context ctx){
     if(instance == null){
@@ -65,7 +66,7 @@ public class MemoryPlayerDAO extends PlayerDB implements PlayerDAO {
 			}
 		}
 		c.close();
-    db.close();
+		db.close();
 		
 		return p;
 	}
