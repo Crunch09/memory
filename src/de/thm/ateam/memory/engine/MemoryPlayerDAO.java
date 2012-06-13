@@ -8,12 +8,12 @@
 package de.thm.ateam.memory.engine;
 
 import java.util.ArrayList;
-import java.util.List;
-
 
 import android.content.Context;
+
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+
 import de.thm.ateam.memory.engine.interfaces.PlayerDAO;
 import de.thm.ateam.memory.engine.type.Player;
 import de.thm.ateam.memory.engine.type.PlayerDB;
@@ -26,16 +26,13 @@ import de.thm.ateam.memory.engine.type.SQLite;
 public class MemoryPlayerDAO extends PlayerDB implements PlayerDAO {
 	
   private SQLite sql;
-  private Context ctx = null;
   private static MemoryPlayerDAO instance = null;
   
-  private MemoryPlayerDAO(Context ctx){
-	  this.ctx = ctx;
-  }
+  private MemoryPlayerDAO(){}
   
   public static MemoryPlayerDAO getInstance(Context ctx){
     if(instance == null){
-      instance = new MemoryPlayerDAO(ctx);
+      instance = new MemoryPlayerDAO();
       instance.sql = new SQLite(ctx);
     }
     return instance;
