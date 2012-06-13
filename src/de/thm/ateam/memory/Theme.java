@@ -3,6 +3,9 @@ package de.thm.ateam.memory;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.thm.ateam.memory.engine.MemoryDeckDAO;
+import de.thm.ateam.memory.engine.type.Deck;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -39,13 +42,29 @@ public class Theme {
 	 * @param ctx
 	 * 
 	 */
-	public Theme(Context ctx) {
-		backSide = BitmapFactory
+	public Theme(Context ctx, boolean useDefault, long ID) {
+		if (useDefault) {
+			backSide = BitmapFactory
 		    .decodeResource(ctx.getResources(), defaultBackside);
-		bitmapList = new ArrayList<Bitmap>();
-		for (int id : defaultImage) {
-			Bitmap tmp = BitmapFactory.decodeResource(ctx.getResources(), id);
-			bitmapList.add(tmp);
+			bitmapList = new ArrayList<Bitmap>();
+			for (int id : defaultImage) {
+				Bitmap tmp = BitmapFactory.decodeResource(ctx.getResources(), id);
+				bitmapList.add(tmp);
+			}
+		} else {
+			if (ID < 0) {
+				backSide = BitmapFactory
+			    .decodeResource(ctx.getResources(), defaultBackside);
+				bitmapList = new ArrayList<Bitmap>();
+				for (int id : defaultImage)
+					bitmapList.add(BitmapFactory.decodeResource(ctx.getResources(), id));
+				
+			} else {
+				MemoryDeckDAO dao = new MemoryDeckDAO(ctx);
+				Deck d = dao.getDeck(ID);
+				backSide = d.getBackSide();
+				bitmapList = d.getFrontSide();
+			}
 		}
 	}
 

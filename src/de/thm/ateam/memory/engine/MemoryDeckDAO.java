@@ -90,6 +90,7 @@ public class MemoryDeckDAO extends DeckDB implements DeckDAO {
 		
 		d.setID(r);
 		db.close();
+		
 		return true;
 	}
 

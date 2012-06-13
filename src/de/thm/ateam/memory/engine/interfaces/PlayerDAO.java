@@ -24,7 +24,7 @@ public interface PlayerDAO {
 	 * 
 	 * @return sequence(Player) All players, otherwise null
 	 */
-	ArrayList<Player> getAllPlayers(); // Y U NO ARRAYLIST ?
+	ArrayList<Player> getAllPlayers();
 	
 	/**
 	 * getPlayer gives a specified player with given ID

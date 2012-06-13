@@ -34,7 +34,7 @@ public class ImageAdapter extends BaseAdapter {
 		mContext = c;
 		listImageView = new ArrayList<ImageView>();
 
-		theme = new Theme(c);
+		theme = new Theme(c, false, -1);
 
 		for (int i = 0; i < row*col/2; i++) {
 			ImageView imageView;

@@ -7,6 +7,8 @@
  */
 package de.thm.ateam.memory.engine.type;
 
+import java.util.ArrayList;
+
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -35,7 +37,7 @@ public class Deck {
 		this.ID = t.getID();
 		this.name = t.getName();
 		backSide = t.getBackSide();
-		frontSide = t.getFrontSide();
+		frontSide = (Bitmap[])t.getFrontSide().toArray();
 	}
 	
 	public Deck(Cursor cv, String name) {
@@ -55,8 +57,11 @@ public class Deck {
 		}
 	}
 	
-	public Bitmap[] getFrontSide() {
-		return this.frontSide;
+	public ArrayList<Bitmap> getFrontSide() {
+		ArrayList<Bitmap> al = new ArrayList<Bitmap>();
+		for (Bitmap b : this.frontSide)
+			al.add(b);
+		return al;
 	}
 	
 	public Bitmap getBackSide() {
