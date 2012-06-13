@@ -1,5 +1,8 @@
 package de.thm.ateam.memory.game;
 
+import de.thm.ateam.memory.engine.*;
+import de.thm.ateam.memory.engine.type.Player;
+
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Timer;
@@ -27,6 +30,8 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
+
+
 
 public class Memory extends Game{
 
@@ -113,7 +118,7 @@ public class Memory extends Game{
 									//TODO do stats
 									
 									for (Player p : attr.getPlayers()) {
-										Log.i(TAG,p.name+" turns: "+p.matchturn+" hits: "+p.matchhit);
+										Log.i(TAG,p.nick+" turns: "+p.turn+" hits: "+p.hit);
 									}
 									
 									envActivity.finish();

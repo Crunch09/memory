@@ -11,14 +11,27 @@ import android.database.Cursor;
 import android.util.Log;
 import de.thm.ateam.memory.engine.interfaces.PlayerDAO;
 
+
 /**
  * @author Frank Kevin Zey
  * 
  */
 public class Player {
+	
+	private final String tag = "Player";
+
+	
+	/* 
+	 * Die private Geschichten sind zwar aus Softwaresicht sinnig
+	 * gehören aber unter Android spart man sich oft die Methodenaufrufe
+	 * aus Geschwindigkeitsgründen.
+	 * Falls ich damit was kaputt gemacht hab, es tut mir leid ;)
+	 */
+	
+	
 	private long id;
-	protected String nick;
-	private int win, lose, draw, hit, shot;
+	public String nick;
+	public int win, lose, draw, hit, turn; /*renamed shot to turn, removing the private modifyer*/
 	
 	public Player(Cursor c) {
 		this.id = c.getInt(0);
@@ -27,7 +40,7 @@ public class Player {
 		this.lose = c.getInt(3);
 		this.draw = c.getInt(4);
 		this.hit = c.getInt(5);
-		this.shot = c.getInt(6);
+		this.turn = c.getInt(6);
 	}
 	
 	protected Player(){}
@@ -38,8 +51,26 @@ public class Player {
 		this.lose = 0;
 		this.draw = 0;
 		this.hit  = 0;
-		this.shot = 0;
+		this.turn = 0;
 	}
+		
+	public Player myTurn(){
+		Log.i(tag, nick+": it's your turn!");
+		return this;
+	}
+	
+	public int hit(){
+		return ++hit;
+	}
+	
+	public int turn(){
+		return ++turn;
+	}
+	
+	public void onChange(){
+		
+	}
+	
 
 	/**
 	 * updatePlayer ver√§ndert die Angaben des Spielers in der Datenbank.
@@ -55,7 +86,7 @@ public class Player {
 			int hit, int shot , PlayerDAO database) {
 		/* calculation new information for THIS player */
 		this.win += win;
-		this.shot += shot;
+		this.turn += shot;
 		this.draw += draw;
 		this.lose += lose;
 		this.hit += hit;
@@ -133,7 +164,7 @@ public class Player {
 	 * @return int Anzahl aller Kartenz√ºge
 	 */
 	public final int getShots() {
-		return this.shot;
+		return this.turn;
 	}
 
 	/**

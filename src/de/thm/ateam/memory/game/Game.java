@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+import de.thm.ateam.memory.engine.type.Player;
 
 public class Game {
 
@@ -34,7 +35,7 @@ public class Game {
 	public Player turn(){
 		Log.i(TAG, "turn()");
 		Player temp = next().myTurn();
-		Toast.makeText(ctx, temp.name+", your turn!",Toast.LENGTH_SHORT).show();
+		Toast.makeText(ctx, temp.nick +", your turn!",Toast.LENGTH_SHORT).show();
 		return temp;
 	}
 

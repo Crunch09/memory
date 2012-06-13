@@ -1,6 +1,7 @@
 package de.thm.ateam.memory.game;
 
 import java.util.ArrayList;
+import de.thm.ateam.memory.engine.type.Player;
 
 /*
  * Supposed to be a first implementation of a Attribute Object,

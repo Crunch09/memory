@@ -1,6 +1,7 @@
 package de.thm.ateam.memory.game;
 
 import java.util.ArrayList;
+import de.thm.ateam.memory.engine.type.Player;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -13,10 +14,6 @@ public class GameActivity extends Activity{
 		//setContentView(R.layout.test); // i hate xml files, so fuck them.
 		
 		ArrayList<Player> players = new ArrayList<Player>();
-		
-		players.add(new Player(1,"penny"));
-		players.add(new Player(2, "sheldon"));
-		
 		
 		/*
 		 * this is where the gameactivity initializes its specific game, e.g. a descendant from "Game.java",
