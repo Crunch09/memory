@@ -6,6 +6,7 @@ import java.util.List;
 import de.thm.ateam.memory.engine.MemoryPlayerDAO;
 import de.thm.ateam.memory.engine.type.Player;
 import de.thm.ateam.memory.game.GameActivity;
+import de.thm.ateam.memory.game.PlayerList;
 
 import android.app.AlertDialog;
 import android.app.ListActivity;
@@ -26,7 +27,7 @@ import android.widget.ListView;
  */
 public class SelectUserActivity extends ListActivity {
 
-	List<Player> players = new ArrayList<Player>();
+	//List<Player> players = new ArrayList<Player>();
 
 	/**
 	 * 
@@ -45,10 +46,9 @@ public class SelectUserActivity extends ListActivity {
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, users);
 		setListAdapter(adapter);*/
 		
-		players = MemoryPlayerDAO.getInstance(this).getAllPlayers();
-		
+		PlayerList.getInstance().players = (ArrayList<Player>)MemoryPlayerDAO.getInstance(this).getAllPlayers();
 
-		setListAdapter(new ArrayAdapter<Player>(this, android.R.layout.simple_list_item_1, players));
+		setListAdapter(new ArrayAdapter<Player>(this, android.R.layout.simple_list_item_1, PlayerList.getInstance().players));
 	}
 	
 	/**
@@ -58,8 +58,8 @@ public class SelectUserActivity extends ListActivity {
 	@Override
   protected void onResume() {
     super.onResume();
-    players = MemoryPlayerDAO.getInstance(this).getAllPlayers();
-    setListAdapter(new ArrayAdapter<Player>(this, android.R.layout.simple_list_item_1, players));
+    PlayerList.getInstance().players =(ArrayList<Player>) MemoryPlayerDAO.getInstance(this).getAllPlayers();
+    setListAdapter(new ArrayAdapter<Player>(this, android.R.layout.simple_list_item_1, PlayerList.getInstance().players));
   }
 
 	/**

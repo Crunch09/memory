@@ -44,9 +44,11 @@ public class MemoryPlayerDAO extends PlayerDB implements PlayerDAO {
 	/* (non-Javadoc)
 	 * @see de.thm.ateam.memory.engine.interfaces.PlayerDAO#getAllPlayers()
 	 */
-	public List<Player> getAllPlayers() {
+  
+  //fixed List = new Arraylist -> use ArrayList, its cool son of List
+	public ArrayList<Player> getAllPlayers() {
 		int j = 0;
-		List<Player> p = new ArrayList<Player>();
+		ArrayList<Player> p = new ArrayList<Player>();
 		SQLiteDatabase db = sql.getReadableDatabase();
 		String[] projection = new String[] {
 			ID, NICK, WIN, LOSE, DRAW, HIT, SHOT

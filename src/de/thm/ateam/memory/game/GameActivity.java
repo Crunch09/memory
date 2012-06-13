@@ -13,7 +13,7 @@ public class GameActivity extends Activity{
 		super.onCreate(savedInstanceState);
 		//setContentView(R.layout.test); // i hate xml files, so fuck them.
 		
-		ArrayList<Player> players = new ArrayList<Player>();
+		ArrayList<Player> players = PlayerList.getInstance().players;
 		
 		/*
 		 * this is where the gameactivity initializes its specific game, e.g. a descendant from "Game.java",
