@@ -8,7 +8,6 @@
 package de.thm.ateam.memory.engine.interfaces;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import de.thm.ateam.memory.engine.type.Player;
 
