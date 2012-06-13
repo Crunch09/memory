@@ -13,7 +13,7 @@ public class GameActivity extends Activity{
 		super.onCreate(savedInstanceState);
 		//setContentView(R.layout.test); // i hate xml files, so fuck them.
 		
-		ArrayList<Player> players = PlayerList.getInstance().players;
+		ArrayList<Player> players = PlayerList.getInstance().session;
 		
 		/*
 		 * this is where the gameactivity initializes its specific game, e.g. a descendant from "Game.java",
@@ -24,7 +24,7 @@ public class GameActivity extends Activity{
 		 * 
 		 */
 		
-		setContentView(new Memory(this,new MemoryAttributes(players, 2, 2)).assembleLayout());
+		setContentView(new Memory(this,new MemoryAttributes(players, 4, 4)).assembleLayout());
 	}
 	
 	

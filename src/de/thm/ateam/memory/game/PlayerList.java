@@ -8,11 +8,13 @@ import de.thm.ateam.memory.engine.type.Player;
 public class PlayerList {
 
 	private static PlayerList instance = null;
-	public ArrayList<Player> players = null;
+	public ArrayList<Player> players = null; //all the players 
+	public ArrayList<Player> session = null; //just the ones selected for a match
 	
 	private PlayerList(){
 		super();
 		this.players = new ArrayList<Player>();
+		this.session = new ArrayList<Player>();
 	}
 	
 	public static PlayerList getInstance(){

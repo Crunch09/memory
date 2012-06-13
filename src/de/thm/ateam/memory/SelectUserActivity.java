@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 /**
  * 
@@ -112,7 +113,9 @@ public class SelectUserActivity extends ListActivity {
 		super.onListItemClick(l, v, position, id);
 
 		final CharSequence[] items = { "Network", "Local" };
-
+		
+		PlayerList.getInstance().session.add(0, (Player)l.getAdapter().getItem(position));
+				
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle("Choose a game");
 		builder.setItems(items, new DialogInterface.OnClickListener() {
@@ -125,17 +128,18 @@ public class SelectUserActivity extends ListActivity {
 					/*
 					 * TestWeise Multiple User
 					 */
-
-					intent = new Intent(getApplicationContext(),
-					    SelectMultipleUserActivity.class);
-					startActivity(intent);
-
+//					intent = new Intent(getApplicationContext(),
+//					    SelectMultipleUserActivity.class);
+//					startActivity(intent);
+					
 					break;
 				// Local Game
 				case 1:
-					intent = new Intent(getApplicationContext(), GameActivity.class);
-					startActivity(intent);
+					
 
+					intent = new Intent(getApplicationContext(),
+						    SelectMultipleUserActivity.class);
+						startActivity(intent);
 					break;
 				default:
 					break;

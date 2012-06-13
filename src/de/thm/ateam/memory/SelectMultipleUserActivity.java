@@ -3,7 +3,9 @@ package de.thm.ateam.memory;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.thm.ateam.memory.engine.type.Player;
 import de.thm.ateam.memory.game.GameActivity;
+import de.thm.ateam.memory.game.PlayerList;
 
 import android.app.ListActivity;
 import android.content.Intent;
@@ -21,7 +23,7 @@ import android.widget.ListView;
  */
 public class SelectMultipleUserActivity extends ListActivity {
 
-	private List<String> users;
+	private ArrayList<Player> users;
 	private ListView listView;
 
 	/**
@@ -35,12 +37,12 @@ public class SelectMultipleUserActivity extends ListActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		users = new ArrayList<String>();
-		users.add("Quallenmann");
-		users.add("Quallenmann2");
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+		users = PlayerList.getInstance().players;
+		ArrayAdapter<Player> adapter = new ArrayAdapter<Player>(this,
 		    android.R.layout.simple_list_item_multiple_choice, users);
 
+		adapter.remove(PlayerList.getInstance().session.get(0)); //host steht an erster stelle
+		
 		listView = getListView();
 
 		listView.setAdapter(adapter);
@@ -77,12 +79,12 @@ public class SelectMultipleUserActivity extends ListActivity {
 		switch (item.getItemId()) {
 		// Create new user
 		case R.id.adduser:
-			intent = new Intent(getApplicationContext(), CreateUserActivity.class);
+			intent = new Intent(this, CreateUserActivity.class);
 			startActivity(intent);
 			break;
 		// Start the game
 		case R.id.start:
-			intent = new Intent(getApplicationContext(), GameActivity.class);
+			intent = new Intent(this, GameActivity.class);
 			startActivity(intent);
 			break;
 		}
