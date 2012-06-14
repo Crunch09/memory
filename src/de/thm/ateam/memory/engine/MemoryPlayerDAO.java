@@ -48,7 +48,7 @@ public class MemoryPlayerDAO extends PlayerDB implements PlayerDAO {
 		ArrayList<Player> p = new ArrayList<Player>();
 		SQLiteDatabase db = sql.getReadableDatabase();
 		String[] projection = new String[] {
-			ID, NICK, WIN, LOSE, DRAW, HIT, SHOT
+			ID, NICK, WIN, LOSE, DRAW, HIT, TURN
 		};
 		
 		Cursor c = db.query(TABLE_NAME, projection, null, null, null, null, ID);
@@ -76,7 +76,7 @@ public class MemoryPlayerDAO extends PlayerDB implements PlayerDAO {
 	public Player getPlayer(int id) {
 		SQLiteDatabase db = sql.getReadableDatabase();
 		String[] projection = new String[] {
-			ID, NICK, WIN, LOSE, DRAW, HIT, SHOT
+			ID, NICK, WIN, LOSE, DRAW, HIT, TURN
 		};
 		
 		Cursor c = db.query(TABLE_NAME, projection, ID, new String[]{String.valueOf(id)}, null, null, ID);
@@ -96,7 +96,7 @@ public class MemoryPlayerDAO extends PlayerDB implements PlayerDAO {
 	public Player getPlayer(String nick) {
 		SQLiteDatabase db = sql.getReadableDatabase();
 		String[] projection = new String[] {
-			ID, NICK, WIN, LOSE, DRAW, HIT, SHOT
+			ID, NICK, WIN, LOSE, DRAW, HIT, TURN
 		};
 		
 		Cursor c = db.query(TABLE_NAME, projection, NICK, new String[]{nick}, null, null, ID);
@@ -130,7 +130,7 @@ public class MemoryPlayerDAO extends PlayerDB implements PlayerDAO {
 	 */
 	public boolean updatePlayer(Player p) {
 		SQLiteDatabase db = sql.getWritableDatabase();
-		int r = db.update(TABLE_NAME, this.createContentValues(p), ID, new String[] {String.valueOf(p.getID())});
+		int r = db.update(TABLE_NAME, this.createContentValues(p), ID + "=?", new String[] {"" + p.getID()});
 
 		db.close();
 		if (r > 0)

@@ -36,7 +36,35 @@ public class Game {
 		Log.i(TAG, "turn()");
 		Player temp = next().myTurn();
 		Toast.makeText(ctx, temp.nick +", your turn!",Toast.LENGTH_SHORT).show();
+		temp.turn();
 		return temp;
+	}
+	
+	public void getWinner(){
+	  int highscore  = 0;
+	  int numberOfWinners = 0;
+	  for(Player p : list){
+	    if(p.roundHits > highscore){
+	      highscore = p.roundHits;
+	      numberOfWinners = 1;
+	    }else if(p.roundHits == highscore){
+	      numberOfWinners++;
+	    }
+	  }
+	  // get all winners
+	  for(Player p : list){
+	    if(numberOfWinners == list.size()){
+	     p.roundDraw = true;
+	     continue;
+	    }
+	    if(p.roundHits == highscore){
+	      Log.i("demo", p.nick + "has won.");
+	      p.roundWin = true;
+	    }else{
+	      Log.i("demo", p.nick + " has lost");
+	      p.roundLose = true;
+	    }
+	  }
 	}
 
 	public View assembleLayout(){

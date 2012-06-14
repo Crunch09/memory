@@ -115,10 +115,13 @@ public class Memory extends Game{
 								
 								left -= 2;
 								if(left<=0){
-									//TODO do stats
+								  Memory.this.getWinner();
+
+								  Thread t = new Thread(new StatsUpdate(envActivity.getApplicationContext()));
+								  t.run();
 									
 									for (Player p : attr.getPlayers()) {
-										Log.i(TAG,p.nick+" turns: "+p.turn+" hits: "+p.hit);
+										Log.i(TAG,p.nick+" turns: "+p.roundTurns+" hits: "+p.roundHits);
 									}
 									
 									envActivity.finish();
@@ -130,7 +133,7 @@ public class Memory extends Game{
 								reset(position);
 								reset(card);
 								card = -1;
-								current.turn();
+								//current.turn();
 								current = turn();
 							}
 						}

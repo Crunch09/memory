@@ -31,7 +31,9 @@ public class Player implements Comparable<Player>{
 	
 	private long id;
 	public String nick;
-	public int win, lose, draw, hit, turn; /*renamed shot to turn, removing the private modifyer*/
+	public int win, lose, draw, hit, turn, roundHits, roundTurns; 
+	public boolean roundWin, roundLose, roundDraw; 
+	/*renamed shot to turn, removing the private modifyer*/
 	
 	public Player(Cursor c) {
 		this.id = c.getInt(0);
@@ -52,6 +54,9 @@ public class Player implements Comparable<Player>{
 		this.draw = 0;
 		this.hit  = 0;
 		this.turn = 0;
+		this.roundDraw = false;
+		this.roundLose = false;
+		this.roundWin = false;
 	}
 		
 	public Player myTurn(){
@@ -60,11 +65,11 @@ public class Player implements Comparable<Player>{
 	}
 	
 	public int hit(){
-		return ++hit;
+		return ++roundHits;
 	}
 	
 	public int turn(){
-		return ++turn;
+		return ++roundTurns;
 	}
 	
 	public void onChange(){
@@ -75,22 +80,9 @@ public class Player implements Comparable<Player>{
 	/**
 	 * updatePlayer verändert die Angaben des Spielers in der Datenbank.
 	 * 
-	 * @param nick - neuer nick, wenn nick == null, wird dieser nicht verändert
-	 * @param win - Anzahl der aktuellen Siege
-	 * @param lose - Anzahl der aktuellen Niederlagen
-	 * @param draw - Anzahl der aktuellen Unentschieden
-	 * @param hit - Anzahl der getroffenen Kartenpaaren
-	 * @param shot - Anzahl der gesamten Kartenzüge
+	 * 
 	 */
-	public final void updatePlayer(String nick, int win, int lose, int draw,
-			int hit, int shot , PlayerDAO database) {
-		/* calculation new information for THIS player */
-		this.win += win;
-		this.turn += shot;
-		this.draw += draw;
-		this.lose += lose;
-		this.hit += hit;
-		this.nick = (nick == null ? this.nick : nick);
+	public final void updatePlayer(PlayerDAO database) {
 
 		if (database.updatePlayer(this))
 			Log.i(PlayerDAO.LOG_TAG, "Database updated");

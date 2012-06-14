@@ -22,7 +22,7 @@ public class PlayerDB {
 	public static final String LOSE 	  = "lose";
 	public static final String DRAW 	  = "draw";
 	public static final String HIT 		  = "hit";
-	public static final String SHOT 	  = "shot";
+	public static final String TURN	  = "turn";
 	
 	/**
 	 * Erzeugt ein neues ContentValues-Objekt mit dem Inhalt des übergebenen
@@ -44,7 +44,7 @@ public class PlayerDB {
 		cv.put(LOSE, player.getLose());
 		cv.put(DRAW, player.getDraw());
 		cv.put(HIT,  player.getHits());
-		cv.put(SHOT, player.getShots());
+		cv.put(TURN, player.getShots());
 		
 		return cv;
 	}

@@ -36,7 +36,7 @@ public class SQLite extends SQLiteOpenHelper {
 				+ PlayerDB.LOSE + " INTEGER,"
 				+ PlayerDB.DRAW + " INTEGER,"
 				+ PlayerDB.HIT + " INTEGER,"
-				+ PlayerDB.SHOT + " INTEGER,"
+				+ PlayerDB.TURN + " INTEGER,"
 				+ "UNIQUE (" + PlayerDB.NICK + "));");
 	}
 
