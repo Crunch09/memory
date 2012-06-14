@@ -3,4 +3,7 @@
 	<item android:id="@+id/adduser"
     android:icon="@android:drawable/ic_menu_add"
     android:title="@string/btnadduser" />
+	<item android:id="@+id/statistics"
+	    android:icon="@android:drawable/ic_menu_sort_by_size"
+	    android:title="@string/statistics" />
 </menu>

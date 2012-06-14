@@ -40,12 +40,6 @@ public class SelectUserActivity extends ListActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-		/*users = new ArrayList<String>();
-		users.add("Quallenmann");
-		users.add("Quallenmann2");
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, users);
-		setListAdapter(adapter);*/
 		
 		PlayerList.getInstance().players = (ArrayList<Player>)MemoryPlayerDAO.getInstance(this).getAllPlayers();
 
@@ -88,12 +82,17 @@ public class SelectUserActivity extends ListActivity {
 	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+	  Intent i = null;
 		switch (item.getItemId()) {
 		case R.id.adduser:
-			Intent intent = new Intent(getApplicationContext(),
+			i = new Intent(getApplicationContext(),
 			    CreateUserActivity.class);
-			startActivity(intent);
+			startActivity(i);
 			break;
+		case R.id.statistics:
+		  i = new Intent(this, ShowStatisticActivity.class);
+		  startActivity(i);
+		  break;
 		}
 		return true;
 	}
