@@ -90,10 +90,6 @@ public class SelectUserActivity extends ListActivity {
 			    CreateUserActivity.class);
 			startActivity(i);
 			break;
-		case R.id.statistics:
-		  i = new Intent(this, ShowStatisticActivity.class);
-		  startActivity(i);
-		  break;
 		}
 		return true;
 	}

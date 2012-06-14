@@ -21,7 +21,7 @@ public class ShowStatisticActivity extends Activity{
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    FuelChart chart = new FuelChart();
+    WinningProbabilityChart chart = new WinningProbabilityChart();
     startActivity((chart.getIntent(this)));
   }
 

@@ -23,7 +23,7 @@ import android.graphics.Paint.Align;
 import android.util.Log;
 
 
-public class FuelChart {
+public class WinningProbabilityChart {
 
   
 
@@ -46,7 +46,7 @@ public class FuelChart {
     Log.i("demo", "wins: "+ Arrays.toString(values.get(1)));
     int[] colors = new int[] { Color.BLUE, Color.CYAN };
     XYMultipleSeriesRenderer renderer = buildBarRenderer(colors);
-    setChartSettings(renderer, "Win probability", "Player", "Games", 0.5,
+    setChartSettings(renderer, "Win probability", "Player", "# of Games", 0.5,
         12.5, 0, Collections.max(PlayerList.getInstance().players).win + 10, Color.GRAY, Color.LTGRAY);
     renderer.getSeriesRendererAt(0).setDisplayChartValues(true);
     renderer.getSeriesRendererAt(1).setDisplayChartValues(true);
