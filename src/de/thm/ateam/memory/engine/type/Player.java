@@ -16,15 +16,15 @@ import de.thm.ateam.memory.engine.interfaces.PlayerDAO;
  * @author Frank Kevin Zey
  * 
  */
-public class Player {
+public class Player implements Comparable<Player>{
 	
 	private final String tag = "Player";
 
 	
 	/* 
 	 * Die private Geschichten sind zwar aus Softwaresicht sinnig
-	 * gehšren aber unter Android spart man sich oft die Methodenaufrufe
-	 * aus GeschwindigkeitsgrŸnden.
+	 * gehï¿½ren aber unter Android spart man sich oft die Methodenaufrufe
+	 * aus Geschwindigkeitsgrï¿½nden.
 	 * Falls ich damit was kaputt gemacht hab, es tut mir leid ;)
 	 */
 	
@@ -47,9 +47,9 @@ public class Player {
 	
 	public Player(String nick) {
 		this.nick = nick;
-		this.win  = 0;
-		this.lose = 0;
-		this.draw = 0;
+		this.win  = 5;
+		this.lose = 22;
+		this.draw = 3;
 		this.hit  = 0;
 		this.turn = 0;
 	}
@@ -223,4 +223,12 @@ public class Player {
 	 public String toString(){
 	   return this.nick;
 	 }
+
+
+  public int compareTo(Player another) throws ClassCastException{
+    if(!(another instanceof Player)){
+      throw new ClassCastException();
+    }
+    return (int) (this.getAverageWinRate() - another.getAverageWinRate());
+  }
 }

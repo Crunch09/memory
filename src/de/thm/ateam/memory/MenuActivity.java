@@ -1,10 +1,6 @@
 package de.thm.ateam.memory;
 
-import java.util.ArrayList;
 
-import de.thm.ateam.memory.engine.MemoryPlayerDAO;
-import de.thm.ateam.memory.engine.type.Player;
-import de.thm.ateam.memory.game.PlayerList;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -52,7 +48,8 @@ public class MenuActivity extends ListActivity {
 			
 			break;
 		case Stats:
-			
+		  intent = new Intent(this, ShowStatisticActivity.class);
+      startActivity(intent);
 			break;
 		case Settings:
 			

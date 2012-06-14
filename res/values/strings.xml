@@ -5,5 +5,9 @@
     <string name="addnametext">Username:</string>
     <string name="btnadduser">Create User</string>
     <string name="btnstart">Start</string>
+    <string name="statistics">Statistics</string>
+    <string name="chartTitle">Chart Title</string>
+    <string name="demo">Demo</string>
+    <string name="value">Value</string>
 
 </resources>
