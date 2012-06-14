@@ -72,7 +72,6 @@ public class SelectMultipleUserActivity extends ListActivity {
 		    android.R.layout.simple_list_item_multiple_choice, users);
 		
 		listView = getListView();
-
 		listView.setAdapter(adapter);
 		listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
   }
@@ -91,7 +90,7 @@ public class SelectMultipleUserActivity extends ListActivity {
 		inflater.inflate(R.menu.selectmultipleusermenu, menu);
 		return true;
 	}
-
+	
 	/**
 	 * 
 	 * Function which is called when a user clicks on a menu button
