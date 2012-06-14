@@ -47,9 +47,9 @@ public class Player implements Comparable<Player>{
 	
 	public Player(String nick) {
 		this.nick = nick;
-		this.win  = 5;
-		this.lose = 22;
-		this.draw = 3;
+		this.win  = 0;
+		this.lose = 0;
+		this.draw = 0;
 		this.hit  = 0;
 		this.turn = 0;
 	}
