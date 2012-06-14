@@ -1,8 +1,8 @@
 package de.thm.ateam.memory;
 
 import java.util.ArrayList;
-import java.util.List;
 
+import de.thm.ateam.memory.engine.MemoryPlayerDAO;
 import de.thm.ateam.memory.engine.type.Player;
 import de.thm.ateam.memory.game.GameActivity;
 import de.thm.ateam.memory.game.PlayerList;
@@ -10,6 +10,7 @@ import de.thm.ateam.memory.game.PlayerList;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -49,6 +50,32 @@ public class SelectMultipleUserActivity extends ListActivity {
 		listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 
 	}
+	
+	/**
+	 * 
+	 * Load the adapter again when the activity is resumed
+	 */
+	@Override
+  protected void onResume() {
+    super.onResume();
+
+    users = (ArrayList<Player>) MemoryPlayerDAO.getInstance(this).getAllPlayers();
+    
+    for(int i = 0; i < users.size(); i++) {
+    	if(users.get(i).getID() == PlayerList.getInstance().session.get(0).getID()) {
+    		users.remove(i);
+    		break;
+    	}
+    }
+    
+    ArrayAdapter<Player> adapter = new ArrayAdapter<Player>(this,
+		    android.R.layout.simple_list_item_multiple_choice, users);
+		
+		listView = getListView();
+
+		listView.setAdapter(adapter);
+		listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+  }
 
 	/**
 	 * 

@@ -154,6 +154,12 @@ public class Memory extends Game{
 		ImageView clicked = (ImageView) imageAdapter.getItem(position);
 		clicked.setImageBitmap(theme.getPicture(clicked.getId()));
 	}
+	
+	public void onDestroy() {
+		for(int i = 0; i < theme.getCount(); i++) {
+			theme.getPicture(i).recycle();
+		}
+	}
 
 
 	/**

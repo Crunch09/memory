@@ -8,6 +8,8 @@ import android.os.Bundle;
 
 public class GameActivity extends Activity{
 	
+	Memory mem;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -23,8 +25,14 @@ public class GameActivity extends Activity{
 		 * assembleLayout() does not need any kind of XML File, which makes it very versatile in its use.
 		 * 
 		 */
-		
-		setContentView(new Memory(this,new MemoryAttributes(players, 4, 4)).assembleLayout());
+		mem = new Memory(this,new MemoryAttributes(players, 4, 4));
+		setContentView(mem.assembleLayout());
+	}
+	
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		mem.onDestroy();
 	}
 	
 	
