@@ -14,8 +14,12 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Adapter;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 /**
  * 
@@ -38,11 +42,16 @@ public class SelectMultipleUserActivity extends ListActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		users = PlayerList.getInstance().players;
+		//users = PlayerList.getInstance().players;
+	
 		ArrayAdapter<Player> adapter = new ArrayAdapter<Player>(this,
-		    android.R.layout.simple_list_item_multiple_choice, users);
+		    android.R.layout.simple_list_item_multiple_choice, PlayerList.getInstance().players);
 
-		adapter.remove(PlayerList.getInstance().session.get(0)); //host steht an erster stelle
+//		for(int i = 1; i<PlayerList.getInstance().session.size();i++){ //remove everything but the FIRST user
+//	    	PlayerList.getInstance().session.remove(0);
+//	    }
+		
+		adapter.remove(PlayerList.getInstance().session.get(0)); //host steht an erster stelle, ist auch gleichzeitig test der objectgleichheit
 		
 		listView = getListView();
 
@@ -52,13 +61,17 @@ public class SelectMultipleUserActivity extends ListActivity {
 	}
 	
 	/**
-	 * 
 	 * Load the adapter again when the activity is resumed
 	 */
 	@Override
   protected void onResume() {
     super.onResume();
-
+    
+    /*
+    for(int i = 1; i<PlayerList.getInstance().session.size();i++){
+    	PlayerList.getInstance().session.remove(i);
+    }
+    
     users = (ArrayList<Player>) MemoryPlayerDAO.getInstance(this).getAllPlayers();
     
     for(int i = 0; i < users.size(); i++) {
@@ -74,6 +87,8 @@ public class SelectMultipleUserActivity extends ListActivity {
 		listView = getListView();
 		listView.setAdapter(adapter);
 		listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+	*/
+    
   }
 
 	/**
@@ -89,6 +104,17 @@ public class SelectMultipleUserActivity extends ListActivity {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.selectmultipleusermenu, menu);
 		return true;
+	}
+	
+	@Override
+	protected void onListItemClick(ListView l, View v, int position, long id) {
+		super.onListItemClick(l, v, position, id);
+		if(!PlayerList.getInstance().session.remove((Player)l.getAdapter().getItem(position))){
+			Toast.makeText(this, "Adding One", Toast.LENGTH_SHORT).show();
+			PlayerList.getInstance().session.add((Player)l.getAdapter().getItem(position));
+		}else{
+			Toast.makeText(this, "Removin One", Toast.LENGTH_SHORT).show();
+		}
 	}
 	
 	/**
