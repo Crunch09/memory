@@ -1,11 +1,9 @@
 package de.thm.ateam.memory;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import de.thm.ateam.memory.engine.MemoryPlayerDAO;
 import de.thm.ateam.memory.engine.type.Player;
-import de.thm.ateam.memory.game.GameActivity;
 import de.thm.ateam.memory.game.PlayerList;
 
 import android.app.AlertDialog;
@@ -19,7 +17,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 /**
  * 
@@ -28,7 +25,7 @@ import android.widget.Toast;
  */
 public class SelectUserActivity extends ListActivity {
 
-	//List<Player> players = new ArrayList<Player>();
+	// List<Player> players = new ArrayList<Player>();
 
 	/**
 	 * 
@@ -41,27 +38,32 @@ public class SelectUserActivity extends ListActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		/*users = new ArrayList<String>();
-		users.add("Quallenmann");
-		users.add("Quallenmann2");
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, users);
-		setListAdapter(adapter);*/
-		
-		PlayerList.getInstance().players = (ArrayList<Player>)MemoryPlayerDAO.getInstance(this).getAllPlayers();
+		/*
+		 * users = new ArrayList<String>(); users.add("Quallenmann");
+		 * users.add("Quallenmann2"); ArrayAdapter<String> adapter = new
+		 * ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, users);
+		 * setListAdapter(adapter);
+		 */
 
-		setListAdapter(new ArrayAdapter<Player>(this, android.R.layout.simple_list_item_1, PlayerList.getInstance().players));
+		PlayerList.getInstance().players = (ArrayList<Player>) MemoryPlayerDAO
+		    .getInstance(this).getAllPlayers();
+
+		setListAdapter(new ArrayAdapter<Player>(this,
+		    android.R.layout.simple_list_item_1, PlayerList.getInstance().players));
 	}
-	
+
 	/**
 	 * 
 	 * Load the adapter again when the activity is resumed
 	 */
 	@Override
-  protected void onResume() {
-    super.onResume();
-    PlayerList.getInstance().players =(ArrayList<Player>) MemoryPlayerDAO.getInstance(this).getAllPlayers();
-    setListAdapter(new ArrayAdapter<Player>(this, android.R.layout.simple_list_item_1, PlayerList.getInstance().players));
-  }
+	protected void onResume() {
+		super.onResume();
+		PlayerList.getInstance().players = (ArrayList<Player>) MemoryPlayerDAO
+		    .getInstance(this).getAllPlayers();
+		setListAdapter(new ArrayAdapter<Player>(this,
+		    android.R.layout.simple_list_item_1, PlayerList.getInstance().players));
+	}
 
 	/**
 	 * 
@@ -112,42 +114,10 @@ public class SelectUserActivity extends ListActivity {
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
 
-		final CharSequence[] items = { "Network", "Local" };
+		PlayerList.getInstance().session.add(0,
+		    (Player) l.getAdapter().getItem(position));
 		
-		PlayerList.getInstance().session.add(0, (Player)l.getAdapter().getItem(position));
-				
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setTitle("Choose a game");
-		builder.setItems(items, new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int item) {
-				Intent intent;
-				switch (item) {
-
-				// Network Game
-				case 0:
-					/*
-					 * TestWeise Multiple User
-					 */
-//					intent = new Intent(getApplicationContext(),
-//					    SelectMultipleUserActivity.class);
-//					startActivity(intent);
-					
-					break;
-				// Local Game
-				case 1:
-					
-
-					intent = new Intent(getApplicationContext(),
-						    SelectMultipleUserActivity.class);
-						startActivity(intent);
-					break;
-				default:
-					break;
-				}
-
-			}
-		});
-
-		builder.create().show();
+		Intent intent = new Intent(getApplicationContext(), MenuActivity.class);
+		startActivity(intent);
 	}
 }

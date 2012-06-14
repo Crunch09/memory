@@ -1,7 +1,5 @@
 package de.thm.ateam.memory;
 
-import java.util.ArrayList;
-
 import de.thm.ateam.memory.engine.MemoryPlayerDAO;
 import de.thm.ateam.memory.engine.type.Player;
 import android.app.Activity;
