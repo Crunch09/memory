@@ -34,11 +34,8 @@ public class GameActivity extends Activity{
 		super.onDestroy();
 		mem.onDestroy();
 	}
-	
-	
 	/*
 	 * if we decide to do some eventhandling for network usage (messages to be more specific) we should do that here.
-	 * A descendant of a Game will have to handle that specific request.
+	 * A descendant of a Game will have to handle that specific request. 
 	 */
-
 }
