@@ -1,20 +1,10 @@
 package de.thm.ateam.memory.game;
 
-import de.thm.ateam.memory.engine.*;
-import de.thm.ateam.memory.engine.type.Player;
-
-import java.util.ArrayList;
-import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import de.thm.ateam.memory.ImageAdapter;
-import de.thm.ateam.memory.Theme;
-
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.AvoidXfermode;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -22,14 +12,13 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
-import android.widget.BaseAdapter;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.TableLayout;
-import android.widget.TableRow;
-import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.AdapterView.OnItemClickListener;
+import de.thm.ateam.memory.ImageAdapter;
+import de.thm.ateam.memory.Theme;
+import de.thm.ateam.memory.engine.type.Player;
 
 
 
@@ -107,6 +96,7 @@ public class Memory extends Game{
 						if(card != position) {
 							flip(position);
 							if(imageAdapter.getItemId(card) == imageAdapter.getItemId(position)){
+							  
 								delete(position, card);
 								//Toast.makeText(ctx,"card "+ " select " +position+ " hit, next player", Toast.LENGTH_SHORT).show();
 								card = -1;
@@ -116,7 +106,15 @@ public class Memory extends Game{
 								left -= 2;
 								if(left<=0){
 								  Memory.this.getWinner();
-
+								  String victoryMsg = "";
+								  for(Player p : attr.getPlayers()){
+								    if(p.roundWin)
+								      victoryMsg += p.nick + ",";
+								  }
+								  // deletes last comma
+								  victoryMsg = victoryMsg.substring(0, victoryMsg.length()-1);
+								  victoryMsg += " has won!!!";
+								  Toast.makeText(envActivity, victoryMsg, Toast.LENGTH_SHORT).show();
 								  Thread t = new Thread(new StatsUpdate(envActivity.getApplicationContext()));
 								  t.run();
 									
@@ -156,6 +154,7 @@ public class Memory extends Game{
 	public void flip(int position) {
 		ImageView clicked = (ImageView) imageAdapter.getItem(position);
 		clicked.setImageBitmap(theme.getPicture(clicked.getId()));
+
 	}
 	
 	public void onDestroy() {

@@ -58,10 +58,8 @@ public class Game {
 	     continue;
 	    }
 	    if(p.roundHits == highscore){
-	      Log.i("demo", p.nick + "has won.");
 	      p.roundWin = true;
 	    }else{
-	      Log.i("demo", p.nick + " has lost");
 	      p.roundLose = true;
 	    }
 	  }

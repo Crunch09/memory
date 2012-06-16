@@ -29,8 +29,7 @@ public class WinningProbabilityChart {
 
   public Intent getIntent(Context context) {
     PlayerList.getInstance().players = (ArrayList<Player>)MemoryPlayerDAO.getInstance(context).getAllPlayers();
-    Log.i("demo", PlayerList.getInstance().players.size() + "");
-    String[] titles = new String[]{ "wins", "total"};
+    String[] titles = new String[]{ "# of games played", "# of wins"};
     
     List<double[]> values = new ArrayList<double[]>();
     values.add(new double[PlayerList.getInstance().players.size()]);
@@ -42,8 +41,6 @@ public class WinningProbabilityChart {
       values.get(1)[i] = PlayerList.getInstance().players.get(i).win;
 
     }
-    Log.i("demo", "games: "+ Arrays.toString(values.get(0)));
-    Log.i("demo", "wins: "+ Arrays.toString(values.get(1)));
     int[] colors = new int[] { Color.BLUE, Color.CYAN };
     XYMultipleSeriesRenderer renderer = buildBarRenderer(colors);
     setChartSettings(renderer, "Win probability", "Player", "# of Games", 0.5,

@@ -48,8 +48,8 @@ public class MenuActivity extends ListActivity {
 			
 			break;
 		case Stats:
-		  intent = new Intent(this, ShowStatisticActivity.class);
-      startActivity(intent);
+		  WinningProbabilityChart chart = new WinningProbabilityChart();
+	    startActivity((chart.getIntent(this)));
 			break;
 		case Settings:
 			
