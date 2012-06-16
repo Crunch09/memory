@@ -2,8 +2,10 @@ package de.thm.ateam.memory;
 
 import de.thm.ateam.memory.engine.MemoryPlayerDAO;
 import de.thm.ateam.memory.engine.type.Player;
+import de.thm.ateam.memory.game.PlayerList;
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
@@ -32,12 +34,16 @@ public class CreateUserActivity extends Activity {
 	 * @param target
 	 */
 	public void onButtonClick(View target) {
-		String userName = ((EditText)findViewById(R.id.editText)).getText().toString();
+		String nick = ((EditText)findViewById(R.id.editText)).getText().toString();
 		/*
 		 * Create User
+		 * add it to DB and PlayerList
 		 */
+		
+		Player newPlayer = new Player(nick);
+		
 		MemoryPlayerDAO playerDAO = MemoryPlayerDAO.getInstance(this);
-    playerDAO.storePlayer(new Player(userName));
+		if(playerDAO.storePlayer(newPlayer))PlayerList.getInstance().players.add(newPlayer);
 		finish();
   }
 

@@ -6,11 +6,13 @@ import android.app.ListActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 import de.thm.ateam.memory.engine.type.Player;
@@ -23,10 +25,15 @@ import de.thm.ateam.memory.game.PlayerList;
  * 
  */
 public class SelectMultipleUserActivity extends ListActivity {
+	
+	private final String tag = this.getClass().getSimpleName();
 
 	private ListView listView;
 	
 	final static int GAME_HAS_FINISHED = 42;
+	
+	
+	private BaseAdapter adapter;
 
 	/**
 	 * 
@@ -39,17 +46,13 @@ public class SelectMultipleUserActivity extends ListActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		//users = PlayerList.getInstance().players;
-	
-		ArrayAdapter<Player> adapter = new ArrayAdapter<Player>(this,
-		    android.R.layout.simple_list_item_multiple_choice, PlayerList.getInstance().players);
+		
+		PlayerList.getInstance().session.clear(); //TODO test it
+		
+		adapter = new ArrayAdapter<Player>(this,
+			    android.R.layout.simple_list_item_multiple_choice, PlayerList.getInstance().players);
 
-//		for(int i = 1; i<PlayerList.getInstance().session.size();i++){ //remove everything but the FIRST user
-//	    	PlayerList.getInstance().session.remove(0);
-//	    }
-		
-		adapter.remove(PlayerList.getInstance().session.get(0)); //host steht an erster stelle, ist auch gleichzeitig test der objectgleichheit
-		
+
 		listView = getListView();
 
 		listView.setAdapter(adapter);
@@ -64,30 +67,8 @@ public class SelectMultipleUserActivity extends ListActivity {
   protected void onResume() {
     super.onResume();
     
-    
-    
-    /*
-    for(int i = 1; i<PlayerList.getInstance().session.size();i++){
-    	PlayerList.getInstance().session.remove(i);
-    }
-    
-    users = (ArrayList<Player>) MemoryPlayerDAO.getInstance(this).getAllPlayers();
-    
-    for(int i = 0; i < users.size(); i++) {
-    	if(users.get(i).getID() == PlayerList.getInstance().session.get(0).getID()) {
-    		users.remove(i);
-    		break;
-    	}
-    }
-    
-    ArrayAdapter<Player> adapter = new ArrayAdapter<Player>(this,
-		    android.R.layout.simple_list_item_multiple_choice, users);
-		
-		listView = getListView();
-		listView.setAdapter(adapter);
-		listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-	*/
-    
+    adapter.notifyDataSetChanged();
+ 
   }
 
 	/**

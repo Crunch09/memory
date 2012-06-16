@@ -1,6 +1,11 @@
 package de.thm.ateam.memory;
 
 
+import java.util.ArrayList;
+
+import de.thm.ateam.memory.engine.MemoryPlayerDAO;
+import de.thm.ateam.memory.engine.type.Player;
+import de.thm.ateam.memory.game.PlayerList;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -28,6 +33,8 @@ public class MenuActivity extends ListActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		PlayerList.getInstance().players = (ArrayList<Player>)MemoryPlayerDAO.getInstance(this).getAllPlayers();
+
 		ArrayAdapter<String> optionAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, options);
 		
 		setListAdapter(optionAdapter);
@@ -45,6 +52,8 @@ public class MenuActivity extends ListActivity {
 			startActivity(intent);
 			break;
 		case NetworkGame:
+			intent = new Intent(getApplicationContext(),SelectUserActivity.class);
+			startActivity(intent);
 			
 			break;
 		case Stats:
