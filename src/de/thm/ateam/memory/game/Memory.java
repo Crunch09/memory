@@ -4,7 +4,10 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -67,7 +70,9 @@ public class Memory extends Game{
 	public View assembleLayout(){
 
 		newGame();
-
+		for(Player p :attr.getPlayers()){
+		  Log.i("demo", p.nick);
+		}
 		imageAdapter = new ImageAdapter(ctx, ROW_COUNT, COL_COUNT);
 		theme = imageAdapter.getTheme();
 
@@ -114,14 +119,15 @@ public class Memory extends Game{
 								  // deletes last comma
 								  victoryMsg = victoryMsg.substring(0, victoryMsg.length()-1);
 								  victoryMsg += " has won!!!";
-								  Toast.makeText(envActivity, victoryMsg, Toast.LENGTH_SHORT).show();
 								  Thread t = new Thread(new StatsUpdate(envActivity.getApplicationContext()));
 								  t.run();
+								  
 									
 									for (Player p : attr.getPlayers()) {
 										Log.i(TAG,p.nick+" turns: "+p.roundTurns+" hits: "+p.roundHits);
 									}
 									
+									envActivity.setResult(envActivity.RESULT_OK, envActivity.getIntent().putExtra("msg", victoryMsg));
 									envActivity.finish();
 								}
 								

@@ -1,25 +1,21 @@
 package de.thm.ateam.memory;
 
-import java.util.ArrayList;
 
-import de.thm.ateam.memory.engine.MemoryPlayerDAO;
-import de.thm.ateam.memory.engine.type.Player;
-import de.thm.ateam.memory.game.GameActivity;
-import de.thm.ateam.memory.game.PlayerList;
-
+import android.app.AlertDialog;
 import android.app.ListActivity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Adapter;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
+import de.thm.ateam.memory.engine.type.Player;
+import de.thm.ateam.memory.game.GameActivity;
+import de.thm.ateam.memory.game.PlayerList;
 
 /**
  * 
@@ -28,8 +24,9 @@ import android.widget.Toast;
  */
 public class SelectMultipleUserActivity extends ListActivity {
 
-	private ArrayList<Player> users;
 	private ListView listView;
+	
+	final static int GAME_HAS_FINISHED = 42;
 
 	/**
 	 * 
@@ -66,6 +63,8 @@ public class SelectMultipleUserActivity extends ListActivity {
 	@Override
   protected void onResume() {
     super.onResume();
+    
+    
     
     /*
     for(int i = 1; i<PlayerList.getInstance().session.size();i++){
@@ -137,10 +136,32 @@ public class SelectMultipleUserActivity extends ListActivity {
 		// Start the game
 		case R.id.start:
 			intent = new Intent(this, GameActivity.class);
-			startActivity(intent);
+			startActivityForResult(intent, GAME_HAS_FINISHED);
 			break;
 		}
 		return true;
 	}
+	
+	@Override
+  protected void onActivityResult(int requestCode, int resultCode, Intent data){
+    if(resultCode == RESULT_OK){
+      if(requestCode == GAME_HAS_FINISHED){
+        DialogInterface.OnClickListener clickListener = new DialogInterface.OnClickListener() {
+          
+          public void onClick(DialogInterface dialog, int which) {
+            switch(which){
+            case DialogInterface.BUTTON_POSITIVE:
+              Intent i = new Intent(SelectMultipleUserActivity.this, GameActivity.class);
+              SelectMultipleUserActivity.this.startActivityForResult(i, GAME_HAS_FINISHED);
+              break;
+            }
+            
+          }
+        };
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+        dialog.setMessage(data.getStringExtra("msg") +" Start a new game?").setPositiveButton("Yes", clickListener).setNegativeButton("No", clickListener).show();
+      }
+    }
+  }
 
 }
