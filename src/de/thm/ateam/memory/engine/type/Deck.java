@@ -23,8 +23,8 @@ public class Deck {
 
 	private String name;
 	private long ID;
-	private Bitmap backSide;
-	private Bitmap frontSide[];
+	private Bitmap backSide = null;
+	private Bitmap frontSide[] = null;
 	private MemoryDeckDAO dao;
 	
 	public Deck(Context ctx, long DECK_ID) throws NullPointerException {
@@ -40,18 +40,18 @@ public class Deck {
 		frontSide = (Bitmap[])t.getFrontSide().toArray();
 	}
 	
-	public Deck(Cursor cv, String name) {
+	public Deck(Cursor c, String name) {
 		boolean b = true;
 		int i = 0;
 		
 		this.name = name;
 		
-		while(cv.moveToNext()) {
+		while(c.moveToNext()) {
 			if (b)
-				backSide = BitmapFactory.decodeByteArray(cv.getBlob(2), 0, cv.getBlob(2).length);
+				backSide = BitmapFactory.decodeByteArray(c.getBlob(2), 0, c.getBlob(2).length);
 			
 			else
-				frontSide[i++] = BitmapFactory.decodeByteArray(cv.getBlob(2), 0, cv.getBlob(2).length);
+				frontSide[i++] = BitmapFactory.decodeByteArray(c.getBlob(2), 0, c.getBlob(2).length);
 			
 			b = false;
 		}
@@ -61,6 +61,7 @@ public class Deck {
 		ArrayList<Bitmap> al = new ArrayList<Bitmap>();
 		for (Bitmap b : this.frontSide)
 			al.add(b);
+		
 		return al;
 	}
 	
