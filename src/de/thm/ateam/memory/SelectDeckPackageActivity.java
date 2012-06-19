@@ -8,6 +8,7 @@
 package de.thm.ateam.memory;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import de.thm.ateam.memory.engine.DPL;
 
@@ -32,7 +33,9 @@ public class SelectDeckPackageActivity extends ListActivity {
 	private String TAG = "SDPA";
 	
 	/**
-	 * Create the Activity View
+	 * Create the Activity ListView.
+	 * 
+	 * Only zip files will be displayed in list.
 	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -51,8 +54,12 @@ public class SelectDeckPackageActivity extends ListActivity {
 			this.finish();
 		}
 		
-		fileList = new ArrayAdapter<File>(this, android.R.layout.simple_list_item_1, files);
+		ArrayList<File> al = new ArrayList<File>();
+		for (File file : files)
+			if (file.getAbsolutePath().endsWith(".zip"))
+				al.add(file);
 		
+		fileList = new ArrayAdapter<File>(this, android.R.layout.simple_list_item_1, al);
 		setListAdapter(fileList);
 	}
 	

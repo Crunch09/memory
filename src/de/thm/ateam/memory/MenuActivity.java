@@ -35,7 +35,7 @@ public class MenuActivity extends ListActivity {
 		super.onCreate(savedInstanceState);
 
 		PlayerList.getInstance().players = (ArrayList<Player>)MemoryPlayerDAO.getInstance(this).getAllPlayers();
-
+		
 		ArrayAdapter<String> optionAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, options);
 		
 		setListAdapter(optionAdapter);
@@ -59,9 +59,9 @@ public class MenuActivity extends ListActivity {
 			break;
 		
 		case Stats:
-		  WinningProbabilityChart chart = new WinningProbabilityChart();
-		  startActivity((chart.getIntent(this)));
-		  break;
+			WinningProbabilityChart chart = new WinningProbabilityChart();
+			startActivity((chart.getIntent(this)));
+			break;
 		
 		case Settings:
 			

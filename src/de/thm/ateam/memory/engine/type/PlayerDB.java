@@ -22,7 +22,7 @@ public class PlayerDB {
 	public static final String LOSE 	  = "lose";
 	public static final String DRAW 	  = "draw";
 	public static final String HIT 		  = "hit";
-	public static final String TURN	  = "turn";
+	public static final String TURN	  = "shot";
 	
 	/**
 	 * Erzeugt ein neues ContentValues-Objekt mit dem Inhalt des übergebenen

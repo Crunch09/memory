@@ -41,6 +41,9 @@ public class DPL {
 	public File checkSDAvailability() {
 		String state = Environment.getExternalStorageState();
 		
+		if (state == null)
+			return null;
+		
 		if (Environment.MEDIA_MOUNTED.equals(state) || Environment.MEDIA_MOUNTED_READ_ONLY.equals(state))
 		    return Environment.getExternalStorageDirectory();
 		
