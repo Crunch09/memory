@@ -1,4 +1,4 @@
-package de.thm.ateam.memory.game;
+ package de.thm.ateam.memory.game;
 
 import java.util.ArrayList;
 

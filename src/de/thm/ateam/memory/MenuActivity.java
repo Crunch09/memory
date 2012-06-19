@@ -54,7 +54,6 @@ public class MenuActivity extends ListActivity {
 		case NetworkGame:
 			intent = new Intent(getApplicationContext(),SelectUserActivity.class);
 			startActivity(intent);
-			
 			break;
 		case Stats:
 		  WinningProbabilityChart chart = new WinningProbabilityChart();
