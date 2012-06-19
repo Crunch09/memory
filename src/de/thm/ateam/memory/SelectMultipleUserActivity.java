@@ -25,14 +25,14 @@ import de.thm.ateam.memory.game.PlayerList;
  * 
  */
 public class SelectMultipleUserActivity extends ListActivity {
-	
+
 	private final String tag = this.getClass().getSimpleName();
 
 	private ListView listView;
-	
+
 	final static int GAME_HAS_FINISHED = 42;
-	
-	
+
+
 	private BaseAdapter adapter;
 
 	/**
@@ -46,11 +46,11 @@ public class SelectMultipleUserActivity extends ListActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		
+
 		PlayerList.getInstance().session.clear(); //TODO test it
-		
+
 		adapter = new ArrayAdapter<Player>(this,
-			    android.R.layout.simple_list_item_multiple_choice, PlayerList.getInstance().players);
+				android.R.layout.simple_list_item_multiple_choice, PlayerList.getInstance().players);
 
 
 		listView = getListView();
@@ -59,17 +59,17 @@ public class SelectMultipleUserActivity extends ListActivity {
 		listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 
 	}
-	
+
 	/**
 	 * Load the adapter again when the activity is resumed
 	 */
 	@Override
-  protected void onResume() {
-    super.onResume();
-    
-    adapter.notifyDataSetChanged();
- 
-  }
+	protected void onResume() {
+		super.onResume();
+
+		adapter.notifyDataSetChanged();
+
+	}
 
 	/**
 	 * 
@@ -85,7 +85,7 @@ public class SelectMultipleUserActivity extends ListActivity {
 		inflater.inflate(R.menu.selectmultipleusermenu, menu);
 		return true;
 	}
-	
+
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
@@ -96,7 +96,7 @@ public class SelectMultipleUserActivity extends ListActivity {
 			Toast.makeText(this, "Removin One", Toast.LENGTH_SHORT).show();
 		}
 	}
-	
+
 	/**
 	 * 
 	 * Function which is called when a user clicks on a menu button
@@ -114,35 +114,37 @@ public class SelectMultipleUserActivity extends ListActivity {
 			intent = new Intent(this, CreateUserActivity.class);
 			startActivity(intent);
 			break;
-		// Start the game
+			// Start the game
 		case R.id.start:
-			intent = new Intent(this, GameActivity.class);
-			startActivityForResult(intent, GAME_HAS_FINISHED);
+			if(PlayerList.getInstance().session.size()>0){
+				intent = new Intent(this, GameActivity.class);
+				startActivityForResult(intent, GAME_HAS_FINISHED);
+			}
 			break;
 		}
 		return true;
 	}
-	
+
 	@Override
-  protected void onActivityResult(int requestCode, int resultCode, Intent data){
-    if(resultCode == RESULT_OK){
-      if(requestCode == GAME_HAS_FINISHED){
-        DialogInterface.OnClickListener clickListener = new DialogInterface.OnClickListener() {
-          
-          public void onClick(DialogInterface dialog, int which) {
-            switch(which){
-            case DialogInterface.BUTTON_POSITIVE:
-              Intent i = new Intent(SelectMultipleUserActivity.this, GameActivity.class);
-              SelectMultipleUserActivity.this.startActivityForResult(i, GAME_HAS_FINISHED);
-              break;
-            }
-            
-          }
-        };
-        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-        dialog.setMessage(data.getStringExtra("msg") +" Start a new game?").setPositiveButton("Yes", clickListener).setNegativeButton("No", clickListener).show();
-      }
-    }
-  }
+	protected void onActivityResult(int requestCode, int resultCode, Intent data){
+		if(resultCode == RESULT_OK){
+			if(requestCode == GAME_HAS_FINISHED){
+				DialogInterface.OnClickListener clickListener = new DialogInterface.OnClickListener() {
+
+					public void onClick(DialogInterface dialog, int which) {
+						switch(which){
+						case DialogInterface.BUTTON_POSITIVE:
+							Intent i = new Intent(SelectMultipleUserActivity.this, GameActivity.class);
+							SelectMultipleUserActivity.this.startActivityForResult(i, GAME_HAS_FINISHED);
+							break;
+						}
+
+					}
+				};
+				AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+				dialog.setMessage(data.getStringExtra("msg") +" Start a new game?").setPositiveButton("Yes", clickListener).setNegativeButton("No", clickListener).show();
+			}
+		}
+	}
 
 }
