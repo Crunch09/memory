@@ -7,20 +7,24 @@
  */
 package de.thm.ateam.memory.engine.type;
 
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
+
 import java.util.ArrayList;
 import java.util.Enumeration;
+
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
 import android.content.Context;
+
 import android.database.Cursor;
+
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+
 import android.util.Log;
+
 import de.thm.ateam.memory.engine.MemoryDeckDAO;
 
 /**
