@@ -15,12 +15,13 @@ import android.widget.ListView;
 
 public class MenuActivity extends ListActivity {
 	
-	private String[] options = {"Local Game", "Network Game", "Stats", "Settings"};
+	private String[] options = {"Local Game", "Network Game", "Stats", "Settings", "Import new Deck"};
 	
 	private static final int LocalGame = 0;
 	private static final int NetworkGame = 1;
 	private static final int Stats = 2;
 	private static final int Settings = 3;
+	private static final int ImportDeck = 4;
 
 	/**
 	 * 
@@ -51,17 +52,24 @@ public class MenuActivity extends ListActivity {
 			intent = new Intent(getApplicationContext(), SelectMultipleUserActivity.class);
 			startActivity(intent);
 			break;
+		
 		case NetworkGame:
 			intent = new Intent(getApplicationContext(),SelectUserActivity.class);
 			startActivity(intent);
-			
 			break;
+		
 		case Stats:
 		  WinningProbabilityChart chart = new WinningProbabilityChart();
-	    startActivity((chart.getIntent(this)));
-			break;
+		  startActivity((chart.getIntent(this)));
+		  break;
+		
 		case Settings:
 			
+			break;
+		
+		case ImportDeck:
+			intent = new Intent(this, SelectDeckPackageActivity.class);
+			startActivity(intent);
 			break;
 
 		default:
