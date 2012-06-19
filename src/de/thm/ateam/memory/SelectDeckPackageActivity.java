@@ -56,7 +56,7 @@ public class SelectDeckPackageActivity extends ListActivity {
 		
 		ArrayList<File> al = new ArrayList<File>();
 		for (File file : files)
-			if (file.getAbsolutePath().endsWith(".zip"))
+			if (file.getAbsolutePath().toLowerCase().endsWith(".zip"))
 				al.add(file);
 		
 		fileList = new ArrayAdapter<File>(this, android.R.layout.simple_list_item_1, al);
