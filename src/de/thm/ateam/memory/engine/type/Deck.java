@@ -7,12 +7,20 @@
  */
 package de.thm.ateam.memory.engine.type;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
+import java.util.zip.ZipInputStream;
 
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 import de.thm.ateam.memory.engine.MemoryDeckDAO;
 
 /**
@@ -20,6 +28,8 @@ import de.thm.ateam.memory.engine.MemoryDeckDAO;
  *
  */
 public class Deck {
+	
+	private final String TAG = "Deck.class";
 
 	private String name;
 	private long ID;
@@ -55,6 +65,20 @@ public class Deck {
 			
 			b = false;
 		}
+	}
+	
+	public Deck(ZipFile zip) throws IOException {
+		Enumeration<? extends ZipEntry> entries = zip.entries();
+		
+		ZipEntry entry = entries.nextElement();
+		ZipInputStream zipinput = new ZipInputStream(zip.getInputStream(entry));
+		
+		do {
+			Bitmap bitmap = BitmapFactory.decodeStream(zipinput);
+			Log.i(TAG,bitmap.getConfig().name());
+		} while(zipinput.getNextEntry() != null);
+		
+		zip.close();
 	}
 	
 	public ArrayList<Bitmap> getFrontSide() {
