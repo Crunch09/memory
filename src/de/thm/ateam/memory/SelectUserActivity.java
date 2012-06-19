@@ -16,7 +16,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 /**
  * 
@@ -25,8 +27,8 @@ import android.widget.ListView;
  */
 public class SelectUserActivity extends ListActivity {
 
-	// List<Player> players = new ArrayList<Player>();
-
+	BaseAdapter ba;
+	
 	/**
 	 * 
 	 * Function called when the activity is first created.
@@ -37,12 +39,10 @@ public class SelectUserActivity extends ListActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
-		PlayerList.getInstance().players = (ArrayList<Player>)MemoryPlayerDAO.getInstance(this).getAllPlayers();
-
-
-		setListAdapter(new ArrayAdapter<Player>(this,
-		    android.R.layout.simple_list_item_1, PlayerList.getInstance().players));
+		PlayerList.getInstance().multiPlayer = null; // just to make sure no bull is selected
+		//PlayerList.getInstance().session.clear(); // muy importante, well not anymore
+		ba = new ArrayAdapter<Player>(this, android.R.layout.simple_list_item_1, PlayerList.getInstance().players); 
+		setListAdapter(ba);
 	}
 
 	/**
@@ -52,10 +52,7 @@ public class SelectUserActivity extends ListActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		PlayerList.getInstance().players = (ArrayList<Player>) MemoryPlayerDAO
-		    .getInstance(this).getAllPlayers();
-		setListAdapter(new ArrayAdapter<Player>(this,
-		    android.R.layout.simple_list_item_1, PlayerList.getInstance().players));
+		ba.notifyDataSetChanged();
 	}
 
 	/**
@@ -86,8 +83,7 @@ public class SelectUserActivity extends ListActivity {
 	  Intent i = null;
 		switch (item.getItemId()) {
 		case R.id.adduser:
-			i = new Intent(getApplicationContext(),
-			    CreateUserActivity.class);
+			i = new Intent(getApplicationContext(),CreateUserActivity.class);
 			startActivity(i);
 			break;
 		}
@@ -107,11 +103,11 @@ public class SelectUserActivity extends ListActivity {
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
-
-		PlayerList.getInstance().session.add(0,
-		    (Player) l.getAdapter().getItem(position));
-		
-		Intent intent = new Intent(getApplicationContext(), MenuActivity.class);
-		startActivity(intent);
+		PlayerList.getInstance().multiPlayer = (Player)l.getAdapter().getItem(position);
+		Toast.makeText(this, "edit the intent in onListItemClick", Toast.LENGTH_SHORT).show();
+		finish(); //TODO remove finish ...
+		//Intent intent = new Intent(getApplicationContext(), MenuActivity.class);
+		//startActivity(intent);
+		//TODO add network activity class 
 	}
 }

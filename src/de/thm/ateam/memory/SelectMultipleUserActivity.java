@@ -47,7 +47,7 @@ public class SelectMultipleUserActivity extends ListActivity {
 		super.onCreate(savedInstanceState);
 
 
-		PlayerList.getInstance().session.clear(); //TODO test it
+		PlayerList.getInstance().session.clear(); 
 
 		adapter = new ArrayAdapter<Player>(this,
 				android.R.layout.simple_list_item_multiple_choice, PlayerList.getInstance().players);
@@ -66,9 +66,7 @@ public class SelectMultipleUserActivity extends ListActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-
 		adapter.notifyDataSetChanged();
-
 	}
 
 	/**
@@ -116,7 +114,7 @@ public class SelectMultipleUserActivity extends ListActivity {
 			break;
 			// Start the game
 		case R.id.start:
-			if(PlayerList.getInstance().session.size()>0){
+			if(PlayerList.getInstance().session.size()>1 && PlayerList.getInstance().session.size()<7){  // 2 - 6 Players
 				intent = new Intent(this, GameActivity.class);
 				startActivityForResult(intent, GAME_HAS_FINISHED);
 			}
