@@ -66,16 +66,10 @@ public class SelectDeckPackageActivity extends ListActivity {
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
-		Intent intent = new Intent(this, null);
 		File selectedFile = fileList.getItem(position);
-		Bundle bundle = new Bundle();
 		
 		Log.i(TAG, selectedFile.getAbsolutePath());
 		
-		bundle.putString("file", selectedFile.getAbsolutePath());
-		intent.putExtras(bundle);
-		
-		//startActivity(intent);
 	}
 	
 }

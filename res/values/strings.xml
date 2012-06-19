@@ -9,5 +9,6 @@
     <string name="chartTitle">Chart Title</string>
     <string name="demo">Demo</string>
     <string name="value">Value</string>
+    <string name="selectDeckPackage">Select zip File to import new Deck</string>
 
 </resources>
