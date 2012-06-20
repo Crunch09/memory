@@ -121,10 +121,13 @@ public class Memory extends Game{
 								    if(p.roundWin)
 								      victoryMsg += p.nick + ",";
 								  }
-								  Log.i("TEst", victoryMsg);
-								  // deletes last comma
-								  victoryMsg = victoryMsg.substring(0, victoryMsg.length()-1);
-								  victoryMsg += " has won!!!";
+								  // deletes last comma if there is a winner
+								  if(!victoryMsg.equals("")){
+								    victoryMsg = victoryMsg.substring(0, victoryMsg.length()-1);
+								    victoryMsg += " has won!!!";
+								  }else{
+								    victoryMsg = "Last round was a draw.";
+								  }
 								  Thread t = new Thread(new StatsUpdate(envActivity.getApplicationContext()));
 								  t.run();
 								  
@@ -133,7 +136,7 @@ public class Memory extends Game{
 										Log.i(TAG,p.nick+" turns: "+p.roundTurns+" hits: "+p.roundHits);
 									}
 									
-									envActivity.setResult(envActivity.RESULT_OK, envActivity.getIntent().putExtra("msg", victoryMsg));
+									envActivity.setResult(Activity.RESULT_OK, envActivity.getIntent().putExtra("msg", victoryMsg));
 									envActivity.finish();
 								}
 								
