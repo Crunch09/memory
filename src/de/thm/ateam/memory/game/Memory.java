@@ -16,8 +16,10 @@ import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 import de.thm.ateam.memory.ImageAdapter;
 import de.thm.ateam.memory.Theme;
@@ -78,8 +80,11 @@ public class Memory extends Game{
 
 		mainView = new GridView(ctx);
 
-		mainView.setLayoutParams(new GridView.LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.MATCH_PARENT));
+		//mainView.setLayoutParams(new GridView.LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.MATCH_PARENT));
+		mainView.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 		mainView.setNumColumns(attr.getColumns());
+		mainView.getLayoutParams().width = imageAdapter.maxSize();
+		
 
 		mainView.setAdapter(imageAdapter);
 
@@ -116,6 +121,7 @@ public class Memory extends Game{
 								    if(p.roundWin)
 								      victoryMsg += p.nick + ",";
 								  }
+								  Log.i("TEst", victoryMsg);
 								  // deletes last comma
 								  victoryMsg = victoryMsg.substring(0, victoryMsg.length()-1);
 								  victoryMsg += " has won!!!";
@@ -146,7 +152,12 @@ public class Memory extends Game{
 
 			}
 		});
-		return mainView;
+		
+		LinearLayout linLay = new LinearLayout(envActivity.getApplicationContext());
+		linLay.setOrientation(LinearLayout.HORIZONTAL);
+		linLay.addView(mainView);
+		//linLay.addView(new Button(envActivity.getApplicationContext()));
+		return linLay;
 	}
 
 
@@ -165,7 +176,8 @@ public class Memory extends Game{
 	
 	public void onDestroy() {
 		for(int i = 0; i < theme.getCount(); i++) {
-			theme.getPicture(i).recycle();
+			if(theme.getPicture(i) != null)
+				theme.getPicture(i).recycle();
 		}
 	}
 

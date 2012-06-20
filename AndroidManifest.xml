@@ -30,7 +30,7 @@
             android:configChanges="orientation|keyboardHidden"  >
         </activity>
         <activity 
-            android:name=".MenuActivity"
+            android:name="de.thm.ateam.memory.MenuActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

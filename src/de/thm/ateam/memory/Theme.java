@@ -21,18 +21,25 @@ public class Theme {
 	private List<Bitmap> bitmapList;
 
 	// references to our default images
-	private Integer defaultBackside = R.drawable.sample_2;
-	private Integer[] defaultImage = { R.drawable.sample_0, R.drawable.sample_1,
-	    R.drawable.sample_3, R.drawable.sample_4, R.drawable.sample_3,
-	    R.drawable.sample_4, R.drawable.sample_3, R.drawable.sample_4,
-	    R.drawable.sample_3, R.drawable.sample_4, R.drawable.sample_3,
-	    R.drawable.sample_4, R.drawable.sample_5, R.drawable.sample_6,
-	    R.drawable.sample_3, R.drawable.sample_4, R.drawable.sample_3,
-	    R.drawable.sample_4, R.drawable.sample_3, R.drawable.sample_4,
-	    R.drawable.sample_3, R.drawable.sample_4, R.drawable.sample_3,
-	    R.drawable.sample_4, R.drawable.sample_3, R.drawable.sample_4,
-	    R.drawable.sample_3, R.drawable.sample_4, R.drawable.sample_5,
-	    R.drawable.sample_6, R.drawable.sample_7, R.drawable.sample_6 };
+	private Integer defaultBackside = R.drawable.backside;
+	private Integer[] defaultImage = { 
+			R.drawable.anglerfisch_card,
+			R.drawable.frosch_card,
+			R.drawable.koralle_card,
+			R.drawable.krabbe_card,
+			R.drawable.kugelfisch_card,
+			R.drawable.muschel_card,
+			R.drawable.piranha_card,
+			R.drawable.qualle_card,
+			R.drawable.schildkroete_card,
+			R.drawable.schwamm_card,
+			R.drawable.schwertfisch_card,
+			R.drawable.seekuh_card,
+			R.drawable.seepferd_card,
+			R.drawable.seestern_card,
+			R.drawable.thunfisch_card,
+			R.drawable.tintenfisch_card
+	};
 
 	/**
 	 * 

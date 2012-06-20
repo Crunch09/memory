@@ -84,6 +84,16 @@ public class SelectMultipleUserActivity extends ListActivity {
 		return true;
 	}
 
+
+	/**
+	 * 
+	 * Function called when user clicks on an entry
+	 * 
+	 * @param ListView l
+	 * @param View v
+	 * @param int position
+	 * @param long id
+	 */
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
@@ -104,7 +114,7 @@ public class SelectMultipleUserActivity extends ListActivity {
 	 * 
 	 */
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
+	public boolean onOptionsItemSelected(MenuItem item) {	
 		Intent intent;
 		switch (item.getItemId()) {
 		// Create new user
