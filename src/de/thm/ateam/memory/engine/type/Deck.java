@@ -38,7 +38,7 @@ public class Deck {
 	private String name;
 	private long ID;
 	private Bitmap backSide = null;
-	private Bitmap frontSide[] = null;
+	private ArrayList<Bitmap> frontSide = null;
 	private MemoryDeckDAO dao;
 	
 	public Deck(Context ctx, long DECK_ID) throws NullPointerException {
@@ -51,46 +51,48 @@ public class Deck {
 		this.ID = t.getID();
 		this.name = t.getName();
 		backSide = t.getBackSide();
-		frontSide = (Bitmap[])t.getFrontSide().toArray();
+		frontSide = t.getFrontSide();
 	}
 	
 	public Deck(Cursor c, String name) {
 		boolean b = true;
-		int i = 0;
 		
 		this.name = name;
-		
 		while(c.moveToNext()) {
 			if (b)
 				backSide = BitmapFactory.decodeByteArray(c.getBlob(2), 0, c.getBlob(2).length);
 			
 			else
-				frontSide[i++] = BitmapFactory.decodeByteArray(c.getBlob(2), 0, c.getBlob(2).length);
+				frontSide.add(BitmapFactory.decodeByteArray(c.getBlob(2), 0, c.getBlob(2).length));
 			
 			b = false;
 		}
 	}
 	
 	public Deck(ZipFile zip) throws IOException {
-		Enumeration<? extends ZipEntry> entries = zip.entries();
+		Enumeration<? extends ZipEntry> e = zip.entries();
 		
-		ZipEntry entry = entries.nextElement();
-		ZipInputStream zipinput = new ZipInputStream(zip.getInputStream(entry));
+		while(e.hasMoreElements()) {
+			ZipEntry entry = e.nextElement();
+			ZipInputStream zis = new ZipInputStream(zip.getInputStream(entry));
+			Bitmap bm = BitmapFactory.decodeStream(zis);
+			
+			if (entry.getName().equals("0.jpg"))
+				backSide = bm;
+				
+			else
+				frontSide.add(bm);
+			
+			Log.i(TAG,entry.getName());
+		}
 		
-		do {
-			Bitmap bitmap = BitmapFactory.decodeStream(zipinput);
-			Log.i(TAG,bitmap.getConfig().name());
-		} while(zipinput.getNextEntry() != null);
+		// TODO store new deck in db
 		
 		zip.close();
 	}
 	
 	public ArrayList<Bitmap> getFrontSide() {
-		ArrayList<Bitmap> al = new ArrayList<Bitmap>();
-		for (Bitmap b : this.frontSide)
-			al.add(b);
-		
-		return al;
+		return frontSide;
 	}
 	
 	public Bitmap getBackSide() {
