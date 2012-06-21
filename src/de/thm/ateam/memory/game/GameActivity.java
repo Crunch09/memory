@@ -25,10 +25,15 @@ public class GameActivity extends Activity{
 		 * assembleLayout() does not need any kind of XML File, which makes it very versatile in its use.
 		 * 
 		 */
-		mem = new Memory(this,new MemoryAttributes(players, 3, 2));
+		mem = new Memory(this,new MemoryAttributes(players, 2, 4));
 		setContentView(mem.assembleLayout());
 	}
 	
+	/**
+	 * 
+	 * Function to clear the Pictures
+	 * 
+	 */
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
