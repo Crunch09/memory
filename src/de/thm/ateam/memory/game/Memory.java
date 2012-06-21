@@ -41,6 +41,7 @@ public class Memory extends Game{
 	private static Object lock = new Object(); //sperrobjekt
 
 	private Activity envActivity;
+	
 
 	
 	/*game function related stuff*/
@@ -48,6 +49,7 @@ public class Memory extends Game{
 	private int COL_COUNT;
 	private int left; //how many cards are left
 	private int card = -1; //should better be an object of card
+	private int numberOfPicks = 0;
 	
 	private Player current;
 
@@ -90,6 +92,10 @@ public class Memory extends Game{
 
 		mainView.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+			  numberOfPicks++;
+			  if(numberOfPicks > 2){
+			    return;
+			  }
 
 				/*
 				 * simple recognition of hits or misses,
@@ -104,18 +110,21 @@ public class Memory extends Game{
 						//Toast.makeText(ctx,"select " +position+ " first move", Toast.LENGTH_SHORT).show();
 					}else{ 
 						if(card != position) {
+						  numberOfPicks++;
 							flip(position);
 							if(imageAdapter.getItemId(card) == imageAdapter.getItemId(position)){
 							  
 								delete(position, card);
+								numberOfPicks = 0;
 								//Toast.makeText(ctx,"card "+ " select " +position+ " hit, next player", Toast.LENGTH_SHORT).show();
 								card = -1;
-								
+								//numberOfPicks = 0;
 								current.hit();
 								
 								left -= 2;
 								if(left<=0){
 								  Memory.this.getWinner();
+								  numberOfPicks = 0;
 								  String victoryMsg = "";
 								  for(Player p : attr.getPlayers()){
 								    if(p.roundWin)
@@ -146,6 +155,7 @@ public class Memory extends Game{
 								reset(position);
 								reset(card);
 								card = -1;
+								
 								//current.turn();
 								current = turn();
 							}
@@ -242,7 +252,7 @@ public class Memory extends Game{
 
 			ImageView clicked = (ImageView) imageAdapter.getItem(msg.getData().getInt("pos"));
 			clicked.setImageBitmap(theme.getBackSide());
-
+			numberOfPicks = 0;
 		}
 	}
 
