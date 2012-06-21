@@ -16,8 +16,10 @@ import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 import de.thm.ateam.memory.ImageAdapter;
 import de.thm.ateam.memory.Theme;
@@ -39,6 +41,7 @@ public class Memory extends Game{
 	private static Object lock = new Object(); //sperrobjekt
 
 	private Activity envActivity;
+	
 
 	
 	/*game function related stuff*/
@@ -46,6 +49,7 @@ public class Memory extends Game{
 	private int COL_COUNT;
 	private int left; //how many cards are left
 	private int card = -1; //should better be an object of card
+	private int numberOfPicks = 0;
 	
 	private Player current;
 
@@ -78,13 +82,20 @@ public class Memory extends Game{
 
 		mainView = new GridView(ctx);
 
-		mainView.setLayoutParams(new GridView.LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.MATCH_PARENT));
+		//mainView.setLayoutParams(new GridView.LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.MATCH_PARENT));
+		mainView.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 		mainView.setNumColumns(attr.getColumns());
+		mainView.getLayoutParams().width = imageAdapter.maxSize();
+		
 
 		mainView.setAdapter(imageAdapter);
 
 		mainView.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+			  numberOfPicks++;
+			  if(numberOfPicks > 2){
+			    return;
+			  }
 
 				/*
 				 * simple recognition of hits or misses,
@@ -99,26 +110,33 @@ public class Memory extends Game{
 						//Toast.makeText(ctx,"select " +position+ " first move", Toast.LENGTH_SHORT).show();
 					}else{ 
 						if(card != position) {
+						  numberOfPicks++;
 							flip(position);
 							if(imageAdapter.getItemId(card) == imageAdapter.getItemId(position)){
 							  
 								delete(position, card);
+								numberOfPicks = 0;
 								//Toast.makeText(ctx,"card "+ " select " +position+ " hit, next player", Toast.LENGTH_SHORT).show();
 								card = -1;
-								
+								//numberOfPicks = 0;
 								current.hit();
 								
 								left -= 2;
 								if(left<=0){
 								  Memory.this.getWinner();
+								  numberOfPicks = 0;
 								  String victoryMsg = "";
 								  for(Player p : attr.getPlayers()){
 								    if(p.roundWin)
 								      victoryMsg += p.nick + ",";
 								  }
-								  // deletes last comma
-								  victoryMsg = victoryMsg.substring(0, victoryMsg.length()-1);
-								  victoryMsg += " has won!!!";
+								  // deletes last comma if there is a winner
+								  if(!victoryMsg.equals("")){
+								    victoryMsg = victoryMsg.substring(0, victoryMsg.length()-1);
+								    victoryMsg += " has won!!!";
+								  }else{
+								    victoryMsg = "Last round was a draw.";
+								  }
 								  Thread t = new Thread(new StatsUpdate(envActivity.getApplicationContext()));
 								  t.run();
 								  
@@ -127,7 +145,7 @@ public class Memory extends Game{
 										Log.i(TAG,p.nick+" turns: "+p.roundTurns+" hits: "+p.roundHits);
 									}
 									
-									envActivity.setResult(envActivity.RESULT_OK, envActivity.getIntent().putExtra("msg", victoryMsg));
+									envActivity.setResult(Activity.RESULT_OK, envActivity.getIntent().putExtra("msg", victoryMsg));
 									envActivity.finish();
 								}
 								
@@ -137,6 +155,7 @@ public class Memory extends Game{
 								reset(position);
 								reset(card);
 								card = -1;
+								
 								//current.turn();
 								current = turn();
 							}
@@ -146,7 +165,12 @@ public class Memory extends Game{
 
 			}
 		});
-		return mainView;
+		
+		LinearLayout linLay = new LinearLayout(envActivity.getApplicationContext());
+		linLay.setOrientation(LinearLayout.HORIZONTAL);
+		linLay.addView(mainView);
+		//linLay.addView(new Button(envActivity.getApplicationContext()));
+		return linLay;
 	}
 
 
@@ -165,7 +189,8 @@ public class Memory extends Game{
 	
 	public void onDestroy() {
 		for(int i = 0; i < theme.getCount(); i++) {
-			theme.getPicture(i).recycle();
+			if(theme.getPicture(i) != null)
+				theme.getPicture(i).recycle();
 		}
 	}
 
@@ -227,7 +252,7 @@ public class Memory extends Game{
 
 			ImageView clicked = (ImageView) imageAdapter.getItem(msg.getData().getInt("pos"));
 			clicked.setImageBitmap(theme.getBackSide());
-
+			numberOfPicks = 0;
 		}
 	}
 

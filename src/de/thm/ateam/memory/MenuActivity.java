@@ -6,12 +6,14 @@ import java.util.ArrayList;
 import de.thm.ateam.memory.engine.MemoryPlayerDAO;
 import de.thm.ateam.memory.engine.type.Player;
 import de.thm.ateam.memory.game.PlayerList;
+
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+
 
 public class MenuActivity extends ListActivity {
 	
@@ -41,6 +43,15 @@ public class MenuActivity extends ListActivity {
 		setListAdapter(optionAdapter);
 	}
 	
+	/**
+	 * 
+	 * Function called when user clicks on an entry
+	 * 
+	 * @param ListView l
+	 * @param View v
+	 * @param int position
+	 * @param long id
+	 */
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);

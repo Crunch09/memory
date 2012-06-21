@@ -35,16 +35,17 @@ public class ImageAdapter extends BaseAdapter {
 		listImageView = new ArrayList<ImageView>();
 
 		theme = new Theme(c, false, -1);
+		
+		int size = (int) (maxSize() / col)-4;
 
 		for (int i = 0; i < row*col/2; i++) {
 			ImageView imageView;
-			int size = (int) (maxSize() / (Math.ceil(Math.sqrt(theme.getCount() * 2)))*2)-6;
 
 			for (int j = 0; j < 2; j++) {
 				imageView = new ImageView(mContext);
 				imageView.setLayoutParams(new GridView.LayoutParams(size, size));
 				imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-				imageView.setPadding(3, 3, 3, 3);
+				imageView.setPadding(2, 2, 2, 2);
 				imageView.setMaxHeight(size);
 				imageView.setMaxWidth(size);
 				imageView.setId(i);
