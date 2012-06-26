@@ -8,9 +8,7 @@
 package de.thm.ateam.memory;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
 import de.thm.ateam.memory.engine.DPL;
@@ -74,7 +72,7 @@ public class SelectDeckPackageActivity extends ListActivity {
 		Log.i(TAG, selectedFile.getAbsolutePath());
 		
 		try {
-			new Deck(new ZipFile(selectedFile, ZipFile.OPEN_READ));
+			new Deck(new ZipFile(selectedFile, ZipFile.OPEN_READ), this);
 		
 		} catch (Exception e) {
 			Log.i(TAG, e.getMessage());

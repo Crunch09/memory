@@ -69,7 +69,7 @@ public class Deck {
 		}
 	}
 	
-	public Deck(ZipFile zip) throws IOException {
+	public Deck(ZipFile zip, Context ctx) throws IOException {
 		Enumeration<? extends ZipEntry> e = zip.entries();
 		
 		while(e.hasMoreElements()) {
@@ -86,7 +86,12 @@ public class Deck {
 			Log.i(TAG,entry.getName());
 		}
 		
-		// TODO store new deck in db
+		this.name = zip.getName();
+		dao = new MemoryDeckDAO(ctx);
+		if (dao.storeDeck(this))
+			Log.i(TAG, "stored");
+		else
+			Log.i(TAG, "not stored");
 		
 		zip.close();
 	}
