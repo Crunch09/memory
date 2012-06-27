@@ -21,6 +21,7 @@ public class DeckDB {
 	public static final String TABLE_NAME 		= "theme";
 	public static final String ID 				= "_id";
 	public static final String NAME 			= "_name";
+	public static final String BACK_CARD		= "_backSide";
 	
 	public static final String CARD_TABLE_NAME	= "card";
 	public static final String CARD_ID			= "_id";

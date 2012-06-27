@@ -15,6 +15,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 
 import de.thm.ateam.memory.engine.interfaces.DeckDAO;
 
@@ -28,11 +29,9 @@ import de.thm.ateam.memory.engine.type.SQLite;
  */
 public class MemoryDeckDAO extends DeckDB implements DeckDAO {
 	
-	private Context ctx;
 	private SQLite sql;
 	
 	public MemoryDeckDAO(Context ctx) {
-		this.ctx = ctx;
 		sql = new SQLite(ctx);
 	}
 
@@ -52,7 +51,7 @@ public class MemoryDeckDAO extends DeckDB implements DeckDAO {
 		
 		int i = 0;
 		while (c.moveToNext())
-			d[i++] = new Deck(ctx, c.getLong(0));
+			d[i++] = new Deck(this, c.getLong(0), c.getString(1), BitmapFactory.decodeByteArray(c.getBlob(2), 0, c.getBlob(2).length));
 		
 		c.close();
 		db.close();
@@ -64,27 +63,28 @@ public class MemoryDeckDAO extends DeckDB implements DeckDAO {
 	 * @see de.thm.ateam.memory.engine.interfaces.DeckDAO#storeDeck(de.thm.ateam.memory.engine.type.Deck)
 	 */
 	public boolean storeDeck(Deck d) {
-		SQLiteDatabase db = sql.getWritableDatabase();
+		long r;
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+        SQLiteDatabase db = sql.getWritableDatabase();
 		ContentValues cv = new ContentValues();
 		cv.put(NAME, d.getName());
-		long r = db.insert(TABLE_NAME, null, cv);
+		d.getBackSide().compress(Bitmap.CompressFormat.JPEG, 100, out);
+		cv.put(CARD_BLOB, out.toByteArray());
+		
+		r = db.insert(TABLE_NAME, null, cv);
 		
 		if (r < 0)
 			return false;
 		
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-        cv = new ContentValues();
-		cv.put(CARD_DECK_ID, r);
-		d.getBackSide().compress(Bitmap.CompressFormat.JPEG, 100, out);
-		cv.put(CARD_BLOB, out.toByteArray());
-		db.insert(CARD_TABLE_NAME, null, cv);
-		
 		for (Bitmap b : d.getFrontSide()) {
+			cv = new ContentValues();
 			out = new ByteArrayOutputStream();
 	        cv = new ContentValues();
-			cv.put(CARD_DECK_ID, r);
+			
+	        cv.put(CARD_DECK_ID, r);
 			b.compress(Bitmap.CompressFormat.JPEG, 100, out);
 			cv.put(CARD_BLOB, out.toByteArray());
+			
 			db.insert(CARD_TABLE_NAME, null, cv);
 		}
 		
@@ -106,7 +106,7 @@ public class MemoryDeckDAO extends DeckDB implements DeckDAO {
 	 */
 	public Deck getDeck(long id) {
 		SQLiteDatabase db = sql.getReadableDatabase();
-		String[] projection = new String[] { ID, NAME };
+		String[] projection = new String[] { ID, NAME, BACK_CARD };
 		
 		Cursor c = db.query(TABLE_NAME, projection, ID, new String[]{String.valueOf(id)}, null, null, ID);
 		c.moveToFirst();
@@ -117,7 +117,7 @@ public class MemoryDeckDAO extends DeckDB implements DeckDAO {
 		db.close();
 		
 		if (cc.moveToFirst())
-			return new Deck(cc, c.getString(1));
+			return new Deck(this, c.getLong(0), c.getString(1), BitmapFactory.decodeByteArray(c.getBlob(2), 0, c.getBlob(2).length));
 		
 		c.close();
 		cc.close();
@@ -140,6 +140,20 @@ public class MemoryDeckDAO extends DeckDB implements DeckDAO {
 		db.close();
 		
 		return null;
+	}
+	
+	public Bitmap[] getCard(long Deck_ID) {
+		SQLiteDatabase db = sql.getReadableDatabase();
+		String []projection = new String[] { CARD_ID, CARD_DECK_ID, CARD_BLOB };
+		Cursor c = db.query(CARD_TABLE_NAME, projection, CARD_DECK_ID, new String[] {String.valueOf(Deck_ID)}, null, null, CARD_ID);
+		
+		Bitmap []b = new Bitmap[c.getCount()];
+		int i = 0;
+		
+		while (c.moveToNext())
+			b[i++] = BitmapFactory.decodeByteArray(c.getBlob(2), 0, c.getBlob(2).length);
+		
+		return b;
 	}
 
 }

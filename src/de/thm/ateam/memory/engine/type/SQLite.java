@@ -38,6 +38,18 @@ public class SQLite extends SQLiteOpenHelper {
 				+ PlayerDB.HIT + " INTEGER,"
 				+ PlayerDB.TURN + " INTEGER,"
 				+ "UNIQUE (" + PlayerDB.NICK + "));");
+		
+		db.execSQL("CREATE TABLE " + DeckDB.TABLE_NAME + "("
+				+ DeckDB.ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+				+ DeckDB.NAME + " VARCHAR(42),"
+				+ DeckDB.BACK_CARD + "BLOB,"
+				+ "UNIQUE (" + DeckDB.NAME + "));");
+		
+		db.execSQL("CREATE TABLE " + DeckDB.CARD_TABLE_NAME + "("
+				+ DeckDB.CARD_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+				+ DeckDB.CARD_DECK_ID + " INTEGER,"
+				+ DeckDB.CARD_BLOB + " BLOB,"
+				+ "UNIQUE (" + DeckDB.NAME + "));");
 	}
 
 	/* (non-Javadoc)
