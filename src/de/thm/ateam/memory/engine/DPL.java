@@ -10,6 +10,7 @@ package de.thm.ateam.memory.engine;
 import java.io.File;
 
 import android.os.Environment;
+import android.util.Log;
 
 /**
  * Class DPL (deck package loader) implements the uncompressing and unpacking zip files for new Decks.
@@ -43,6 +44,8 @@ public class DPL {
 		
 		if (state == null)
 			return null;
+		
+		Log.i("SDAVAIL", state);
 		
 		if (Environment.MEDIA_MOUNTED.equals(state) || Environment.MEDIA_MOUNTED_READ_ONLY.equals(state))
 		    return Environment.getExternalStorageDirectory();

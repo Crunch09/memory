@@ -51,23 +51,27 @@ public class SelectDeckPackageActivity extends ListActivity {
 		dpl = DPL.getInstance();
 		File f = dpl.checkSDAvailability();
 		if (f == null) {
-			Toast.makeText(this, "no sd card plugged in or not readable", Toast.LENGTH_LONG);
+			Toast.makeText(this, "no sd card plugged in or not readable", Toast.LENGTH_LONG).show();
 			this.finish();
+			
+		} else {
+			File []files = f.listFiles();
+			
+			if (files == null) {
+				Toast.makeText(this, "error by reading directory of sd card", Toast.LENGTH_LONG).show();
+				this.finish();
+				
+			} else {
+			
+				ArrayList<File> al = new ArrayList<File>();
+				for (File file : files)
+					if (file.getAbsolutePath().toLowerCase().endsWith(".zip"))
+						al.add(file);
+				
+				fileList = new ArrayAdapter<File>(this, android.R.layout.simple_list_item_1, al);
+				setListAdapter(fileList);
+			}
 		}
-		
-		File []files = f.listFiles();
-		if (files == null) {
-			Toast.makeText(this, "error by reading directory of sd card", Toast.LENGTH_LONG);
-			this.finish();
-		}
-		
-		ArrayList<File> al = new ArrayList<File>();
-		for (File file : files)
-			if (file.getAbsolutePath().toLowerCase().endsWith(".zip"))
-				al.add(file);
-		
-		fileList = new ArrayAdapter<File>(this, android.R.layout.simple_list_item_1, al);
-		setListAdapter(fileList);
 	}
 	
 	@Override
