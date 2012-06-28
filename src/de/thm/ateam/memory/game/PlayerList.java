@@ -24,5 +24,16 @@ public class PlayerList {
 		return instance;
 	}
 	
+	public static int getMaxGames(){
+	  int max = 0;
+	  if(instance == null) return max;
+	  for(Player p : instance.players){
+	    if(p.getGameNumber() > max){
+	      max = p.getGameNumber();
+	    }
+	  }
+	  return max;
+	}
+	
 	
 }

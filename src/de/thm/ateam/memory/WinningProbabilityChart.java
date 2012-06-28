@@ -44,19 +44,33 @@ public class WinningProbabilityChart {
     int[] colors = new int[] { Color.BLUE, Color.CYAN };
     XYMultipleSeriesRenderer renderer = buildBarRenderer(colors);
     setChartSettings(renderer, "Win probability", "Player", "# of Games", 0.5,
-        12.5, 0, Collections.max(PlayerList.getInstance().players).getGameNumber() + 10, Color.GRAY, Color.LTGRAY);
+        12.5, 0, PlayerList.getMaxGames() + 10, Color.GRAY, Color.LTGRAY);
     renderer.getSeriesRendererAt(0).setDisplayChartValues(true);
     renderer.getSeriesRendererAt(1).setDisplayChartValues(true);
-    for(int i = 0; i < PlayerList.getInstance().players.size(); i++){
-      renderer.addXTextLabel(i, PlayerList.getInstance().players.get(i).toString());
-    }
     renderer.setXLabels(0);
+    for(int i = 1; i <= PlayerList.getInstance().players.size(); i++){
+      renderer.addXTextLabel(i, PlayerList.getInstance().players.get(i-1).toString());
+    }
     renderer.setYLabels(10);
     renderer.setXLabelsAlign(Align.CENTER);
     renderer.setYLabelsAlign(Align.CENTER);
     renderer.setPanEnabled(true, false);
     // renderer.setZoomEnabled(false);
-    renderer.setZoomRate(1.1f);
+    //renderer.setZoomRate(1.1f);
+    renderer.setAxisTitleTextSize(16);
+    renderer.setChartTitleTextSize(20);
+    renderer.setLabelsTextSize(15);
+    renderer.setLegendTextSize(15);
+    renderer.setPointSize(5f);
+    renderer.setXLabelsAngle(45f);
+    renderer.setMargins(new int[] { 20, 30, 15, 20 });
+    int length = colors.length;
+//    for (int i = 0; i < length; i++) {
+//      XYSeriesRenderer r = new XYSeriesRenderer();
+//      r.setColor(colors[i]);
+//      r.setPointStyle(styles[i]);
+//      renderer.addSeriesRenderer(r);
+//    }
     renderer.setBarSpacing(0.5f);
     return ChartFactory.getBarChartIntent(context, buildBarDataset(titles, values), renderer,
         Type.STACKED);
@@ -113,7 +127,7 @@ public class WinningProbabilityChart {
     renderer.setLabelsTextSize(15);
     renderer.setLegendTextSize(15);
     renderer.setPointSize(5f);
-    renderer.addXTextLabel(0, "foo");
+    renderer.setXLabelsAngle(45f);
     renderer.setMargins(new int[] { 20, 30, 15, 20 });
     int length = colors.length;
     for (int i = 0; i < length; i++) {

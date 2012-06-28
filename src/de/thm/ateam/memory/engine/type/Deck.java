@@ -18,8 +18,6 @@ import java.util.zip.ZipInputStream;
 
 import android.content.Context;
 
-import android.database.Cursor;
-
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
@@ -54,22 +52,17 @@ public class Deck {
 		frontSide = t.getFrontSide();
 	}
 	
-	public Deck(Cursor c, String name) {
-		boolean b = true;
-		
+	public Deck(MemoryDeckDAO memoryDeckDAO, long ID, String name, Bitmap backSide) {
+		this.backSide = backSide;
 		this.name = name;
-		while(c.moveToNext()) {
-			if (b)
-				backSide = BitmapFactory.decodeByteArray(c.getBlob(2), 0, c.getBlob(2).length);
-			
-			else
-				frontSide.add(BitmapFactory.decodeByteArray(c.getBlob(2), 0, c.getBlob(2).length));
-			
-			b = false;
-		}
+		this.ID = ID;
+		
+		frontSide = new ArrayList<Bitmap>();
+		for( Bitmap b : memoryDeckDAO.getCard(ID))
+			frontSide.add(b);
 	}
 	
-	public Deck(ZipFile zip) throws IOException {
+	public Deck(ZipFile zip, Context ctx) throws IOException {
 		Enumeration<? extends ZipEntry> e = zip.entries();
 		
 		while(e.hasMoreElements()) {
@@ -86,7 +79,12 @@ public class Deck {
 			Log.i(TAG,entry.getName());
 		}
 		
-		// TODO store new deck in db
+		this.name = zip.getName();
+		dao = new MemoryDeckDAO(ctx);
+		if (dao.storeDeck(this))
+			Log.i(TAG, "stored");
+		else
+			Log.i(TAG, "not stored");
 		
 		zip.close();
 	}
