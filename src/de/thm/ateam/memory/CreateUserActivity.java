@@ -5,7 +5,6 @@ import de.thm.ateam.memory.engine.type.Player;
 import de.thm.ateam.memory.game.PlayerList;
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
@@ -26,8 +25,7 @@ public class CreateUserActivity extends Activity {
 	}
 	
 	/**
-	 * 
-	 * Function when the user pressed the button "Create User"
+	 * Function is called when the user pressed the button "Create User"
 	 * 
 	 * @pre Valid user input
 	 * @post New user in database
