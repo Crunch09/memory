@@ -186,11 +186,12 @@ public class Memory extends Game{
 
 
 	/**
+	 * Function is exclusively used to turn a pair of cards to the back side.
+	 * Launches a TimedTask, a ResetTask to be exact.
 	 * 
-	 * Function which resets the card on the position to the backside
-	 * note: added a Timed Task to make everything look a bit cooler
+	 * @param pos
+	 * @param pos2
 	 * 
-	 * @param position
 	 */
 	public void reset(int pos, int pos2) {
 		
@@ -199,7 +200,15 @@ public class Memory extends Game{
 		t.schedule(task, 1000);
 		
 	}
-
+	
+	/**
+	 * Function is exclusively used to make a pair of cards invisible and unclickable.
+	 * Launches a TimedTask, a DeleteTask to be exact.
+	 * 
+	 * @param pos
+	 * @param pos2
+	 * 
+	 */
 	public void delete(int pos, int pos2) {
 
 		DeleteTask task = new DeleteTask(pos, pos2);
@@ -208,7 +217,7 @@ public class Memory extends Game{
 
 	}
 
-
+	// TODO add java doc
 	class ResetTask extends TimerTask  {
 		private int pos, pos2;
 		public ResetTask(int pos, int pos2) {
