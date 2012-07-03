@@ -3,11 +3,9 @@ package de.thm.ateam.memory.game;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -16,11 +14,10 @@ import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
+//import android.widget.Toast;
 import de.thm.ateam.memory.ImageAdapter;
 import de.thm.ateam.memory.Theme;
 import de.thm.ateam.memory.engine.type.Player;
@@ -31,35 +28,35 @@ public class Memory extends Game{
 
 	/*environement stuff*/
 	private static final String TAG = Memory.class.getSimpleName();
-	
+
 	private MemoryAttributes attr;
 	private GridView mainView;
 	private Theme theme;
 	private ImageAdapter imageAdapter;
 
-	private UpdateCardsHandler handler;
+	private UpdateCardsHandler resHandler;
+	private DeleteCardsHandler delHandler;
 	private static Object lock = new Object(); //sperrobjekt
 
 	private Activity envActivity;
-	
 
-	
+
+
 	/*game function related stuff*/
 	private int ROW_COUNT;
 	private int COL_COUNT;
 	private int left; //how many cards are left
 	private int card = -1; //should better be an object of card
 	private int numberOfPicks = 0;
-	
+
 	private Player current;
 
-	
-	
 	public Memory(Context ctx, MemoryAttributes attr){
 		super(ctx,attr);
 		this.attr = attr;
 		this.envActivity = (Activity)ctx; // just a funny cast, that will let us access more functionality
-		handler = new UpdateCardsHandler();
+		resHandler = new UpdateCardsHandler();
+		delHandler = new DeleteCardsHandler();
 	}
 
 	public void newGame(){
@@ -75,7 +72,7 @@ public class Memory extends Game{
 
 		newGame();
 		for(Player p :attr.getPlayers()){
-		  Log.i("demo", p.nick);
+			Log.i("demo", p.nick);
 		}
 		imageAdapter = new ImageAdapter(ctx, ROW_COUNT, COL_COUNT);
 		theme = imageAdapter.getTheme();
@@ -86,77 +83,70 @@ public class Memory extends Game{
 		mainView.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 		mainView.setNumColumns(attr.getColumns());
 		mainView.getLayoutParams().width = imageAdapter.maxSize();
-		
+
 
 		mainView.setAdapter(imageAdapter);
 
 		mainView.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-			  numberOfPicks++;
-			  if(numberOfPicks > 2){
-			    return;
-			  }
+				numberOfPicks++;
+				if(numberOfPicks > 2){
+					return;
+				}
 
 				/*
 				 * simple recognition of hits or misses,
 				 * must be overridden by a round-based player system
-				 * 
 				 */
 
-				synchronized (lock) { //just to avoid unwanted behaviour
+				synchronized (lock) { //just to avoid unwanted behavior
 					if(card == -1){
 						flip(position);
 						card = position;
 						//Toast.makeText(ctx,"select " +position+ " first move", Toast.LENGTH_SHORT).show();
 					}else{ 
 						if(card != position) {
-						  numberOfPicks++;
+							numberOfPicks++;
 							flip(position);
 							if(imageAdapter.getItemId(card) == imageAdapter.getItemId(position)){
-							  
-								delete(position, card);
-								numberOfPicks = 0;
+								delete(position, card); 
 								//Toast.makeText(ctx,"card "+ " select " +position+ " hit, next player", Toast.LENGTH_SHORT).show();
 								card = -1;
-								//numberOfPicks = 0;
 								current.hit();
-								
 								left -= 2;
 								if(left<=0){
-								  Memory.this.getWinner();
-								  numberOfPicks = 0;
-								  String victoryMsg = "";
-								  for(Player p : attr.getPlayers()){
-								    if(p.roundWin)
-								      victoryMsg += p.nick + ",";
-								  }
-								  // deletes last comma if there is a winner
-								  if(!victoryMsg.equals("")){
-								    victoryMsg = victoryMsg.substring(0, victoryMsg.length()-1);
-								    victoryMsg += " has won!!!";
-								  }else{
-								    victoryMsg = "Last round was a draw.";
-								  }
-								  Thread t = new Thread(new StatsUpdate(envActivity.getApplicationContext()));
-								  t.run();
-								  
-									
+									Memory.this.getWinner();
+									numberOfPicks = 0;
+									String victoryMsg = "";
+									for(Player p : attr.getPlayers()){
+										if(p.roundWin)
+											victoryMsg += p.nick + ",";
+									}
+									// deletes last comma if there is a winner
+									if(!victoryMsg.equals("")){
+										victoryMsg = victoryMsg.substring(0, victoryMsg.length()-1);
+										victoryMsg += " has won!!!";
+									}else{
+										victoryMsg = "Last round was a draw.";
+									}
+
+									Thread t = new Thread(new StatsUpdate(envActivity.getApplicationContext()));
+									t.run();
+
+
 									for (Player p : attr.getPlayers()) {
 										Log.i(TAG,p.nick+" turns: "+p.roundTurns+" hits: "+p.roundHits);
 									}
-									
+
 									envActivity.setResult(Activity.RESULT_OK, envActivity.getIntent().putExtra("msg", victoryMsg));
 									envActivity.finish();
 								}
-								
-								
+
+
 							}else{
 								//Toast.makeText(ctx,"card "+ " select " +position+ "miss, next player", Toast.LENGTH_SHORT).show();
-								reset(position);
-								reset(card);
+								reset(position, card);
 								card = -1;
-								
-								//current.turn();
 								current = turn();
 							}
 						}
@@ -165,7 +155,7 @@ public class Memory extends Game{
 
 			}
 		});
-		
+
 		LinearLayout linLay = new LinearLayout(envActivity.getApplicationContext());
 		linLay.setOrientation(LinearLayout.HORIZONTAL);
 		linLay.addView(mainView);
@@ -186,7 +176,7 @@ public class Memory extends Game{
 		clicked.setImageBitmap(theme.getPicture(clicked.getId()));
 
 	}
-	
+
 	public void onDestroy() {
 		for(int i = 0; i < theme.getCount(); i++) {
 			if(theme.getPicture(i) != null)
@@ -202,57 +192,94 @@ public class Memory extends Game{
 	 * 
 	 * @param position
 	 */
-	public void reset(int position) {
-		/* 
-		 * clicked.setImageBitmap(theme.getBackSide());
-		 * is now in the Handler that receives a message from the TimedTask
-		 */
-		ResetTask task = new ResetTask(position);
+	public void reset(int pos, int pos2) {
+		
+		ResetTask task = new ResetTask(pos, pos2);
 		Timer t = new Timer(false);
 		t.schedule(task, 1000);
+		
 	}
 
-	public void delete(int pos1, int pos2) {
-		ImageView clicked = (ImageView) imageAdapter.getItem(pos1);
-		ImageView clicked2 = (ImageView) imageAdapter.getItem(pos2);
+	public void delete(int pos, int pos2) {
 
-		clicked.setImageBitmap(null);
-		clicked.setEnabled(false);
-		clicked2.setImageBitmap(null);
-		clicked2.setEnabled(false);
+		DeleteTask task = new DeleteTask(pos, pos2);
+		Timer t = new Timer(false);
+		t.schedule(task, 1000);
 
 	}
 
 
 	class ResetTask extends TimerTask  {
-		private int pos;
-		public ResetTask(int pos) {
+		private int pos, pos2;
+		public ResetTask(int pos, int pos2) {
 			this.pos = pos;
+			this.pos2 = pos2;
 		}
 
 		@Override
 		public void run() {
 			Bundle data = new Bundle();
 			data.putInt("pos", pos);
+			data.putInt("pos2", pos2);
 			Message msg = new Message();
 			msg.setData(data);
-			handler.sendMessage(msg);
+			resHandler.sendMessage(msg);
 		}
 	}
-
-	class UpdateCardsHandler extends Handler{
-
+	
+	class DeleteTask extends TimerTask {
+		private int pos, pos2;
+		
+		public DeleteTask(int pos, int pos2){
+			this.pos = pos;
+			this.pos2 = pos2;
+		}
+		
 		@Override
-		public void handleMessage(Message msg) {
+		public void run(){
+			Bundle data = new Bundle();
+			data.putInt("pos", pos);
+			data.putInt("pos2", pos2);
+			Message msg = new Message();
+			msg.setData(data);
+			delHandler.sendMessage(msg);
+		}
+	}
+	
+	@SuppressLint("HandlerLeak")
+	class UpdateCardsHandler extends Handler{
+		@Override
+		public  void handleMessage(Message msg) {
 			synchronized (lock) {
 				doJob(msg);
 			}
 		}
 		public void doJob(Message msg){
-
 			ImageView clicked = (ImageView) imageAdapter.getItem(msg.getData().getInt("pos"));
 			clicked.setImageBitmap(theme.getBackSide());
+			clicked = (ImageView) imageAdapter.getItem(msg.getData().getInt("pos2"));
+			clicked.setImageBitmap(theme.getBackSide());
 			numberOfPicks = 0;
+		}
+	}
+	
+	@SuppressLint("HandlerLeak")
+	class DeleteCardsHandler extends Handler{
+		@Override
+		public  void handleMessage(Message msg) {
+			synchronized (lock) {
+				doJob(msg);
+			}
+		}
+		public void doJob(Message msg){
+			ImageView clicked = (ImageView) imageAdapter.getItem(msg.getData().getInt("pos"));
+			clicked.setImageBitmap(null);
+			clicked.setEnabled(false);
+			
+			clicked = (ImageView) imageAdapter.getItem(msg.getData().getInt("pos2"));
+			clicked.setImageBitmap(null);
+			clicked.setEnabled(false);
+			numberOfPicks = 0; 
 		}
 	}
 
