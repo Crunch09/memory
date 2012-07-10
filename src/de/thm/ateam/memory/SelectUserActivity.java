@@ -1,14 +1,10 @@
 package de.thm.ateam.memory;
 
-import java.util.ArrayList;
 
-import de.thm.ateam.memory.engine.MemoryPlayerDAO;
 import de.thm.ateam.memory.engine.type.Player;
 import de.thm.ateam.memory.game.PlayerList;
 
-import android.app.AlertDialog;
 import android.app.ListActivity;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -25,10 +21,11 @@ import android.widget.Toast;
  * List activity to select the user
  * 
  */
+
 public class SelectUserActivity extends ListActivity {
 
 	BaseAdapter ba;
-	
+
 	/**
 	 * 
 	 * Function called when the activity is first created.
@@ -53,6 +50,10 @@ public class SelectUserActivity extends ListActivity {
 	protected void onResume() {
 		super.onResume();
 		ba.notifyDataSetChanged();
+		if(PlayerList.getInstance().players.isEmpty()){
+			Intent i = new Intent(getApplicationContext(),CreateUserActivity.class);
+			startActivity(i);
+		}
 	}
 
 	/**
@@ -80,7 +81,7 @@ public class SelectUserActivity extends ListActivity {
 	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-	  Intent i = null;
+		Intent i = null;
 		switch (item.getItemId()) {
 		case R.id.adduser:
 			i = new Intent(getApplicationContext(),CreateUserActivity.class);

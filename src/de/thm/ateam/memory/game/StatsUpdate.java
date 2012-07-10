@@ -5,6 +5,7 @@ import android.util.Log;
 import de.thm.ateam.memory.engine.MemoryPlayerDAO;
 import de.thm.ateam.memory.engine.type.Player;
 
+@SuppressWarnings("unused")
 public class StatsUpdate implements Runnable {
   
   Context ctx;

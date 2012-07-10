@@ -7,7 +7,7 @@
 		android:title="@string/btnadduser"/>
 	<item
 		android:id="@+id/start"
-		android:icon="@android:drawable/ic_menu_camera"
+		android:icon="@android:drawable/ic_media_play"
 		android:title="@string/btnstart"/>
 
 </menu>

@@ -6,7 +6,6 @@ import android.app.ListActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -25,7 +24,8 @@ import de.thm.ateam.memory.game.PlayerList;
  * 
  */
 public class SelectMultipleUserActivity extends ListActivity {
-
+	
+	@SuppressWarnings("unused")
 	private final String tag = this.getClass().getSimpleName();
 
 	private ListView listView;
@@ -49,6 +49,8 @@ public class SelectMultipleUserActivity extends ListActivity {
 
 		PlayerList.getInstance().session.clear(); 
 
+		
+		
 		adapter = new ArrayAdapter<Player>(this,
 				android.R.layout.simple_list_item_multiple_choice, PlayerList.getInstance().players);
 
@@ -67,6 +69,10 @@ public class SelectMultipleUserActivity extends ListActivity {
 	protected void onResume() {
 		super.onResume();
 		adapter.notifyDataSetChanged();
+		if(PlayerList.getInstance().players.size() < 2){ // we need at least 2 players here
+			Intent i = new Intent(getApplicationContext(),CreateUserActivity.class);
+			startActivity(i);
+		}
 	}
 
 	/**

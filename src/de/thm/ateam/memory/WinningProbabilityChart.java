@@ -1,7 +1,5 @@
 package de.thm.ateam.memory;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import org.achartengine.ChartFactory;
@@ -23,6 +21,7 @@ import android.graphics.Paint.Align;
 import android.util.Log;
 
 
+@SuppressWarnings("unused")
 public class WinningProbabilityChart {
 
   

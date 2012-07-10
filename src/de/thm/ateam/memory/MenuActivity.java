@@ -14,7 +14,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-
+@Deprecated
 public class MenuActivity extends ListActivity {
 	
 	private String[] options = {"Local Game", "Network Game", "Stats", "Settings", "Import new Deck"};
