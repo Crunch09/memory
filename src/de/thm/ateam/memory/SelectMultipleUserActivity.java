@@ -45,7 +45,7 @@ public class SelectMultipleUserActivity extends ListActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		setContentView(R.layout.selectmultipleuser);
 
 		PlayerList.getInstance().session.clear(); 
 
@@ -56,9 +56,9 @@ public class SelectMultipleUserActivity extends ListActivity {
 
 
 		listView = getListView();
-
 		listView.setAdapter(adapter);
 		listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+		
 
 	}
 
@@ -69,10 +69,6 @@ public class SelectMultipleUserActivity extends ListActivity {
 	protected void onResume() {
 		super.onResume();
 		adapter.notifyDataSetChanged();
-		if(PlayerList.getInstance().players.size() < 2){ // we need at least 2 players here
-			Intent i = new Intent(getApplicationContext(),CreateUserActivity.class);
-			startActivity(i);
-		}
 	}
 
 	/**
@@ -137,6 +133,18 @@ public class SelectMultipleUserActivity extends ListActivity {
 			break;
 		}
 		return true;
+	}
+	
+	public void createUser(View view){
+		Intent intent = new Intent(this, CreateUserActivity.class);
+		startActivity(intent);
+	}
+	
+	public void start(View view){
+		if(PlayerList.getInstance().session.size()>1 && PlayerList.getInstance().session.size()<7){  // 2 - 6 Players
+			Intent intent = new Intent(this, GameActivity.class);
+			startActivityForResult(intent, GAME_HAS_FINISHED);
+		}
 	}
 
 	@Override

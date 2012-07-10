@@ -21,7 +21,10 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:text="@string/btnadduser"
-            android:onClick="createUser" />
+            android:drawableLeft="@android:drawable/ic_menu_add"
+            style="@style/button_black"
+            android:onClick="createUser"
+            />
     </LinearLayout>
 
 </LinearLayout>

@@ -1,7 +1,12 @@
 package de.thm.ateam.memory;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
+
+import de.thm.ateam.memory.engine.MemoryPlayerDAO;
+import de.thm.ateam.memory.engine.type.Player;
+import de.thm.ateam.memory.game.PlayerList;
 
 import android.app.Activity;
 import android.app.ListActivity;
@@ -67,6 +72,9 @@ public class MenuExperimental extends ListActivity {
 		CustomAdapter adapter = new CustomAdapter(this, R.layout.list, R.id.title, data);
 		setListAdapter(adapter);
 		getListView().setTextFilterEnabled(true);
+		
+		PlayerList.getInstance().players = (ArrayList<Player>)MemoryPlayerDAO.getInstance(this).getAllPlayers();
+		
 	}
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);

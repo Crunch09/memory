@@ -24,7 +24,9 @@
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
 			android:text="@string/btnadduser"
-			android:onClick="onButtonClick"/>
+			android:onClick="onButtonClick"
+			android:drawableTop="@android:drawable/ic_menu_add"
+			style="@style/button_black"/>
 		
 	</LinearLayout>
 	

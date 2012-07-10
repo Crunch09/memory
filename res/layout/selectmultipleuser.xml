@@ -23,8 +23,10 @@
             android:layout_gravity="left"
             android:layout_weight="0.1"
             android:text="@string/btnadduser"
-            android:onClick="createUser" />
-
+            android:drawableLeft="@android:drawable/ic_menu_add"
+            android:onClick="createUser"
+            style="@style/button_black"
+            />
         <Button
             android:id="@+id/button2"
             android:layout_width="match_parent"
@@ -32,7 +34,9 @@
             android:layout_gravity="right"
             android:layout_weight="0.1"
             android:text="@string/btnstart"
-            android:onClick="start" />
+            android:drawableLeft="@android:drawable/ic_media_play"
+            android:onClick="start"
+            style="@style/button_black" />
 
     </LinearLayout>
 

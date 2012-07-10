@@ -36,6 +36,7 @@ public class SelectUserActivity extends ListActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setContentView(R.layout.selectuser);
 		PlayerList.getInstance().multiPlayer = null; // just to make sure no bull is selected
 		//PlayerList.getInstance().session.clear(); // muy importante, well not anymore
 		ba = new ArrayAdapter<Player>(this, android.R.layout.simple_list_item_1, PlayerList.getInstance().players); 
@@ -50,10 +51,6 @@ public class SelectUserActivity extends ListActivity {
 	protected void onResume() {
 		super.onResume();
 		ba.notifyDataSetChanged();
-		if(PlayerList.getInstance().players.isEmpty()){
-			Intent i = new Intent(getApplicationContext(),CreateUserActivity.class);
-			startActivity(i);
-		}
 	}
 
 	/**
@@ -89,6 +86,11 @@ public class SelectUserActivity extends ListActivity {
 			break;
 		}
 		return true;
+	}
+	
+	public void createUser(View view){
+		Intent i = new Intent(getApplicationContext(),CreateUserActivity.class);
+		startActivity(i);
 	}
 
 	/**

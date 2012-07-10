@@ -2,8 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="de.thm.ateam.memory"
     android:versionCode="1"
-    android:versionName="1.0" >
-
+    android:versionName="1.0"
+     >
+	
+	
     <uses-sdk android:minSdkVersion="8" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     
