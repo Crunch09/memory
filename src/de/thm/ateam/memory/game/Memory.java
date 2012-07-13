@@ -87,74 +87,7 @@ public class Memory extends Game{
 
 		mainView.setAdapter(imageAdapter);
 
-		mainView.setOnItemClickListener(new OnItemClickListener() {
-			public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-				numberOfPicks++;
-				if(numberOfPicks > 2){
-					return;
-				}
-
-				/*
-				 * simple recognition of hits or misses,
-				 * must be overridden by a round-based player system
-				 */
-
-				synchronized (lock) { //just to avoid unwanted behavior
-					if(card == -1){
-						flip(position);
-						card = position;
-						//Toast.makeText(ctx,"select " +position+ " first move", Toast.LENGTH_SHORT).show();
-					}else{ 
-						if(card != position) {
-							numberOfPicks++;
-							flip(position);
-							if(imageAdapter.getItemId(card) == imageAdapter.getItemId(position)){
-								delete(position, card); 
-								//Toast.makeText(ctx,"card "+ " select " +position+ " hit, next player", Toast.LENGTH_SHORT).show();
-								card = -1;
-								current.hit();
-								left -= 2;
-								if(left<=0){
-									Memory.this.getWinner();
-									numberOfPicks = 0;
-									String victoryMsg = "";
-									for(Player p : attr.getPlayers()){
-										if(p.roundWin)
-											victoryMsg += p.nick + ",";
-									}
-									// deletes last comma if there is a winner
-									if(!victoryMsg.equals("")){
-										victoryMsg = victoryMsg.substring(0, victoryMsg.length()-1);
-										victoryMsg += " has won!!!";
-									}else{
-										victoryMsg = "Last round was a draw.";
-									}
-
-									Thread t = new Thread(new StatsUpdate(envActivity.getApplicationContext()));
-									t.run();
-
-
-									for (Player p : attr.getPlayers()) {
-										Log.i(TAG,p.nick+" turns: "+p.roundTurns+" hits: "+p.roundHits);
-									}
-
-									envActivity.setResult(Activity.RESULT_OK, envActivity.getIntent().putExtra("msg", victoryMsg));
-									envActivity.finish();
-								}
-
-
-							}else{
-								//Toast.makeText(ctx,"card "+ " select " +position+ "miss, next player", Toast.LENGTH_SHORT).show();
-								reset(position, card);
-								card = -1;
-								current = turn();
-							}
-						}
-					}
-				}
-
-			}
-		});
+		mainView.setOnItemClickListener(new MemoryClickListener());
 
 		LinearLayout linLay = new LinearLayout(envActivity.getApplicationContext());
 		linLay.setOrientation(LinearLayout.HORIZONTAL);
@@ -194,13 +127,13 @@ public class Memory extends Game{
 	 * 
 	 */
 	public void reset(int pos, int pos2) {
-		
+
 		ResetTask task = new ResetTask(pos, pos2);
 		Timer t = new Timer(false);
 		t.schedule(task, 1000);
-		
+
 	}
-	
+
 	/**
 	 * Function is exclusively used to make a pair of cards invisible and unclickable.
 	 * Launches a TimedTask, a DeleteTask to be exact.
@@ -235,15 +168,15 @@ public class Memory extends Game{
 			resHandler.sendMessage(msg);
 		}
 	}
-	
+
 	class DeleteTask extends TimerTask {
 		private int pos, pos2;
-		
+
 		public DeleteTask(int pos, int pos2){
 			this.pos = pos;
 			this.pos2 = pos2;
 		}
-		
+
 		@Override
 		public void run(){
 			Bundle data = new Bundle();
@@ -254,7 +187,7 @@ public class Memory extends Game{
 			delHandler.sendMessage(msg);
 		}
 	}
-	
+
 	@SuppressLint("HandlerLeak")
 	class UpdateCardsHandler extends Handler{
 		@Override
@@ -271,7 +204,7 @@ public class Memory extends Game{
 			numberOfPicks = 0;
 		}
 	}
-	
+
 	@SuppressLint("HandlerLeak")
 	class DeleteCardsHandler extends Handler{
 		@Override
@@ -284,7 +217,7 @@ public class Memory extends Game{
 			ImageView clicked = (ImageView) imageAdapter.getItem(msg.getData().getInt("pos"));
 			clicked.setImageBitmap(null);
 			clicked.setEnabled(false);
-			
+
 			clicked = (ImageView) imageAdapter.getItem(msg.getData().getInt("pos2"));
 			clicked.setImageBitmap(null);
 			clicked.setEnabled(false);
@@ -292,7 +225,79 @@ public class Memory extends Game{
 		}
 	}
 
+	class MemoryClickListener implements OnItemClickListener {
+		public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+			numberOfPicks++;
+			if(numberOfPicks > 2){
+				return;
+			}
 
+			/*
+			 * simple recognition of hits or misses,
+			 * must be overridden by a round-based player system
+			 */
+
+			synchronized (lock) { //just to avoid unwanted behavior
+				if(card == -1){
+					flip(position);
+					card = position;
+					//Toast.makeText(ctx,"select " +position+ " first move", Toast.LENGTH_SHORT).show();
+				}else{ 
+					if(card != position) {
+						numberOfPicks++;
+						flip(position);
+						if(imageAdapter.getItemId(card) == imageAdapter.getItemId(position)){
+							delete(position, card); 
+							//Toast.makeText(ctx,"card "+ " select " +position+ " hit, next player", Toast.LENGTH_SHORT).show();
+							card = -1;
+							current.hit();
+							left -= 2;
+							if(left<=0){
+								Memory.this.getWinner();
+								numberOfPicks = 0;
+								String victoryMsg = "";
+								for(Player p : attr.getPlayers()){
+									if(p.roundWin)
+										victoryMsg += p.nick + ",";
+								}
+								// deletes last comma if there is a winner
+								if(!victoryMsg.equals("")){
+									victoryMsg = victoryMsg.substring(0, victoryMsg.length()-1);
+									victoryMsg += " has won!!!";
+								}else{
+									victoryMsg = "Last round was a draw.";
+								}
+
+								Thread t = new Thread(new StatsUpdate(envActivity.getApplicationContext()));
+								t.run();
+
+
+								for (Player p : attr.getPlayers()) {
+									Log.i(TAG,p.nick+" turns: "+p.roundTurns+" hits: "+p.roundHits);
+								}
+
+								envActivity.setResult(Activity.RESULT_OK, envActivity.getIntent().putExtra("msg", victoryMsg));
+								envActivity.finish();
+							}
+
+
+						}else{
+							//Toast.makeText(ctx,"card "+ " select " +position+ "miss, next player", Toast.LENGTH_SHORT).show();
+							reset(position, card);
+							card = -1;
+							current = turn();
+						}
+					}
+				}
+			}
+
+		}
+	}
 
 
 }
+
+
+
+
+
