@@ -17,6 +17,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 //import android.widget.Toast;
 import de.thm.ateam.memory.ImageAdapter;
 import de.thm.ateam.memory.Theme;
@@ -33,10 +34,11 @@ public class Memory extends Game{
 	private GridView mainView;
 	private Theme theme;
 	private ImageAdapter imageAdapter;
+	private TextView infoView;
 
 	private UpdateCardsHandler resHandler;
 	private DeleteCardsHandler delHandler;
-	private static Object lock = new Object(); //sperrobjekt
+	private static Object lock = new Object(); //synchronous actions suck.
 
 	private Activity envActivity;
 
@@ -64,35 +66,35 @@ public class Memory extends Game{
 		COL_COUNT = attr.getColumns();
 		left = ROW_COUNT * COL_COUNT;
 		current = turn();
+		infoView.setText(current.nick);
 	}
 
 
 
 	public View assembleLayout(){
+		
+		infoView = new TextView(ctx);
+		infoView.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT, 0.05f)); //this is fixed value, should be fine though
+		infoView.setText("Initializing ...");
 
 		newGame();
-		for(Player p :attr.getPlayers()){
-			Log.i("demo", p.nick);
-		}
+		
 		imageAdapter = new ImageAdapter(ctx, ROW_COUNT, COL_COUNT);
 		theme = imageAdapter.getTheme();
 
 		mainView = new GridView(ctx);
-
-		//mainView.setLayoutParams(new GridView.LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.MATCH_PARENT));
-		mainView.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+		mainView.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1f)); //relations are 1 to .05
 		mainView.setNumColumns(attr.getColumns());
 		mainView.getLayoutParams().width = imageAdapter.maxSize();
 
-
 		mainView.setAdapter(imageAdapter);
-
 		mainView.setOnItemClickListener(new MemoryClickListener());
 
 		LinearLayout linLay = new LinearLayout(envActivity.getApplicationContext());
-		linLay.setOrientation(LinearLayout.HORIZONTAL);
+		linLay.setOrientation(LinearLayout.VERTICAL); // Hor-izontal is Hor - joke - rible
+		
+		linLay.addView(infoView);
 		linLay.addView(mainView);
-		//linLay.addView(new Button(envActivity.getApplicationContext()));
 		return linLay;
 	}
 
@@ -286,6 +288,7 @@ public class Memory extends Game{
 							reset(position, card);
 							card = -1;
 							current = turn();
+							infoView.setText(current.nick);
 						}
 					}
 				}
