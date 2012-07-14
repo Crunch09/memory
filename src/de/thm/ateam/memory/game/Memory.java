@@ -90,6 +90,7 @@ public class Memory extends Game{
 		mainView.setAdapter(imageAdapter);
 		mainView.setOnItemClickListener(new MemoryClickListener());
 
+
 		LinearLayout linLay = new LinearLayout(envActivity.getApplicationContext());
 		linLay.setOrientation(LinearLayout.VERTICAL); // Hor-izontal is Hor - joke - rible
 		
@@ -243,6 +244,8 @@ public class Memory extends Game{
 				if(card == -1){
 					flip(position);
 					card = position;
+					/* Increase the number of turns */
+					current.turn();
 					//Toast.makeText(ctx,"select " +position+ " first move", Toast.LENGTH_SHORT).show();
 				}else{ 
 					if(card != position) {

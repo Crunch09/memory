@@ -1,32 +1,50 @@
-package de.thm.ateam.memory;
+package de.thm.ateam.memory.statistics;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.achartengine.ChartFactory;
-import org.achartengine.chart.PointStyle;
+import org.achartengine.GraphicalView;
 import org.achartengine.chart.BarChart.Type;
 import org.achartengine.model.CategorySeries;
 import org.achartengine.model.XYMultipleSeriesDataset;
 import org.achartengine.renderer.SimpleSeriesRenderer;
 import org.achartengine.renderer.XYMultipleSeriesRenderer;
-import org.achartengine.renderer.XYSeriesRenderer;
 
+import android.content.Context;
+import android.graphics.Color;
+import android.graphics.Paint.Align;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import de.thm.ateam.memory.engine.MemoryPlayerDAO;
 import de.thm.ateam.memory.engine.type.Player;
 import de.thm.ateam.memory.game.PlayerList;
-import android.content.Context;
-import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.Paint.Align;
-import android.util.Log;
 
 
-@SuppressWarnings("unused")
-public class WinningProbabilityChart {
+public class WinningProbabilityChart extends Fragment{
+  
+  @Override
+  public void onViewCreated(View view, Bundle savedInstanceState){
+    super.onCreate(savedInstanceState);
+  }
+  
+  @Override
+  public View onCreateView(LayoutInflater inflater, ViewGroup container,
+          Bundle savedInstanceState) {
+
+      return getView(getActivity());
+
+  }
 
   
-
-  public Intent getIntent(Context context) {
+  /**
+   * Constructs a Chart
+   * @param context the context of the activity
+   * @return        the GraphicalView of the chart
+   */
+  public GraphicalView getView(Context context) {
     PlayerList.getInstance().players = (ArrayList<Player>)MemoryPlayerDAO.getInstance(context).getAllPlayers();
     String[] titles = new String[]{ "# of games played", "# of wins"};
     
@@ -42,7 +60,7 @@ public class WinningProbabilityChart {
     }
     int[] colors = new int[] { Color.BLUE, Color.CYAN };
     XYMultipleSeriesRenderer renderer = buildBarRenderer(colors);
-    setChartSettings(renderer, "Win probability", "Player", "# of Games", 0.5,
+    setChartSettings(renderer, "", "Player", "# of Games", 0.5,
         12.5, 0, PlayerList.getMaxGames() + 10, Color.GRAY, Color.LTGRAY);
     renderer.getSeriesRendererAt(0).setDisplayChartValues(true);
     renderer.getSeriesRendererAt(1).setDisplayChartValues(true);
@@ -54,8 +72,6 @@ public class WinningProbabilityChart {
     renderer.setXLabelsAlign(Align.CENTER);
     renderer.setYLabelsAlign(Align.CENTER);
     renderer.setPanEnabled(true, false);
-    // renderer.setZoomEnabled(false);
-    //renderer.setZoomRate(1.1f);
     renderer.setAxisTitleTextSize(16);
     renderer.setChartTitleTextSize(20);
     renderer.setLabelsTextSize(15);
@@ -63,19 +79,17 @@ public class WinningProbabilityChart {
     renderer.setPointSize(5f);
     renderer.setXLabelsAngle(45f);
     renderer.setMargins(new int[] { 20, 30, 15, 20 });
-    int length = colors.length;
-//    for (int i = 0; i < length; i++) {
-//      XYSeriesRenderer r = new XYSeriesRenderer();
-//      r.setColor(colors[i]);
-//      r.setPointStyle(styles[i]);
-//      renderer.addSeriesRenderer(r);
-//    }
     renderer.setBarSpacing(0.5f);
-    return ChartFactory.getBarChartIntent(context, buildBarDataset(titles, values), renderer,
+    return ChartFactory.getBarChartView(context, buildBarDataset(titles, values), renderer,
         Type.STACKED);
   }
 
-  protected XYMultipleSeriesRenderer buildBarRenderer(int[] colors) {
+  /**
+   * Constructs the renderer for each bar
+   * @param colors an array of colors for the bars
+   * @return a XYMultipleSeriesRenderer
+   */
+  private XYMultipleSeriesRenderer buildBarRenderer(int[] colors) {
     XYMultipleSeriesRenderer renderer = new XYMultipleSeriesRenderer();
     renderer.setAxisTitleTextSize(16);
     renderer.setChartTitleTextSize(20);
@@ -90,7 +104,13 @@ public class WinningProbabilityChart {
     return renderer;
   }
 
-  protected XYMultipleSeriesDataset buildBarDataset(String[] titles, List<double[]> values) {
+  /**
+   * Collects the given data and assings it to a dataset
+   * @param titles the title of each bar
+   * @param values the value of each bar
+   * @return the dataset of the graph
+   */
+  private XYMultipleSeriesDataset buildBarDataset(String[] titles, List<double[]> values) {
     XYMultipleSeriesDataset dataset = new XYMultipleSeriesDataset();
     int length = titles.length;
     for (int i = 0; i < length; i++) {
@@ -105,7 +125,21 @@ public class WinningProbabilityChart {
     return dataset;
   }
   
-  protected void setChartSettings(XYMultipleSeriesRenderer renderer, String title, String xTitle,
+  
+  /**
+   * Sets some Settings of the Chart
+   * @param renderer      a XYMultipleSeriesRenderer
+   * @param title         the title of the graph
+   * @param xTitle        the title of the xAxis
+   * @param yTitle        the title of the yAxis
+   * @param xMin          the Minimum Value of the xAxis
+   * @param xMax          the Maximum Value of the xAxis
+   * @param yMin          the Minimum Value of the yAxis
+   * @param yMax          the Maximum Value of the yAxis
+   * @param axesColor     the Color of the two axes
+   * @param labelsColor   the Color of the labels
+   */
+  private void setChartSettings(XYMultipleSeriesRenderer renderer, String title, String xTitle,
       String yTitle, double xMin, double xMax, double yMin, double yMax, int axesColor,
       int labelsColor) {
     renderer.setChartTitle(title);
@@ -119,21 +153,5 @@ public class WinningProbabilityChart {
     renderer.setLabelsColor(labelsColor);
   }
 
-  protected void setRendererProperties(XYMultipleSeriesRenderer renderer, int[] colors,
-      PointStyle[] styles) {
-    renderer.setAxisTitleTextSize(16);
-    renderer.setChartTitleTextSize(20);
-    renderer.setLabelsTextSize(15);
-    renderer.setLegendTextSize(15);
-    renderer.setPointSize(5f);
-    renderer.setXLabelsAngle(45f);
-    renderer.setMargins(new int[] { 20, 30, 15, 20 });
-    int length = colors.length;
-    for (int i = 0; i < length; i++) {
-      XYSeriesRenderer r = new XYSeriesRenderer();
-      r.setColor(colors[i]);
-      r.setPointStyle(styles[i]);
-      renderer.addSeriesRenderer(r);
-    }
-  }
+
 }

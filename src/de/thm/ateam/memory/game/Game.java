@@ -51,14 +51,13 @@ public class Game {
 	}
 	
 	/**
-	 * Get next Player via next() and notify the Player via myTurn(), finally call player.turn() to make the turn. Returns the current Player.
+	 * Get next Player via next() and notify the Player via myTurn(). Returns the current Player.
 	 * @return Player currentPlayer
 	 */
 	public Player turn(){
 		Log.i(TAG, "turn()");
 		Player temp = next().myTurn();
 		Toast.makeText(ctx, temp.nick +", your turn!",Toast.LENGTH_SHORT).show();
-		temp.turn();
 		return temp;
 	}
 	
