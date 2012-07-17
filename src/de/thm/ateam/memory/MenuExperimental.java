@@ -14,6 +14,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ParseException;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,8 +36,6 @@ public class MenuExperimental extends ListActivity {
 	private static final int NetworkGame = 1;
 	private static final int Stats = 2;
 	private static final int Settings = 3;
-	//private static final int ImportDeck = 4;
-	
 
 	static final String[] title = new String[] {
 		"Local Game",
@@ -48,7 +47,7 @@ public class MenuExperimental extends ListActivity {
 		"Compete against up to 7 of your friends",
 		"Host or join a Match",
 		"Compare your performance with other players",
-		"Change game setup and appearance"}; 
+		"Change game setup and appearance"};
 
 	private Integer[] imgid = {android.R.drawable.ic_media_play,
 			android.R.drawable.ic_menu_share,
@@ -100,14 +99,9 @@ public class MenuExperimental extends ListActivity {
 		case Settings:
 			
 			break;
-		/* This here should be done under Settings
-		case ImportDeck:
-			intent = new Intent(this, SelectDeckPackageActivity.class);
-			startActivity(intent);
-			break;
-		*/
+		
 		default:
-			
+			Log.i("GOD","only I know what went wrong :-P");
 			break;
 		}
 	}

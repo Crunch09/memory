@@ -58,12 +58,11 @@ public class MemoryPlayerDAO extends PlayerDB implements PlayerDAO {
 				int id = c.getInt(0);
 				p.add(new Player(c));
 				
-				if (j < id)
-					j = id;
-				else
-					j++;
+				if (j < id)	j = id;
+				else j++;
 			}
 		}
+		
 		c.close();
 		db.close();
 		
