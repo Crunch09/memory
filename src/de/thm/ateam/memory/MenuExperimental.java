@@ -7,6 +7,9 @@ import java.util.Vector;
 import de.thm.ateam.memory.engine.MemoryPlayerDAO;
 import de.thm.ateam.memory.engine.type.Player;
 import de.thm.ateam.memory.game.PlayerList;
+import de.thm.ateam.memory.statistics.ChartFragment;
+import de.thm.ateam.memory.statistics.HitProbabilityChart;
+import de.thm.ateam.memory.statistics.WinningProbabilityChart;
 
 import android.app.Activity;
 import android.app.ListActivity;
@@ -92,8 +95,8 @@ public class MenuExperimental extends ListActivity {
 			break;
 		
 		case Stats:
-			WinningProbabilityChart chart = new WinningProbabilityChart();
-			startActivity((chart.getIntent(this)));
+			intent = new Intent(getApplicationContext(),ChartFragment.class);
+			startActivity(intent);
 			break;
 		
 		case Settings:
