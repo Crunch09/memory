@@ -64,7 +64,8 @@ public class Deck {
 	
 	public Deck(ZipFile zip, Context ctx) throws IOException {
 		Enumeration<? extends ZipEntry> e = zip.entries();
-		
+		frontSide = new ArrayList<Bitmap>();
+
 		while(e.hasMoreElements()) {
 			ZipEntry entry = e.nextElement();
 			InputStream f = zip.getInputStream(entry);
