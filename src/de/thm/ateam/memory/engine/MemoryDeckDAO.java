@@ -64,12 +64,8 @@ public class MemoryDeckDAO extends DeckDB implements DeckDAO {
 	 */
 	public boolean storeDeck(Deck d) {
 		long r;
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-        SQLiteDatabase db = sql.getWritableDatabase();
-		ContentValues cv = new ContentValues();
-		cv.put(NAME, d.getName());
-		d.getBackSide().compress(Bitmap.CompressFormat.JPEG, 100, out);
-		cv.put(CARD_BLOB, out.toByteArray());
+		SQLiteDatabase db = sql.getWritableDatabase();
+		ContentValues cv = this.createDeckContentValues(d);
 		
 		r = db.insert(TABLE_NAME, null, cv);
 		
@@ -77,13 +73,7 @@ public class MemoryDeckDAO extends DeckDB implements DeckDAO {
 			return false;
 		
 		for (Bitmap b : d.getFrontSide()) {
-			cv = new ContentValues();
-			out = new ByteArrayOutputStream();
-	        cv = new ContentValues();
-			
-	        cv.put(CARD_DECK_ID, r);
-			b.compress(Bitmap.CompressFormat.JPEG, 100, out);
-			cv.put(CARD_BLOB, out.toByteArray());
+			cv = this.createCardContentValues(b, r);
 			
 			db.insert(CARD_TABLE_NAME, null, cv);
 		}

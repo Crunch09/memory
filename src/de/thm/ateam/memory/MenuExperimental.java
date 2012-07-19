@@ -100,7 +100,8 @@ public class MenuExperimental extends ListActivity {
 			break;
 		
 		case Settings:
-			
+			intent = new Intent(getApplicationContext(),SelectDeckPackageActivity.class);
+			startActivity(intent);
 			break;
 		
 		default:
