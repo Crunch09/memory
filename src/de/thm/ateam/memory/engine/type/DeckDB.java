@@ -43,8 +43,7 @@ public class DeckDB {
 		ContentValues cv = new ContentValues();
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
         
-		out = new ByteArrayOutputStream();
-	    b.compress(Bitmap.CompressFormat.JPEG, 100, out);
+		b.compress(Bitmap.CompressFormat.JPEG, 100, out);
 	    cv.put(CARD_BLOB, out.toByteArray());
 		
 		return cv;
