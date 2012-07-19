@@ -72,6 +72,6 @@ public interface PlayerDAO {
 	 * @param id ID of the player to be deleted
 	 * @return boolean Returns true, if player with id ID deleted, otherwise false
 	 */
-	boolean removePlayer(int id);
+	boolean removePlayer(long id);
 
 }
