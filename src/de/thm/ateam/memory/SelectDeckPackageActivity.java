@@ -83,9 +83,8 @@ public class SelectDeckPackageActivity extends ListActivity {
 		
 		try {
 			new Deck(new ZipFile(selectedFile, ZipFile.OPEN_READ), this);
-		
 		} catch (Exception e) {
-			Log.i(TAG, e.getMessage());
+			e.printStackTrace();
 		
 		} finally {
 			this.finish();

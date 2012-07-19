@@ -56,7 +56,7 @@ public class SQLite extends SQLiteOpenHelper {
 	 */
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		//db.needUpgrade(newVersion);
+		db.needUpgrade(newVersion);
 	}
 
 }
