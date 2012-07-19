@@ -42,6 +42,8 @@ public class DeckDB {
 	protected ContentValues createCardContentValues(Bitmap b, long DeckID) {
 		ContentValues cv = new ContentValues();
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		
+		cv.put(CARD_DECK_ID, DeckID);
         
 		b.compress(Bitmap.CompressFormat.JPEG, 100, out);
 	    cv.put(CARD_BLOB, out.toByteArray());
