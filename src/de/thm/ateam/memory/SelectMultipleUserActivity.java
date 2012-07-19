@@ -6,14 +6,19 @@ import android.app.ListActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
+import android.widget.AdapterView.AdapterContextMenuInfo;
+import de.thm.ateam.memory.engine.MemoryPlayerDAO;
 import de.thm.ateam.memory.engine.type.Player;
 import de.thm.ateam.memory.game.GameActivity;
 import de.thm.ateam.memory.game.PlayerList;
@@ -59,7 +64,30 @@ public class SelectMultipleUserActivity extends ListActivity {
 		listView.setAdapter(adapter);
 		listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 		
+		registerForContextMenu(getListView());
+	}
 
+
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+		super.onCreateContextMenu(menu, v, menuInfo);
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.contextdelete, menu);
+	}
+
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+		switch (item.getItemId()) {
+			case R.id.delete_user:
+				// TODO If selected remove from playerlist
+				Player selected = (Player)adapter.getItem(info.position);
+				PlayerList.getInstance().session.remove(selected);
+				MemoryPlayerDAO.getInstance(this).removePlayer(selected);
+				return true;
+			default:
+				return super.onContextItemSelected(item);
+		}
 	}
 
 	/**
