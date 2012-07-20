@@ -58,7 +58,7 @@
 			android:label="@string/selectDeckPackage" >
 		</activity>
 		<activity 
-			android:name=".SettingsActivity" >
+			android:name="SettingsActivity" >
 		</activity>
 	</application>
 
