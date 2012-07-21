@@ -1,6 +1,8 @@
 package de.thm.ateam.memory.game;
 
 import java.util.ArrayList;
+import java.util.Collections;
+
 import de.thm.ateam.memory.engine.type.Player;
 
 import android.app.Activity;
@@ -15,7 +17,9 @@ public class GameActivity extends Activity{
 		super.onCreate(savedInstanceState);
 		//setContentView(R.layout.test); // i hate xml files, so fuck them.
 		
-		ArrayList<Player> players = PlayerList.getInstance().session;
+		ArrayList<Player> players = PlayerList.getInstance().session; // just a reference
+		
+		Collections.shuffle(PlayerList.getInstance().session); // we want a different order each time
 		
 		/*
 		 * this is where the gameactivity initializes its specific game, e.g. a descendant from "Game.java",
