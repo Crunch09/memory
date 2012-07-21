@@ -82,8 +82,8 @@ public class SelectMultipleUserActivity extends ListActivity {
 			case R.id.delete_user:
 				// TODO If selected remove from playerlist
 				Player selected = (Player)adapter.getItem(info.position);
-				PlayerList.getInstance().session.remove(selected);
-				MemoryPlayerDAO.getInstance(this).removePlayer(selected);
+				if(!selected.remove(adapter)) Log.i(tag, "could not remove " + selected.toString() + "!");
+				//MemoryPlayerDAO.getInstance(this).removePlayer(selected); //this does not work.
 				return true;
 			default:
 				return super.onContextItemSelected(item);

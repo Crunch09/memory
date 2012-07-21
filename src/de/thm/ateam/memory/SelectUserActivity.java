@@ -32,8 +32,8 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 
 public class SelectUserActivity extends ListActivity {
 
-	BaseAdapter ba;
-
+	private BaseAdapter ba;
+	private final String tag = this.getClass().getSimpleName();
 	/**
 	 * 
 	 * Function called when the activity is first created.
@@ -65,7 +65,7 @@ public class SelectUserActivity extends ListActivity {
 		switch (item.getItemId()) {
 			case R.id.delete_user:
 				Player selected = (Player)getListAdapter().getItem(info.position);
-				MemoryPlayerDAO.getInstance(this).removePlayer(selected);
+				if(!selected.remove(ba))Log.i(tag , "Could not delete " + selected.nick + " !");
 				return true;
 			default:
 				return super.onContextItemSelected(item);

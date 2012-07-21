@@ -24,48 +24,57 @@ import de.thm.ateam.memory.engine.type.SQLite;
  *
  */
 public class MemoryPlayerDAO extends PlayerDB implements PlayerDAO {
-	
-  private SQLite sql;
-  private static MemoryPlayerDAO instance = null;
-  
-  private MemoryPlayerDAO(){}
-  
-  public static MemoryPlayerDAO getInstance(Context ctx){
-    if(instance == null){
-      instance = new MemoryPlayerDAO();
-      instance.sql = new SQLite(ctx);
-    }
-    return instance;
-  }
+
+	private SQLite sql;
+	private static MemoryPlayerDAO instance = null;
+
+	private MemoryPlayerDAO(){}
+
+	public static MemoryPlayerDAO getInstance(Context ctx){
+		if(instance == null){
+			instance = new MemoryPlayerDAO();
+			instance.sql = new SQLite(ctx);
+		}
+		return instance;
+	}
+
+	/**
+	 * Retruns an Instance of MemoryPlayerDAO, use with care.
+	 * 
+	 * @return MemoryPlayerDAO
+	 */
+	public static MemoryPlayerDAO getInstance(){
+		return instance;
+	}
 
 	/* (non-Javadoc)
 	 * @see de.thm.ateam.memory.engine.interfaces.PlayerDAO#getAllPlayers()
 	 */
-  
-  //fixed List = new Arraylist -> use ArrayList, its cool son of List
+
+	//fixed List = new Arraylist -> use ArrayList, its cool son of List
 	public ArrayList<Player> getAllPlayers() {
 		int j = 0;
 		ArrayList<Player> p = new ArrayList<Player>();
 		SQLiteDatabase db = sql.getReadableDatabase();
 		String[] projection = new String[] {
-			ID, NICK, WIN, LOSE, DRAW, HIT, TURN
+				ID, NICK, WIN, LOSE, DRAW, HIT, TURN
 		};
-		
+
 		Cursor c = db.query(TABLE_NAME, projection, null, null, null, null, ID);
 		if (c.getCount() > 0) {
-		
+
 			while(c.moveToNext()) {
 				int id = c.getInt(0);
 				p.add(new Player(c));
-				
+
 				if (j < id)	j = id;
 				else j++;
 			}
 		}
-		
+
 		c.close();
 		db.close();
-		
+
 		return p;
 	}
 
@@ -75,17 +84,17 @@ public class MemoryPlayerDAO extends PlayerDB implements PlayerDAO {
 	public Player getPlayer(int id) {
 		SQLiteDatabase db = sql.getReadableDatabase();
 		String[] projection = new String[] {
-			ID, NICK, WIN, LOSE, DRAW, HIT, TURN
+				ID, NICK, WIN, LOSE, DRAW, HIT, TURN
 		};
-		
+
 		Cursor c = db.query(TABLE_NAME, projection, ID, new String[]{String.valueOf(id)}, null, null, ID);
-		
+
 		if (c.moveToFirst())
 			return new Player(c);
-		
+
 		c.close();
 		db.close();
-		
+
 		return null;
 	}
 
@@ -95,17 +104,17 @@ public class MemoryPlayerDAO extends PlayerDB implements PlayerDAO {
 	public Player getPlayer(String nick) {
 		SQLiteDatabase db = sql.getReadableDatabase();
 		String[] projection = new String[] {
-			ID, NICK, WIN, LOSE, DRAW, HIT, TURN
+				ID, NICK, WIN, LOSE, DRAW, HIT, TURN
 		};
-		
+
 		Cursor c = db.query(TABLE_NAME, projection, NICK, new String[]{nick}, null, null, ID);
-		
+
 		if (c.moveToFirst())
 			return new Player(c);
-		
+
 		c.close();
 		db.close();
-		
+
 		return null;
 	}
 
@@ -115,10 +124,10 @@ public class MemoryPlayerDAO extends PlayerDB implements PlayerDAO {
 	public boolean storePlayer(Player p) {
 		SQLiteDatabase db = sql.getWritableDatabase();
 		long r = db.insert(TABLE_NAME, null, this.createContentValues(p));
-		
+
 		if (r < 0)
 			return false;
-		
+
 		p.setID(r);
 		db.close();
 		return true;
@@ -144,11 +153,11 @@ public class MemoryPlayerDAO extends PlayerDB implements PlayerDAO {
 	public boolean removePlayer(Player p) {
 		SQLiteDatabase db = sql.getWritableDatabase();
 		int r = db.delete(TABLE_NAME, ID, new String[] {String.valueOf(p.getID())});
-		
+
 		db.close();
 		if (r < 0)
 			return false;
-		
+
 		return true;
 	}
 
@@ -158,11 +167,11 @@ public class MemoryPlayerDAO extends PlayerDB implements PlayerDAO {
 	public boolean removePlayer(long id) {
 		SQLiteDatabase db = sql.getWritableDatabase();
 		int r = db.delete(TABLE_NAME, ID, new String[] {String.valueOf(id)});
-		
+
 		db.close();
 		if (r < 0)
 			return false;
-		
+
 		return true;
 	}
 
