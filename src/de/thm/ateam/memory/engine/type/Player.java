@@ -33,7 +33,7 @@ public class Player implements Comparable<Player>{
 	 */
 
 
-	private long id;
+	public long id;
 	public String nick;
 	public int win, lose, draw, hit, turn, roundHits, roundTurns; 
 	public boolean roundWin, roundLose, roundDraw; 
