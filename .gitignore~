@@ -16,4 +16,4 @@ gen/
 local.properties
 
 # ignore project.properties
-# project.properties
+project.properties
