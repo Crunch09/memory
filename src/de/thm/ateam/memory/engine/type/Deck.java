@@ -31,7 +31,7 @@ import de.thm.ateam.memory.engine.MemoryDeckDAO;
  */
 public class Deck {
 	
-	private final String TAG = "Deck.class";
+	private final String TAG = this.getClass().getSimpleName();
 
 	private String name;
 	private long ID;
