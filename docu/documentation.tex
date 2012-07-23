@@ -77,16 +77,25 @@ Kann
 
 \section {Architektur}
 Wir haben uns selbst als Ziel gesetzt, dass wir in 2 Richtungen entwickeln: Das Spiel Memory als sehr spezifische Implementierung und ein "'Framework"', das alle typischen Funktionen für ein rundenbasiertes Spiel mitbringt. So konnten wir mit entsprechenden Oberklassen (Game.java) und abgeleiteten Klassen (z.B. Memory.java) garantieren, dass am Ende beide Zweige zusammen führen.
-Zum Framework gehört Game.java als Oberklasse aller implementierbaren rundenbasierten Spiele, eine Engine die im Wesentlichen Datenbankzugriffe kapselt, ein einfaches Menüsystem, das leicht konfigurier- und erweiterbar ist und einen statistischen Teil der mit der Datenbank zusammen arbeitet. Wir haben dann als Konkrete Implementierung fü
+Zum Framework gehört Game.java als Oberklasse aller implementierbaren rundenbasierten Spiele, eine Engine die im Wesentlichen Datenbankzugriffe kapselt, ein einfaches Menüsystem, das leicht konfigurier- und erweiterbar ist und einen statistischen Teil der mit der Datenbank zusammen arbeitet. Wir haben dann als Konkrete Implementierung für Memory die Klasse Memory.java von Game erben lassen und entsprechend für Memory angepasst. Ebenso wird die Netzwerkimplementierung eine von Game abgeleitete Klasse sein, natürlich noch mit einigen spezifischen Anpassungen zur Kommunikation der Geräte.
 
+\subsection{Design}
+Icke
+\subsection{Engine / Datenbanken}
+zeyorama
+\subsection{Statistik}
+crunch
+\subsection{Memory}
+markus
+\subsection{Netzwerk}
+crunch
 
+\subsection*{Benutzerdokumentation}
 
+Die Benutzerdokumentation wird per {\em Help} in der App bereitgestellt. 
 
+\subsection*{Code Dokumentation}
 
-
-
-
-
-
+Die Code Dokumentation ist per JavaDoc im Quelltext abgewickelt.
 
 \end{document}
