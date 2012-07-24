@@ -8,6 +8,8 @@
 package de.thm.ateam.memory.engine.type;
 
 
+import java.net.Socket;
+
 import de.thm.ateam.memory.engine.*;
 import android.database.Cursor;
 import android.util.Log;
@@ -22,7 +24,7 @@ import de.thm.ateam.memory.game.PlayerList;
  */
 public class Player implements Comparable<Player>{
 
-	private final String tag = "Player";
+	private final String TAG = this.getClass().getSimpleName();
 
 
 	/* 
@@ -36,7 +38,8 @@ public class Player implements Comparable<Player>{
 	public long id;
 	public String nick;
 	public int win, lose, draw, hit, turn, roundHits, roundTurns; 
-	public boolean roundWin, roundLose, roundDraw; 
+	public boolean roundWin, roundLose, roundDraw, afk, hasToken;
+	public Socket sock;
 	/*renamed shot to turn, removing the private modifyer*/
 
 	public Player(Cursor c) {
@@ -47,6 +50,9 @@ public class Player implements Comparable<Player>{
 		this.draw = c.getInt(4);
 		this.hit = c.getInt(5);
 		this.turn = c.getInt(6);
+		this.sock = null;
+		this.afk = false;
+		this.hasToken = false;
 	}
 
 	protected Player(){}
@@ -61,10 +67,29 @@ public class Player implements Comparable<Player>{
 		this.roundDraw = false;
 		this.roundLose = false;
 		this.roundWin = false;
+		this.sock = null;
+		this.afk = false;
+		this.hasToken = false;
+	}
+	
+	
+	public Player(Socket sock){
+	  this.sock = sock;
+	  this.nick = "";
+    this.win  = 0;
+    this.lose = 0;
+    this.draw = 0;
+    this.hit  = 0;
+    this.turn = 0;
+    this.roundDraw = false;
+    this.roundLose = false;
+    this.roundWin = false;
+    this.afk = false;
+    this.hasToken = false;
 	}
 
 	public Player myTurn(){
-		Log.i(tag, nick+": it's your turn!");
+		Log.i(TAG, nick+": it's your turn!");
 		return this;
 	}
 
@@ -234,7 +259,7 @@ public class Player implements Comparable<Player>{
 			//TODO: Das funktioniert so nicht.
 			MemoryPlayerDAO.getInstance().removePlayer(this);
 		} catch (Exception e) {
-			Log.e(tag, "", e);
+			Log.e(TAG, "", e);
 			return false;
 		}
 		return true;

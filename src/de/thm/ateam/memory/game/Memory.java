@@ -81,6 +81,7 @@ public class Memory extends Game{
 		
 		imageAdapter = new ImageAdapter(ctx, ROW_COUNT, COL_COUNT);
 		theme = imageAdapter.getTheme();
+		imageAdapter.shuffleImages();
 
 		mainView = new GridView(ctx);
 		mainView.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1f)); //relations are 1 to .05
@@ -96,6 +97,13 @@ public class Memory extends Game{
 		
 		linLay.addView(infoView);
 		linLay.addView(mainView);
+		
+		Card[][] c = imageAdapter.getPositions();
+		for(int i = 0; i < c.length; i++){
+		  Log.i("positions", "X: "+ c[i][0].x +", Y: "+ c[i][0].y);
+		  Log.i("positions", "X: "+ c[i][1].x +", Y: "+ c[i][1].y);
+		  Log.i("position", "------------------------------------");
+		}
 		return linLay;
 	}
 

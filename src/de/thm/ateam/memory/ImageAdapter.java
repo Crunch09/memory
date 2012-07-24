@@ -1,17 +1,18 @@
 package de.thm.ateam.memory;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 import android.app.Activity;
 import android.content.Context;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
+import de.thm.ateam.memory.game.Card;
 
 /**
  * 
@@ -54,8 +55,48 @@ public class ImageAdapter extends BaseAdapter {
 
 				listImageView.add(imageView);
 			}
-		}
-		Collections.shuffle(listImageView);
+		}		
+	}
+	
+	public void shuffleImages(){
+	  Collections.shuffle(listImageView);
+	}
+	
+	
+	public void buildField(String fieldString){
+	  ImageView[] imageViewNew = new ImageView[8];
+	  
+	  String[] pairs = fieldString.split("Ende");
+	  for(int i = 0; i < pairs.length; i++){
+	    String pair[] = pairs[i].split(";");
+	    for(int j = 0; j < pair.length; j++){
+	      String values[] = pair[j].split(",");
+	      imageViewNew[Integer.parseInt(values[1])* 4 + Integer.parseInt(values[0])] = listImageView.get(j);
+	    }
+	    //jetzt die ersten zwei Element aus imageView entfernen, damit die Schleife weiter funktioniert
+	    listImageView.remove(0);
+	    listImageView.remove(0);
+	  }
+	  listImageView.clear();
+	  listImageView = Arrays.asList(imageViewNew);
+	}
+	
+	
+	public Card[][] getPositions(){
+	  Card[][] cards = new Card[listImageView.size()/2][2];
+	  for(int j = 0; j < listImageView.size(); j++){
+	    for(int i = 0; i < listImageView.size(); i++){
+	      if(cards[i][0] == null){
+	        cards[i][0] = new Card(listImageView.get(j).getId(), j%4, j/4);
+	        break;
+	      }
+	      if(cards[i][0] != null && cards[i][0].id == listImageView.get(j).getId()){
+	        cards[i][1] = new Card(listImageView.get(j).getId(), j%4, j/4);
+	        break;
+	      }
+	    }
+	  }
+	  return cards;
 	}
 
 	/**
@@ -75,7 +116,7 @@ public class ImageAdapter extends BaseAdapter {
 	 * @return Object - ImageView
 	 * 
 	 */
-	public Object getItem(int position) {
+	public ImageView getItem(int position) {
 		return listImageView.get(position);
 	}
 

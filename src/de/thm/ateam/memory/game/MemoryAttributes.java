@@ -13,7 +13,12 @@ public class MemoryAttributes extends GameAttributes{
 		this.columns = columns;
 	}
 
-	public int getRows() {
+	public MemoryAttributes(int rows, int columns) {
+	  this.rows = rows;
+	  this.columns = columns;
+  }
+
+  public int getRows() {
 		return rows;
 	}
 

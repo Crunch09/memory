@@ -17,6 +17,10 @@ public class GameAttributes {
 		super();
 		this.players = players;
 	}
+	
+	public GameAttributes(){
+	  
+	}
 
 	public int getNumUsers() {
 		return players.size();
