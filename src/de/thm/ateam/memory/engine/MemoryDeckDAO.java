@@ -7,8 +7,6 @@
  */
 package de.thm.ateam.memory.engine;
 
-import java.io.ByteArrayOutputStream;
-
 import android.content.ContentValues;
 import android.content.Context;
 
@@ -38,20 +36,20 @@ public class MemoryDeckDAO extends DeckDB implements DeckDAO {
 	/* (non-Javadoc)
 	 * @see de.thm.ateam.memory.engine.interfaces.DeckDAO#getAllDecks()
 	 */
-	public Deck[] getAllDecks() {
-		Deck[] d = null;
+	public String[] getAllDecks() {
+		String[] d = null;
 		
 		SQLiteDatabase db = sql.getReadableDatabase();
-		String[] projection = new String[] { ID };
+		String[] projection = new String[] { ID, NAME };
 		
 		Cursor c = db.query(TABLE_NAME, projection, null, null, null, null, ID);
 		
 		if (c.getCount() > 0)
-			d = new Deck[c.getCount()];
+			d = new String[c.getCount()];
 		
 		int i = 0;
 		while (c.moveToNext())
-			d[i++] = new Deck(this, c.getLong(0), c.getString(1), BitmapFactory.decodeByteArray(c.getBlob(2), 0, c.getBlob(2).length));
+			d[i++] = c.getString(1);
 		
 		c.close();
 		db.close();

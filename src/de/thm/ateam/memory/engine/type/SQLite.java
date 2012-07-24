@@ -42,7 +42,7 @@ public class SQLite extends SQLiteOpenHelper {
 		db.execSQL("CREATE TABLE " + DeckDB.TABLE_NAME + "("
 				+ DeckDB.ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
 				+ DeckDB.NAME + " VARCHAR(42),"
-				+ DeckDB.BACK_CARD + "BLOB,"
+				+ DeckDB.BACK_CARD + " BLOB,"
 				+ "UNIQUE (" + DeckDB.NAME + "));");
 		
 		db.execSQL("CREATE TABLE " + DeckDB.CARD_TABLE_NAME + "("

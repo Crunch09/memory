@@ -128,28 +128,14 @@ public class MemoryPlayerDAO extends PlayerDB implements PlayerDAO {
 	 * @see de.thm.ateam.memory.engine.interfaces.PlayerDAO#updatePlayer()
 	 */
 	public boolean updatePlayer(Player p) {
-		SQLiteDatabase db = sql.getWritableDatabase();
-		int r = db.update(TABLE_NAME, this.createContentValues(p), ID + "=?", new String[] {"" + p.getID()});
-
-		db.close();
-		if (r > 0)
-			return true;
-		else
-			return false;
+		return this.removePlayer(p.getID());
 	}
 
 	/* (non-Javadoc)
 	 * @see de.thm.ateam.memory.engine.interfaces.PlayerDAO#removePlayer(de.thm.ateam.memory.engine.type.Player)
 	 */
 	public boolean removePlayer(Player p) {
-		SQLiteDatabase db = sql.getWritableDatabase();
-		int r = db.delete(TABLE_NAME, ID, new String[] {String.valueOf(p.getID())});
-		
-		db.close();
-		if (r < 0)
-			return false;
-		
-		return true;
+		return this.removePlayer(p.getID());
 	}
 
 	/* (non-Javadoc)
@@ -160,7 +146,7 @@ public class MemoryPlayerDAO extends PlayerDB implements PlayerDAO {
 		int r = db.delete(TABLE_NAME, ID, new String[] {String.valueOf(id)});
 		
 		db.close();
-		if (r < 0)
+		if (r <= 0)
 			return false;
 		
 		return true;
