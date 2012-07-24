@@ -185,7 +185,6 @@ public class SelectMultipleUserActivity extends ListActivity {
 							SelectMultipleUserActivity.this.startActivityForResult(i, GAME_HAS_FINISHED);
 							break;
 						}
-
 					}
 				};
 				AlertDialog.Builder dialog = new AlertDialog.Builder(this);

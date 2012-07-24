@@ -130,11 +130,9 @@ public class Memory extends Game{
 	 * 
 	 */
 	public void reset(int pos, int pos2) {
-
 		ResetTask task = new ResetTask(pos, pos2);
 		Timer t = new Timer(false);
 		t.schedule(task, 1000);
-
 	}
 
 	/**

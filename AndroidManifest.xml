@@ -38,7 +38,7 @@
 			android:label="@string/app_name" >
 		</activity>
 		<activity
-			android:name="de.thm.ateam.memory.game.GameActivity"
+			android:name="de.thm.ateam.memory.game.MemoryTest"
 			android:configChanges="orientation|keyboardHidden"
 			android:label="@string/app_name" >
 		</activity>

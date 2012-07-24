@@ -3,6 +3,8 @@
 \documentclass[11pt,a4paper]{article}
 \usepackage[ngerman]{babel}
 \usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{hyperref}
 %\renewcommand{\ttdefault}{cmss}
 
 \usepackage{lmodern}
@@ -36,7 +38,6 @@ Muss
 \item Jeder Spieler bekommt einen Namen, der über Spielsitzungen hinweg gespeichert wird.
 \item Über jeden Spieler wird eine Statistik angezeigt, wie z.B. Anzahl gewonnener \/ verlorener Spiele, oder Anzahl richtiger Treffer pro 100 Züge.
 \end{itemize}
-
 Kann
 \begin{itemize}
 \item Mehrspielermodus über mehrere Smartphones innerhalb eines LANs.
@@ -80,7 +81,14 @@ Wir haben uns selbst als Ziel gesetzt, dass wir in 2 Richtungen entwickeln: Das 
 Zum Framework gehört Game.java als Oberklasse aller implementierbaren rundenbasierten Spiele, eine Engine die im Wesentlichen Datenbankzugriffe kapselt, ein einfaches Menüsystem, das leicht konfigurier- und erweiterbar ist und einen statistischen Teil der mit der Datenbank zusammen arbeitet. Wir haben dann als Konkrete Implementierung für Memory die Klasse Memory.java von Game erben lassen und entsprechend für Memory angepasst. Ebenso wird die Netzwerkimplementierung eine von Game abgeleitete Klasse sein, natürlich noch mit einigen spezifischen Anpassungen zur Kommunikation der Geräte.
 
 \subsection{Design}
-Icke
+Wie in \autoref{fig:memorydesign} zu sehen ist entsteht das Framework völlig unabhängig vom zu implementierenden Spiel.
+\begin{figure}[!h]
+\centering
+\includegraphics[scale=0.4]{pics/memorydesign.png}
+\caption{Konzept}
+\label{fig:memorydesign}
+\end{figure}
+
 \subsection{Engine / Datenbanken}
 zeyorama
 \subsection{Statistik}
