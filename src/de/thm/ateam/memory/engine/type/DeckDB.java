@@ -28,25 +28,18 @@ public class DeckDB {
 	public static final String CARD_DECK_ID		= "deck_id";
 	public static final String CARD_BLOB		= "card_image";
 
-	protected ContentValues createDeckContentValues(Deck d) {
+	protected ContentValues createContentValues(Deck d) {
 		ContentValues cv = new ContentValues();
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
         
 		cv.put(NAME, d.getName());
-		d.getBackSide().compress(Bitmap.CompressFormat.JPEG, 100, out);
-		cv.put(BACK_CARD, out.toByteArray());
-		
-		return cv;
-	}
-	
-	protected ContentValues createCardContentValues(Bitmap b, long DeckID) {
-		ContentValues cv = new ContentValues();
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-        
-		out = new ByteArrayOutputStream();
-	    b.compress(Bitmap.CompressFormat.JPEG, 100, out);
-	    cv.put(CARD_BLOB, out.toByteArray());
-		
+		d.getBackSide().compress(Bitmap.CompressFormat.PNG, 100, out);
+		cv.put(CARD_BLOB, out.toByteArray());
+		for (Bitmap b : d.getFrontSide()) {
+			out = new ByteArrayOutputStream();
+	        b.compress(Bitmap.CompressFormat.PNG, 100, out);
+	        cv.put(CARD_BLOB, out.toByteArray());
+		}
 		return cv;
 	}
 	
