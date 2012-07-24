@@ -42,7 +42,7 @@ public class PlayerDB {
 		cv.put(LOSE, player.getLose());
 		cv.put(DRAW, player.getDraw());
 		cv.put(HIT,  player.getHits());
-		cv.put(TURN, player.getShots());
+		cv.put(TURN, player.getTurns());
 		
 		return cv;
 	}

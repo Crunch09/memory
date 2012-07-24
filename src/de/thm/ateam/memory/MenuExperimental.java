@@ -34,7 +34,11 @@ public class MenuExperimental extends ListActivity {
 	private Vector<RowData> data;
 	RowData rd;
 	
-	
+	/*
+	 * Later on these finals will be used to determine the row an therefore the action selected.
+	 * If you think of changing the order down in "Title", "Detail" or "Imgid", remember to change them also
+	 * up here.
+	 */
 	private static final int LocalGame = 0;
 	private static final int NetworkGame = 1;
 	private static final int Stats = 2;
@@ -109,18 +113,28 @@ public class MenuExperimental extends ListActivity {
 			break;
 		}
 	}
+	
+	/**
+	 * 
+	 * Common thing to use little helper objects in these cases.
+	 * This class only holds a rows data, fancy isn't it?
+	 *
+	 */
 	private class RowData {
-		protected int mId;
-		protected String mTitle;
-		protected String mDetail;
+		// I think protected is what we need
+		protected int myId;
+		protected String myTitle;
+		protected String myDetail;
+		
 		RowData(int id,String title,String detail){
-			mId=id;
-			mTitle = title;
-			mDetail=detail;
+			myId=id;
+			myTitle = title;
+			myDetail = detail;
 		}
+		
 		@Override
 		public String toString() {
-			return mId+" "+mTitle+" "+mDetail;
+			return myId+" "+myTitle+" "+myDetail;
 		}
 	}
 	private class CustomAdapter extends ArrayAdapter<RowData> {
@@ -136,7 +150,7 @@ public class MenuExperimental extends ListActivity {
 			ViewHolder holder = null;
 			TextView title = null;
 			TextView detail = null;
-			ImageView i11=null;
+			ImageView imageView=null;
 			RowData rowData= getItem(position);
 			if(null == convertView){
 				convertView = mInflater.inflate(R.layout.list, null);
@@ -145,41 +159,42 @@ public class MenuExperimental extends ListActivity {
 			}
 			holder = (ViewHolder) convertView.getTag();
 			title = holder.gettitle();
-			title.setText(rowData.mTitle);
+			title.setText(rowData.myTitle);
 			detail = holder.getdetail();
-			detail.setText(rowData.mDetail);                                                     
+			detail.setText(rowData.myDetail);                                                     
 
-			i11=holder.getImage();
-			i11.setImageResource(imgid[rowData.mId]);
+			imageView=holder.getImage();
+			imageView.setImageResource(imgid[rowData.myId]);
 			return convertView;
 		}
+		
 		private class ViewHolder {
 			private View mRow;
 			private TextView title = null;
 			private TextView detail = null;
-			private ImageView i11=null; 
+			private ImageView imageView=null; 
 
 			public ViewHolder(View row) {
 				mRow = row;
 			}
 			public TextView gettitle() {
-				if(null == title){
+				if(title == null){
 					title = (TextView) mRow.findViewById(R.id.title);
 				}
 				return title;
 			}     
 
 			public TextView getdetail() {
-				if(null == detail){
+				if(detail == null){
 					detail = (TextView) mRow.findViewById(R.id.detail);
 				}
 				return detail;
 			}
 			public ImageView getImage() {
-				if(null == i11){
-					i11 = (ImageView) mRow.findViewById(R.id.img);
+				if(null == imageView){
+					imageView = (ImageView) mRow.findViewById(R.id.img);
 				}
-				return i11;
+				return imageView;
 			}
 		}
 	}

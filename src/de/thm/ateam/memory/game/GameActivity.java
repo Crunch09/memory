@@ -10,12 +10,13 @@ import android.os.Bundle;
 
 public class GameActivity extends Activity{
 	
-	Memory mem;
+	private final String TAG =  this.getClass().getSimpleName();
+	
+	Game game;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		//setContentView(R.layout.test); // i hate xml files, so fuck them.
 		
 		ArrayList<Player> players = PlayerList.getInstance().session; // just a reference
 		
@@ -29,8 +30,8 @@ public class GameActivity extends Activity{
 		 * assembleLayout() does not need any kind of XML File, which makes it very versatile in its use.
 		 * 
 		 */
-		mem = new Memory(this,new MemoryAttributes(players, 2, 4));
-		setContentView(mem.assembleLayout());
+		game = new Memory(this,new MemoryAttributes(players, 2, 4));
+		setContentView(game.assembleLayout());
 	}
 	
 	/**
@@ -41,7 +42,7 @@ public class GameActivity extends Activity{
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		mem.onDestroy();
+		game.onDestroy();
 	}
 	/*
 	 * if we decide to do some eventhandling for network usage (messages to be more specific) we should do that here.
