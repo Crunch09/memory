@@ -7,6 +7,8 @@
  */
 package de.thm.ateam.memory.engine;
 
+import java.io.ByteArrayOutputStream;
+
 import android.content.ContentValues;
 import android.content.Context;
 
