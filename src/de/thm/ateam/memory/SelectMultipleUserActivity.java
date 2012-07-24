@@ -1,5 +1,6 @@
 package de.thm.ateam.memory;
 
+
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.DialogInterface;
@@ -17,6 +18,7 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 import android.widget.AdapterView.AdapterContextMenuInfo;
+import de.thm.ateam.memory.engine.MemoryPlayerDAO;
 import de.thm.ateam.memory.engine.type.Player;
 import de.thm.ateam.memory.game.GameActivity;
 import de.thm.ateam.memory.game.PlayerList;
@@ -28,6 +30,7 @@ import de.thm.ateam.memory.game.PlayerList;
  */
 public class SelectMultipleUserActivity extends ListActivity {
 	
+	@SuppressWarnings("unused")
 	private final String tag = this.getClass().getSimpleName();
 
 	private ListView listView;
@@ -79,8 +82,8 @@ public class SelectMultipleUserActivity extends ListActivity {
 			case R.id.delete_user:
 				// TODO If selected remove from playerlist
 				Player selected = (Player)adapter.getItem(info.position);
-				if(!selected.remove(adapter)) Log.i(tag, "could not remove " + selected.toString() + "!");
-				getListView().setItemChecked(info.position, false);
+				PlayerList.getInstance().session.remove(selected);
+				MemoryPlayerDAO.getInstance(this).removePlayer(selected);
 				return true;
 			default:
 				return super.onContextItemSelected(item);
@@ -166,7 +169,7 @@ public class SelectMultipleUserActivity extends ListActivity {
 	}
 	
 	public void start(View view){
-		if(PlayerList.getInstance().session.size()>1 && PlayerList.getInstance().session.size()<7){  // 2 - 6 Players		
+		if(PlayerList.getInstance().session.size()>1 && PlayerList.getInstance().session.size()<7){  // 2 - 6 Players
 			Intent intent = new Intent(this, GameActivity.class);
 			startActivityForResult(intent, GAME_HAS_FINISHED);
 		}

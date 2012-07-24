@@ -7,6 +7,7 @@
  */
 package de.thm.ateam.memory.engine.interfaces;
 
+import android.graphics.Bitmap;
 import de.thm.ateam.memory.engine.type.Deck;
 
 /**
@@ -18,11 +19,11 @@ public interface DeckDAO {
 	static final String LOG_TAG = "MemoryDeckDAO";
 	
 	/**
-	 * getAllDecks returns an array of all stored deck
+	 * getAllDecks returns an array of all stored decknames and IDs
 	 * 
-	 * @return sequence(Deck) All stored Decks, otherwise null
+	 * @return sequence(sequence(String)) All stored Decknames and IDs, otherwise null
 	 */
-	Deck[] getAllDecks();
+	String[][] getAllDecks();
 	
 	/**
 	 * storeDeck stores a specified deck in the DB
@@ -56,5 +57,13 @@ public interface DeckDAO {
 	 * @return String returns name of specified deck by ID id
 	 */
 	String getDeckName(long id);
+	
+	/**
+	 * Returns an sequence of Bitmap objects by specified Deck ID
+	 * 
+	 * @param Deck_ID The specified ID for font side card images
+	 * @return sequence(Bitmap) The Array of Bitmap images by specified ID
+	 */
+	Bitmap[] getCard(long Deck_ID);
 	
 }

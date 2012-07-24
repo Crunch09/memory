@@ -38,20 +38,22 @@ public class MemoryDeckDAO extends DeckDB implements DeckDAO {
 	/* (non-Javadoc)
 	 * @see de.thm.ateam.memory.engine.interfaces.DeckDAO#getAllDecks()
 	 */
-	public Deck[] getAllDecks() {
-		Deck[] d = null;
+	public String[][] getAllDecks() {
+		String[][] d = null;
 		
 		SQLiteDatabase db = sql.getReadableDatabase();
-		String[] projection = new String[] { ID };
+		String[] projection = new String[] { ID, NAME };
 		
 		Cursor c = db.query(TABLE_NAME, projection, null, null, null, null, ID);
 		
 		if (c.getCount() > 0)
-			d = new Deck[c.getCount()];
+			d = new String[c.getCount()][2];
 		
 		int i = 0;
-		while (c.moveToNext())
-			d[i++] = new Deck(this, c.getLong(0), c.getString(1), BitmapFactory.decodeByteArray(c.getBlob(2), 0, c.getBlob(2).length));
+		while (c.moveToNext()) {
+			d[i][0] = c.getString(1);
+			d[i++][1] = String.valueOf(c.getLong(0));
+		}
 		
 		c.close();
 		db.close();
@@ -64,8 +66,12 @@ public class MemoryDeckDAO extends DeckDB implements DeckDAO {
 	 */
 	public boolean storeDeck(Deck d) {
 		long r;
-		SQLiteDatabase db = sql.getWritableDatabase();
-		ContentValues cv = this.createDeckContentValues(d);
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+        SQLiteDatabase db = sql.getWritableDatabase();
+		ContentValues cv = new ContentValues();
+		cv.put(NAME, d.getName());
+		d.getBackSide().compress(Bitmap.CompressFormat.JPEG, 100, out);
+		cv.put(CARD_BLOB, out.toByteArray());
 		
 		r = db.insert(TABLE_NAME, null, cv);
 		
@@ -73,7 +79,13 @@ public class MemoryDeckDAO extends DeckDB implements DeckDAO {
 			return false;
 		
 		for (Bitmap b : d.getFrontSide()) {
-			cv = this.createCardContentValues(b, r);
+			cv = new ContentValues();
+			out = new ByteArrayOutputStream();
+	        cv = new ContentValues();
+			
+	        cv.put(CARD_DECK_ID, r);
+			b.compress(Bitmap.CompressFormat.JPEG, 100, out);
+			cv.put(CARD_BLOB, out.toByteArray());
 			
 			db.insert(CARD_TABLE_NAME, null, cv);
 		}
@@ -132,6 +144,9 @@ public class MemoryDeckDAO extends DeckDB implements DeckDAO {
 		return null;
 	}
 	
+	/* (non-Javadoc)
+	 * @see de.thm.ateam.memory.engine.interfaces.DeckDAO#getCard(long)
+	 */
 	public Bitmap[] getCard(long Deck_ID) {
 		SQLiteDatabase db = sql.getReadableDatabase();
 		String []projection = new String[] { CARD_ID, CARD_DECK_ID, CARD_BLOB };
