@@ -38,8 +38,8 @@ public class MemoryDeckDAO extends DeckDB implements DeckDAO {
 	/* (non-Javadoc)
 	 * @see de.thm.ateam.memory.engine.interfaces.DeckDAO#getAllDecks()
 	 */
-	public String[] getAllDecks() {
-		String[] d = null;
+	public String[][] getAllDecks() {
+		String[][] d = null;
 		
 		SQLiteDatabase db = sql.getReadableDatabase();
 		String[] projection = new String[] { ID, NAME };
@@ -47,11 +47,13 @@ public class MemoryDeckDAO extends DeckDB implements DeckDAO {
 		Cursor c = db.query(TABLE_NAME, projection, null, null, null, null, ID);
 		
 		if (c.getCount() > 0)
-			d = new String[c.getCount()];
+			d = new String[c.getCount()][2];
 		
 		int i = 0;
-		while (c.moveToNext())
-			d[i++] = c.getString(1);
+		while (c.moveToNext()) {
+			d[i][0] = c.getString(1);
+			d[i++][1] = String.valueOf(c.getLong(0));
+		}
 		
 		c.close();
 		db.close();

@@ -19,11 +19,11 @@ public interface DeckDAO {
 	static final String LOG_TAG = "MemoryDeckDAO";
 	
 	/**
-	 * getAllDecks returns an array of all stored decknames
+	 * getAllDecks returns an array of all stored decknames and IDs
 	 * 
-	 * @return sequence(String) All stored Decknames, otherwise null
+	 * @return sequence(sequence(String)) All stored Decknames and IDs, otherwise null
 	 */
-	String[] getAllDecks();
+	String[][] getAllDecks();
 	
 	/**
 	 * storeDeck stores a specified deck in the DB
