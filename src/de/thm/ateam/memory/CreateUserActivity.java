@@ -11,19 +11,19 @@ import android.widget.EditText;
 /**
  * 
  * Activity which show the view to register a new user
- *
+ * 
  */
 public class CreateUserActivity extends Activity {
-	
+
 	/**
 	 * Create the Activity View
 	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-	  super.onCreate(savedInstanceState);
+		super.onCreate(savedInstanceState);
 		setContentView(R.layout.add);
 	}
-	
+
 	/**
 	 * Function is called when the user pressed the button "Create User"
 	 * 
@@ -32,17 +32,16 @@ public class CreateUserActivity extends Activity {
 	 * @param target
 	 */
 	public void onButtonClick(View target) {
-		String nick = ((EditText)findViewById(R.id.editText)).getText().toString();
+		String nick = ((EditText) findViewById(R.id.editText)).getText().toString();
 		/*
-		 * Create User
-		 * add it to DB and PlayerList
+		 * Create User add it to DB and PlayerList
 		 */
-		
 		Player newPlayer = new Player(nick);
-		
+
 		MemoryPlayerDAO playerDAO = MemoryPlayerDAO.getInstance(this);
-		if(playerDAO.storePlayer(newPlayer))PlayerList.getInstance().players.add(newPlayer);
+		if (!nick.equals("") && playerDAO.storePlayer(newPlayer))
+			PlayerList.getInstance().players.add(newPlayer);
 		finish();
-  }
+	}
 
 }

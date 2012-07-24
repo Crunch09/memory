@@ -1,20 +1,28 @@
 package de.thm.ateam.memory;
 
 
+import java.util.ArrayList;
+
+import de.thm.ateam.memory.R.id;
+import de.thm.ateam.memory.engine.MemoryPlayerDAO;
 import de.thm.ateam.memory.engine.type.Player;
 import de.thm.ateam.memory.game.PlayerList;
 
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 
 /**
  * 
@@ -24,8 +32,8 @@ import android.widget.Toast;
 
 public class SelectUserActivity extends ListActivity {
 
-	BaseAdapter ba;
-
+	private BaseAdapter ba;
+	private final String tag = this.getClass().getSimpleName();
 	/**
 	 * 
 	 * Function called when the activity is first created.
@@ -41,6 +49,27 @@ public class SelectUserActivity extends ListActivity {
 		//PlayerList.getInstance().session.clear(); // muy importante, well not anymore
 		ba = new ArrayAdapter<Player>(this, android.R.layout.simple_list_item_1, PlayerList.getInstance().players); 
 		setListAdapter(ba);
+		registerForContextMenu(getListView());
+	}
+
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+		super.onCreateContextMenu(menu, v, menuInfo);
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.contextdelete, menu);
+	}
+
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+		switch (item.getItemId()) {
+			case R.id.delete_user:
+				Player selected = (Player)getListAdapter().getItem(info.position);
+				if(!selected.remove(ba))Log.i(tag , "Could not delete " + selected.nick + " !");
+				return true;
+			default:
+				return super.onContextItemSelected(item);
+		}
 	}
 
 	/**

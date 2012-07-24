@@ -33,6 +33,7 @@ public class DeckDB {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
         
 		cv.put(NAME, d.getName());
+<<<<<<< HEAD
 		d.getBackSide().compress(Bitmap.CompressFormat.PNG, 100, out);
 		cv.put(CARD_BLOB, out.toByteArray());
 		for (Bitmap b : d.getFrontSide()) {
@@ -40,6 +41,23 @@ public class DeckDB {
 	        b.compress(Bitmap.CompressFormat.PNG, 100, out);
 	        cv.put(CARD_BLOB, out.toByteArray());
 		}
+=======
+		d.getBackSide().compress(Bitmap.CompressFormat.JPEG, 100, out);
+		cv.put(BACK_CARD, out.toByteArray());
+		
+		return cv;
+	}
+	
+	protected ContentValues createCardContentValues(Bitmap b, long DeckID) {
+		ContentValues cv = new ContentValues();
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		
+		cv.put(CARD_DECK_ID, DeckID);
+        
+		b.compress(Bitmap.CompressFormat.JPEG, 100, out);
+	    cv.put(CARD_BLOB, out.toByteArray());
+		
+>>>>>>> 61717d7008825ee2a2c0685ba65ea9c56e94c1ae
 		return cv;
 	}
 	

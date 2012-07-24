@@ -100,7 +100,7 @@ public class MenuExperimental extends ListActivity {
 			break;
 		
 		case Settings:
-			intent = new Intent(getApplicationContext(),SelectDeckPackageActivity.class);
+			intent = new Intent(this, SettingsActivity.class);
 			startActivity(intent);
 			break;
 		
@@ -182,4 +182,5 @@ public class MenuExperimental extends ListActivity {
 				return i11;
 			}
 		}
-	} }
+	}
+}
