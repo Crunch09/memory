@@ -14,3 +14,20 @@ gen/
 
 # Local configuration file (sdk path, etc)
 local.properties
+
+# ignore project.properties
+project.properties
+
+#Tex Ignore
+*.log
+*.synctex.*
+*.aux
+*.dvi
+*.toc
+*.snm
+*.nav
+*.tar
+*.ps
+*.tex.bak
+*.out
+

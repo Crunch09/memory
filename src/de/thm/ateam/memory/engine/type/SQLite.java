@@ -47,7 +47,7 @@ public class SQLite extends SQLiteOpenHelper {
 		
 		db.execSQL("CREATE TABLE " + DeckDB.CARD_TABLE_NAME + "("
 				+ DeckDB.CARD_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
-				+ DeckDB.CARD_DECK_ID + " INTEGER,"
+				+ DeckDB.CARD_DECK_ID + " INTEGER," 
 				+ DeckDB.CARD_BLOB + " BLOB);");
 	}
 

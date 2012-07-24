@@ -7,34 +7,38 @@
  */
 package de.thm.ateam.memory.engine.type;
 
+
+import de.thm.ateam.memory.engine.*;
 import android.database.Cursor;
 import android.util.Log;
+import android.widget.BaseAdapter;
 import de.thm.ateam.memory.engine.interfaces.PlayerDAO;
+import de.thm.ateam.memory.game.PlayerList;
 
 
 /**
- * @author Frank Kevin Zey
+ * @author fast nur Frank Kevin Zey
  * 
  */
 public class Player implements Comparable<Player>{
-	
+
 	private final String tag = "Player";
 
-	
+
 	/* 
 	 * Die private Geschichten sind zwar aus Softwaresicht sinnig
-	 * geh�ren aber unter Android spart man sich oft die Methodenaufrufe
-	 * aus Geschwindigkeitsgr�nden.
+	 * geh���ren aber unter Android spart man sich oft die Methodenaufrufe
+	 * aus Geschwindigkeitsgr���nden.
 	 * Falls ich damit was kaputt gemacht hab, es tut mir leid ;)
 	 */
-	
-	
-	private long id;
+
+
+	public long id;
 	public String nick;
 	public int win, lose, draw, hit, turn, roundHits, roundTurns; 
 	public boolean roundWin, roundLose, roundDraw; 
 	/*renamed shot to turn, removing the private modifyer*/
-	
+
 	public Player(Cursor c) {
 		this.id = c.getInt(0);
 		this.nick = c.getString(1);
@@ -44,9 +48,9 @@ public class Player implements Comparable<Player>{
 		this.hit = c.getInt(5);
 		this.turn = c.getInt(6);
 	}
-	
+
 	protected Player(){}
-	
+
 	public Player(String nick) {
 		this.nick = nick;
 		this.win  = 0;
@@ -58,24 +62,24 @@ public class Player implements Comparable<Player>{
 		this.roundLose = false;
 		this.roundWin = false;
 	}
-		
+
 	public Player myTurn(){
 		Log.i(tag, nick+": it's your turn!");
 		return this;
 	}
-	
+
 	public int hit(){
 		return ++roundHits;
 	}
-	
+
 	public int turn(){
 		return ++roundTurns;
 	}
-	
+
 	public void onChange(){
-		
+
 	}
-	
+
 
 	/**
 	 * Updates the player information in DB
@@ -174,7 +178,7 @@ public class Player implements Comparable<Player>{
 	public final long getID() {
 		return this.id;
 	}
-	
+
 	/**
 	 * Returns generated hash for Player calculated by ID and Nick
 	 * 
@@ -186,7 +190,7 @@ public class Player implements Comparable<Player>{
 		 * result = 42
 		 */
 		int result = 42;
-		
+
 		/* using only the lowest 32 bit of ID */
 		result = 31 * result + (int) this.getID();
 		result = 31 * result
@@ -194,7 +198,7 @@ public class Player implements Comparable<Player>{
 
 		return result;
 	}
-	
+
 	/**
 	 * Set new ID for current Player
 	 * 
@@ -203,15 +207,15 @@ public class Player implements Comparable<Player>{
 	public void setID(long id) {
 		this.id = id;
 	}
-	
-  /**
-   * for printing the object
-   * 
-   * @return The nickname of the user
-   */
-	 public String toString(){
-	   return this.nick;
-	 }
+
+	/**
+	 * for printing the object
+	 * 
+	 * @return The nickname of the user
+	 */
+	public String toString(){
+		return this.nick;
+	}
 
 	 /**
 	  * Returns the difference between two players averaged win rate
@@ -224,4 +228,24 @@ public class Player implements Comparable<Player>{
 
 		 return (int) (this.getAverageWinRate() - another.getAverageWinRate());
 	 }
+	 
+	/**
+	 * removes a player
+	 * 
+	 * @returns success or failure
+	 */
+	public boolean remove(BaseAdapter adapter){
+		PlayerList.getInstance().session.remove(this);
+		PlayerList.getInstance().players.remove(this);
+		
+		try {
+			if(adapter!= null)adapter.notifyDataSetChanged();
+			//TODO: Das funktioniert so nicht.
+			MemoryPlayerDAO.getInstance().removePlayer(this);
+		} catch (Exception e) {
+			Log.e(tag, "", e);
+			return false;
+		}
+		return true;
+	}
 }
