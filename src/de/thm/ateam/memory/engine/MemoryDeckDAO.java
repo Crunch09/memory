@@ -130,6 +130,9 @@ public class MemoryDeckDAO extends DeckDB implements DeckDAO {
 		return null;
 	}
 	
+	/* (non-Javadoc)
+	 * @see de.thm.ateam.memory.engine.interfaces.DeckDAO#getCard(long)
+	 */
 	public Bitmap[] getCard(long Deck_ID) {
 		SQLiteDatabase db = sql.getReadableDatabase();
 		String []projection = new String[] { CARD_ID, CARD_DECK_ID, CARD_BLOB };

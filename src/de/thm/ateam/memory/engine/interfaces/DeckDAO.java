@@ -7,6 +7,7 @@
  */
 package de.thm.ateam.memory.engine.interfaces;
 
+import android.graphics.Bitmap;
 import de.thm.ateam.memory.engine.type.Deck;
 
 /**
@@ -56,5 +57,13 @@ public interface DeckDAO {
 	 * @return String returns name of specified deck by ID id
 	 */
 	String getDeckName(long id);
+	
+	/**
+	 * Returns an sequence of Bitmap objects by specified Deck ID
+	 * 
+	 * @param Deck_ID The specified ID for font side card images
+	 * @return sequence(Bitmap) The Array of Bitmap images by specified ID
+	 */
+	Bitmap[] getCard(long Deck_ID);
 	
 }

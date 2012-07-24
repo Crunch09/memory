@@ -26,6 +26,10 @@ public class DPL {
 	
 	private DPL() { }
 	
+	/**
+	 * Creates or returns a DPL object, if one already exists, it will be returned, otherwise a new one will be created.
+	 * @return DPL object
+	 */
 	public static DPL getInstance() {
 		if (instance == null)
 			instance = new DPL();

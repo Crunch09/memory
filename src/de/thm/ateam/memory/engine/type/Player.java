@@ -78,9 +78,9 @@ public class Player implements Comparable<Player>{
 	
 
 	/**
-	 * updatePlayer verändert die Angaben des Spielers in der Datenbank.
+	 * Updates the player information in DB
 	 * 
-	 * 
+	 * @param database DB object
 	 */
 	public final void updatePlayer(PlayerDAO database) {
 
@@ -91,46 +91,45 @@ public class Player implements Comparable<Player>{
 	}
 
 	/**
-	 * getNick gibt den Nick des jeweiligen Spielers zurück.
+	 * Returns the nick of current Player
 	 * 
-	 * @return String Nickname des Spielers
+	 * @return String Nickname of this player
 	 */
 	public final String getNick() {
 		return this.nick;
 	}
 
 	/**
-	 * getWin gibt die Anzahl der Siege des Spielers zurück.
+	 * Returns the number of wins of current Player
 	 * 
-	 * @return int Anzahl der Siege
+	 * @return int Number of wins
 	 */
 	public final int getWin() {
 		return this.win;
 	}
 
 	/**
-	 * getLose gibt die Anzahl der Niederlagen des Spielers zurück.
+	 * Returns loses of current player
 	 * 
-	 * @return int Anzahl der Niederlagen
+	 * @return int Number of loses
 	 */
 	public final int getLose() {
 		return this.lose;
 	}
 
 	/**
-	 * getDraw gibt die Anzahl der Unentschieden des Spielers zurück.
+	 * Returns draws of current Player
 	 * 
-	 * @return int Anzahl der Unentschieden
+	 * @return int Number of draws
 	 */
 	public final int getDraw() {
 		return this.draw;
 	}
 
 	/**
-	 * getAverageWinRate gibt einen Prozentfaktor des durchschnittlichen
-	 * Siegrate des Spielers zurück.
+	 * Returns the computed average win rate of current player
 	 * 
-	 * @return float Siegrate des Spielers
+	 * @return float win rate of current player
 	 */
 	public final float getAverageWinRate() {
 		float f = 0.0f;
@@ -141,47 +140,45 @@ public class Player implements Comparable<Player>{
 	}
 
 	/**
-	 * getGameNumber gibt die Anzahl aller gespielten Spiele des Spielers
-	 * zurück.
+	 * Returns number of played games of current player
 	 * 
-	 * @return int Anzahl aller gespielten Spiele
+	 * @return int Number of played games
 	 */
 	public final int getGameNumber() {
 		return (this.win + this.lose + this.draw);
 	}
 
 	/**
-	 * getShots die Anzahl aller Kartenzüge zurück.
+	 * Returns the number of turns.
 	 * 
-	 * @return int Anzahl aller Kartenzüge
+	 * @return int Number of all turns
 	 */
 	public final int getShots() {
 		return this.turn;
 	}
 
 	/**
-	 * getGameNumber gibt die Anzahl der getroffenen Kartenpaaren zurück.
+	 * Returns the number of all hitted pairs.
 	 * 
-	 * @return int Anzahl aller getroffenen Kartenpaaren
+	 * @return int Number of all hitted pairs.
 	 */
 	public final int getHits() {
 		return this.hit;
 	}
 
 	/**
-	 * getID gibt die ID des Spielers zurück
+	 * Returns ID of current player
 	 * 
-	 * @return int Die ID des Spielers, gleich der in der Datenbank
+	 * @return int Player ID
 	 */
 	public final long getID() {
 		return this.id;
 	}
 	
 	/**
-	 * hashCode generiert einen Hashcode des Objekts anhand der ID und des Nicks. Sollte
-	 * der Nick 'null' oder ein leerer String sein, wird stattdessen 0 gewählt.
+	 * Returns generated hash for Player calculated by ID and Nick
 	 * 
-	 * @return int Generierter Hash
+	 * @return int Generated hash
 	 */
 	@Override
 	public int hashCode() {
@@ -199,9 +196,9 @@ public class Player implements Comparable<Player>{
 	}
 	
 	/**
-	 * setID setzt die ID des Spielers
+	 * Set new ID for current Player
 	 * 
-	 * @param id Die neue ID des Spielers
+	 * @param id The new ID
 	 */
 	public void setID(long id) {
 		this.id = id;
@@ -216,11 +213,15 @@ public class Player implements Comparable<Player>{
 	   return this.nick;
 	 }
 
+	 /**
+	  * Returns the difference between two players averaged win rate
+	  * 
+	  * @return int Difference between two players win rate
+	  */
+	 public int compareTo(Player another) throws ClassCastException{
+		 if(!(another instanceof Player))
+			 throw new ClassCastException();
 
-  public int compareTo(Player another) throws ClassCastException{
-    if(!(another instanceof Player)){
-      throw new ClassCastException();
-    }
-    return (int) (this.getAverageWinRate() - another.getAverageWinRate());
-  }
+		 return (int) (this.getAverageWinRate() - another.getAverageWinRate());
+	 }
 }
