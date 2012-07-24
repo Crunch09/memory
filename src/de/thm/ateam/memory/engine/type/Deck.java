@@ -9,7 +9,6 @@ package de.thm.ateam.memory.engine.type;
 
 import java.io.IOException;
 import java.io.InputStream;
-
 import java.util.ArrayList;
 import java.util.Enumeration;
 
@@ -88,6 +87,7 @@ public class Deck {
 	public Deck(ZipFile zip, Context ctx) throws IOException {
 		Enumeration<? extends ZipEntry> e = zip.entries();
 		frontSide = new ArrayList<Bitmap>();
+
 		while(e.hasMoreElements()) {
 			ZipEntry entry = e.nextElement();
 			InputStream f = zip.getInputStream(entry);
@@ -104,8 +104,7 @@ public class Deck {
 			Log.i(TAG,entry.getName());
 		}
 		
-		String[] splitted = zip.getName().split("/");
-		this.name = splitted[splitted.length-1].substring(0, splitted[splitted.length-1].length()-4);
+		this.name = zip.getName();
 		dao = new MemoryDeckDAO(ctx);
 		if (dao.storeDeck(this))
 			Log.i(TAG, "stored");
