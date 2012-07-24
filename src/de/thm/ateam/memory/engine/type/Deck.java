@@ -8,13 +8,14 @@
 package de.thm.ateam.memory.engine.type;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Enumeration;
 
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import javax.imageio.stream.FileCacheImageInputStream;
+import java.io.ByteArrayInputStream;
 
 import android.content.Context;
 
@@ -67,9 +68,9 @@ public class Deck {
 		
 		while(e.hasMoreElements()) {
 			ZipEntry entry = e.nextElement();
-			FileCacheImageInputStream f = new FileCacheImageInputStream(zip.getInputStream(entry), null);
-			byte[] b = new byte[(int)f.length()];
-			f.readFully(b);
+			InputStream f = zip.getInputStream(entry);
+			byte[] b = new byte[(int)f.available()];
+			f.read(b,0,b.length);
 			Bitmap bm = BitmapFactory.decodeByteArray(b, 0, b.length);
 			
 			if (entry.getName().equals("0.jpg"))
