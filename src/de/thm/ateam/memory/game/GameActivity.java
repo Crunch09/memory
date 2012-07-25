@@ -16,7 +16,7 @@ import android.util.Log;
 import android.widget.Toast;
 import de.thm.ateam.memory.ImageAdapter;
 import de.thm.ateam.memory.R;
-import de.thm.ateam.memory.engine.type.Player;
+import de.thm.ateam.memory.engine.type.*;
 import de.thm.ateam.memory.network.NetworkMemory;
 
 public class GameActivity extends Activity{
@@ -30,7 +30,7 @@ public class GameActivity extends Activity{
 	
 	private static final String TAG = GameActivity.class.getSimpleName();
 
-  Player currentPlayer = null;
+  NetworkPlayer currentPlayer = null;
   int numberOfClicks = 0;
   PrintWriter out = null;
 

@@ -9,14 +9,14 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 import android.util.Log;
-import de.thm.ateam.memory.engine.type.Player;
+import de.thm.ateam.memory.engine.type.*;
 
 
 public class HostService extends Service{
 
   private static final String TAG = HostService.class.getSimpleName();
 
-  public static ArrayList<Player> clients = null;
+  public static ArrayList<NetworkPlayer> clients = null;
   public static int current = 0;
   public static boolean gameAvailable = false;
   public static int afkCount = 0;
@@ -28,18 +28,18 @@ public class HostService extends Service{
   @Override
   public int onStartCommand(Intent intent, int flags, int startId){
     Log.i(TAG, "Starte Server Service!");
-    clients = new ArrayList<Player>();
+    clients = new ArrayList<NetworkPlayer>();
     gameAvailable = true;
     Thread t = new Thread(new ServerTask());
     t.start();
 
     return START_NOT_STICKY;
   }
-  
-  
-  public static Player findPlayerBySocket(Socket sock){
+
+
+  public static NetworkPlayer findPlayerBySocket(Socket sock){
     if(clients.size() == 0) return null;
-    for(Player p : clients){
+    for(NetworkPlayer p : clients){
       if(p.sock != null && p.sock.getLocalAddress().equals(sock.getLocalAddress())){
         return p;
       }
@@ -68,7 +68,7 @@ public class HostService extends Service{
             Log.i(TAG, "Client tried to connect, but Server is full.");
           }else{
             Log.i(TAG, "A Client has connected!");
-            clients.add(new Player(clientSock));
+            clients.add(new NetworkPlayer(clientSock));
             //prüfen ob schon ein Thread existiert
             Thread t = new Thread(new ClientConnection(clientSock));
             t.start();
@@ -89,21 +89,21 @@ public class HostService extends Service{
     Player winner = null;
     int numberOfWinners = 0;
     for(Player p : clients){
-        if(p.roundHits > highscore){
-          highscore = p.roundHits;
-          numberOfWinners = 1;
-          winner = p;
-        }else if(p.roundHits == highscore){
-          numberOfWinners++;
-        }
-        //reset it for the next round
-        p.roundHits = 0;
+      if(p.roundHits > highscore){
+        highscore = p.roundHits;
+        numberOfWinners = 1;
+        winner = p;
+      }else if(p.roundHits == highscore){
+        numberOfWinners++;
+      }
+      //reset it for the next round
+      p.roundHits = 0;
     }
     if(numberOfWinners == 1){
       return winner;
     }
     return null;
-    
+
   }
 
 }

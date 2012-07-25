@@ -25,7 +25,7 @@ import android.widget.TextView;
 import de.thm.ateam.memory.ImageAdapter;
 import de.thm.ateam.memory.R;
 import de.thm.ateam.memory.Theme;
-import de.thm.ateam.memory.engine.type.Player;
+import de.thm.ateam.memory.engine.type.*;
 import de.thm.ateam.memory.game.Card;
 import de.thm.ateam.memory.game.Game;
 import de.thm.ateam.memory.game.MemoryAttributes;
@@ -48,7 +48,7 @@ public class NetworkMemory extends Game{
   public ImageAdapter imageAdapter;
   public TextView infoView;
   private final String TAG = this.getClass().getSimpleName();
-  Player currentPlayer = null;
+  NetworkPlayer currentPlayer = null;
   int numberOfClicks = 0;
   PrintWriter out = null;
   private UpdateCardsHandler resHandler;

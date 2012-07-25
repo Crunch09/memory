@@ -25,7 +25,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import de.thm.ateam.memory.R;
-import de.thm.ateam.memory.engine.type.Player;
+import de.thm.ateam.memory.engine.type.*;
 import de.thm.ateam.memory.game.GameActivity;
 import de.thm.ateam.memory.game.PlayerList;
 import de.thm.ateam.memory.network.MyAlertDialog.MyAlertDialogListener;
@@ -42,7 +42,7 @@ public class WaitingRoomActivity extends FragmentActivity implements MyAlertDial
   FragmentManager fm = null;
   private boolean gameHasStarted = false;
   private String serverAddress = "";
-  private Player currentPlayer = null;
+  private NetworkPlayer currentPlayer = null;
   private PrintWriter out = null;
   private BufferedReader bf = null;
   private boolean resumed = false;
