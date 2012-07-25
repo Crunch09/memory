@@ -41,6 +41,7 @@ public class Response implements Runnable{
    */
   public void run() {
     PrintWriter out = null;
+    boolean winnerIsChosen = false;
     if(incMessage.startsWith("[token]")){
       // aktueller Spieler hat seinen Zug gemacht, also nächsten Spieler benachrichtigen
       Player nextPlayer = nextTurn();
@@ -81,6 +82,23 @@ public class Response implements Runnable{
       Log.i(TAG, "Player switched AFK status");
       Player p = HostService.findPlayerBySocket(incSocket);
       p.afk = incMessage.startsWith("[afk]") ? true : false;
+    }else if(incMessage.startsWith("[finish]")){
+      Player winner = HostService.computeWinner();
+      try {
+        for(Player player : HostService.clients){
+          if(player.sock != null){
+            out = new PrintWriter(player.sock.getOutputStream(), true);
+            if(winner == null){
+              out.println("[finish]");
+            }else{
+              out.println("[finish]"+ winner.nick);
+            }
+          }
+        }
+
+      } catch (IOException e) {
+        Log.e(TAG, "IOException");
+      }
     }else{
       /* here are the messages for all clients */
       Player playerWhoSentThisMessage = HostService.findPlayerBySocket(this.incSocket);
