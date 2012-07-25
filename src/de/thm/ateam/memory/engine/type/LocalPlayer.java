@@ -62,7 +62,7 @@ public class LocalPlayer extends Player {
 		if (!(p.getLose() == this.getLose()))
 			return false;
 
-		if (!(p.getShots() == this.getShots()))
+		if (!(p.getTurns() == this.getTurns()))
 			return false;
 
 		return true;

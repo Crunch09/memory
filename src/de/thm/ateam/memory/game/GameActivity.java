@@ -21,8 +21,9 @@ import de.thm.ateam.memory.network.NetworkMemory;
 
 public class GameActivity extends Activity{
 	
-	Memory mem = null;
-	NetworkMemory netMem = null;
+
+
+  Game game = null;
 	private static final int ROWS = 2;
 	private static final int COLUMNS = 4;
 	
@@ -120,11 +121,6 @@ public class GameActivity extends Activity{
     out.println("[resume]");
   }*/
 
- 
-
-  
-
-  
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -146,18 +142,18 @@ public class GameActivity extends Activity{
   		 * assembleLayout() does not need any kind of XML File, which makes it very versatile in its use.
   		 * 
   		 */
-  		mem = new Memory(this,new MemoryAttributes(players, ROWS, COLUMNS));
-  		setContentView(mem.assembleLayout());
+  		game = new Memory(this,new MemoryAttributes(players, ROWS, COLUMNS));
+  		setContentView(game.assembleLayout());
 		}else{
 		  currentPlayer = PlayerList.getInstance().currentPlayer;
 		  new ReadingTask().execute();
 		  //setContentView(R.layout.game_host);
 		  // it's a network game
 		  boolean host = b.getBoolean("host");
-      netMem = NetworkMemory.getInstance(this, new MemoryAttributes(ROWS, COLUMNS));
+      game = NetworkMemory.getInstance(this, new MemoryAttributes(ROWS, COLUMNS));
 		  if(host){
 		    //setContentView(netMem.assembleLayout());
-		    String field =  netMem.createField();
+		    String field =  ((NetworkMemory)game).createField();
 		    try {
           out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(currentPlayer.sock.getOutputStream())), true);
         } catch (IOException e) {
@@ -171,6 +167,9 @@ public class GameActivity extends Activity{
         out.println("[field]"+ field);
 		  }
 		}
+
+		
+		setContentView(game.assembleLayout());
 	}
 	
 	/**
@@ -181,8 +180,7 @@ public class GameActivity extends Activity{
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		if(mem != null) mem.onDestroy();
-		if(netMem != null) netMem.onDestroy();
+		game.onDestroy();
 	}
 	/*
 	 * if we decide to do some eventhandling for network usage (messages to be more specific) we should do that here.

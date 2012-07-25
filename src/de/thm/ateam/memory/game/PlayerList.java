@@ -6,6 +6,8 @@ import de.thm.ateam.memory.engine.type.Player;
 
 public class PlayerList {
 
+	private final String TAG = this.getClass().getSimpleName();
+	
 	private static PlayerList instance = null;
 	public ArrayList<Player> players = null; //all the players 
 	public ArrayList<Player> session = null; //just the ones selected for a match

@@ -1,5 +1,6 @@
 package de.thm.ateam.memory;
 
+
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.DialogInterface;
@@ -17,6 +18,7 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 import android.widget.AdapterView.AdapterContextMenuInfo;
+import de.thm.ateam.memory.engine.MemoryPlayerDAO;
 import de.thm.ateam.memory.engine.type.Player;
 import de.thm.ateam.memory.game.GameActivity;
 import de.thm.ateam.memory.game.PlayerList;
@@ -28,7 +30,8 @@ import de.thm.ateam.memory.game.PlayerList;
  */
 public class SelectMultipleUserActivity extends ListActivity {
 	
-	private final String tag = this.getClass().getSimpleName();
+	@SuppressWarnings("unused")
+	private final String TAG = this.getClass().getSimpleName();
 
 	private ListView listView;
 
@@ -77,9 +80,14 @@ public class SelectMultipleUserActivity extends ListActivity {
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
 		switch (item.getItemId()) {
 			case R.id.delete_user:
-				// TODO If selected remove from playerlist
 				Player selected = (Player)adapter.getItem(info.position);
-				if(!selected.remove(adapter)) Log.i(tag, "could not remove " + selected.toString() + "!");
+			   /*
+				* PlayerList.getInstance().session.remove(selected);
+				* MemoryPlayerDAO.getInstance(this).removePlayer(selected);
+				* 
+				* is this a joke? see SelectMultipleUser Activity at the same spot. 
+				*/
+				if(!selected.remove(adapter))Log.i(TAG, "Could not delete " + selected.nick + "!");
 				getListView().setItemChecked(info.position, false);
 				return true;
 			default:
@@ -166,7 +174,7 @@ public class SelectMultipleUserActivity extends ListActivity {
 	}
 	
 	public void start(View view){
-		if(PlayerList.getInstance().session.size()>1 && PlayerList.getInstance().session.size()<7){  // 2 - 6 Players		
+		if(PlayerList.getInstance().session.size()>1 && PlayerList.getInstance().session.size()<7){  // 2 - 6 Players
 			Intent intent = new Intent(this, GameActivity.class);
 			startActivityForResult(intent, GAME_HAS_FINISHED);
 		}
@@ -185,7 +193,6 @@ public class SelectMultipleUserActivity extends ListActivity {
 							SelectMultipleUserActivity.this.startActivityForResult(i, GAME_HAS_FINISHED);
 							break;
 						}
-
 					}
 				};
 				AlertDialog.Builder dialog = new AlertDialog.Builder(this);

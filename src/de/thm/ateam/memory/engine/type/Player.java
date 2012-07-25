@@ -10,30 +10,18 @@ package de.thm.ateam.memory.engine.type;
 
 import java.net.Socket;
 
-import de.thm.ateam.memory.engine.*;
 import android.database.Cursor;
 import android.util.Log;
 import android.widget.BaseAdapter;
+import de.thm.ateam.memory.engine.MemoryPlayerDAO;
 import de.thm.ateam.memory.engine.interfaces.PlayerDAO;
 import de.thm.ateam.memory.game.PlayerList;
 
 
-/**
- * @author fast nur Frank Kevin Zey
- * 
- */
 public class Player implements Comparable<Player>{
 
+
 	private final String TAG = this.getClass().getSimpleName();
-
-
-	/* 
-	 * Die private Geschichten sind zwar aus Softwaresicht sinnig
-	 * geh���ren aber unter Android spart man sich oft die Methodenaufrufe
-	 * aus Geschwindigkeitsgr���nden.
-	 * Falls ich damit was kaputt gemacht hab, es tut mir leid ;)
-	 */
-
 
 	public long id;
 	public String nick;
@@ -87,79 +75,93 @@ public class Player implements Comparable<Player>{
     this.afk = false;
     this.hasToken = false;
 	}
-
+	
+	/**
+	 * Notify Player, that it is his turn.
+	 * @return Player for further usage
+	 */
 	public Player myTurn(){
 		Log.i(TAG, nick+": it's your turn!");
 		return this;
 	}
 
+	/**
+	 * Increases the number of hits
+	 * @return
+	 */
 	public int hit(){
 		return ++roundHits;
 	}
 
+	/**
+	 * Increases the number of turns
+	 * @return current number of turns in Game
+	 */
 	public int turn(){
 		return ++roundTurns;
 	}
-
+	
+	/**
+	 * Not currently required.
+	 */
+	@Deprecated
 	public void onChange(){
 
 	}
 
 
 	/**
-	 * updatePlayer ver��ndert die Angaben des Spielers in der Datenbank.
+	 * Updates the player information in DB
 	 * 
-	 * 
+	 * @param database DB object
 	 */
 	public final void updatePlayer(PlayerDAO database) {
 
-		if (database.updatePlayer(this))
-			Log.i(PlayerDAO.LOG_TAG, "Database updated");
+		if (database.updatePlayer(this)) Log.i(PlayerDAO.LOG_TAG, "Database updated");
 		else
 			Log.i(PlayerDAO.LOG_TAG, "Database not updated");
 	}
 
 	/**
-	 * getNick gibt den Nick des jeweiligen Spielers zur��ck.
+	 * Returns the nick of current Player
 	 * 
-	 * @return String Nickname des Spielers
+	 * @return String Nickname of this player
 	 */
 	public final String getNick() {
 		return this.nick;
 	}
 
 	/**
-	 * getWin gibt die Anzahl der Siege des Spielers zur��ck.
+	 * Returns the number of wins of current Player
 	 * 
-	 * @return int Anzahl der Siege
+	 * @return int Number of wins
 	 */
 	public final int getWin() {
 		return this.win;
 	}
 
 	/**
-	 * getLose gibt die Anzahl der Niederlagen des Spielers zur��ck.
+	 * Returns loses of current player
 	 * 
-	 * @return int Anzahl der Niederlagen
+	 * @return int Number of loses
 	 */
 	public final int getLose() {
 		return this.lose;
 	}
 
 	/**
-	 * getDraw gibt die Anzahl der Unentschieden des Spielers zur��ck.
+	 * Returns draws of current Player
 	 * 
-	 * @return int Anzahl der Unentschieden
+	 * @return int Number of draws
 	 */
 	public final int getDraw() {
 		return this.draw;
 	}
 
 	/**
-	 * getAverageWinRate gibt einen Prozentfaktor des durchschnittlichen
-	 * Siegrate des Spielers zur��ck.
+	 * Returns the computed average win rate of current player
 	 * 
-	 * @return float Siegrate des Spielers
+	 * @return float win rate of current player
 	 */
 	public final float getAverageWinRate() {
 		float f = 0.0f;
@@ -170,47 +172,45 @@ public class Player implements Comparable<Player>{
 	}
 
 	/**
-	 * getGameNumber gibt die Anzahl aller gespielten Spiele des Spielers
-	 * zur��ck.
+	 * Returns number of played games of current player
 	 * 
-	 * @return int Anzahl aller gespielten Spiele
+	 * @return int Number of played games
 	 */
 	public final int getGameNumber() {
 		return (this.win + this.lose + this.draw);
 	}
 
 	/**
-	 * getShots die Anzahl aller Kartenz��ge zur��ck.
+	 * Returns the number of turns.
 	 * 
-	 * @return int Anzahl aller Kartenz��ge
+	 * @return int Number of all turns
 	 */
-	public final int getShots() {
+	public final int getTurns() {
 		return this.turn;
 	}
 
 	/**
-	 * getGameNumber gibt die Anzahl der getroffenen Kartenpaaren zur��ck.
+	 * Returns the number of all hitted pairs.
 	 * 
-	 * @return int Anzahl aller getroffenen Kartenpaaren
+	 * @return int Number of all hitted pairs.
 	 */
 	public final int getHits() {
 		return this.hit;
 	}
 
 	/**
-	 * getID gibt die ID des Spielers zur��ck
+	 * Returns ID of current player
 	 * 
-	 * @return int Die ID des Spielers, gleich der in der Datenbank
+	 * @return int Player ID
 	 */
 	public final long getID() {
 		return this.id;
 	}
 
 	/**
-	 * hashCode generiert einen Hashcode des Objekts anhand der ID und des Nicks. Sollte
-	 * der Nick 'null' oder ein leerer String sein, wird stattdessen 0 gew��hlt.
+	 * Returns generated hash for Player calculated by ID and Nick
 	 * 
-	 * @return int Generierter Hash
+	 * @return int Generated hash
 	 */
 	@Override
 	public int hashCode() {
@@ -228,27 +228,41 @@ public class Player implements Comparable<Player>{
 	}
 
 	/**
-	 * setID setzt die ID des Spielers
+	 * Set new ID for current Player
 	 * 
-	 * @param id Die neue ID des Spielers
+	 * @param id The new ID
 	 */
 	public void setID(long id) {
 		this.id = id;
 	}
 
 	/**
-	 * for printing the object
+	 * Prints the Player
 	 * 
-	 * @return The nickname of the user
+	 * @return The nickname
 	 */
 	public String toString(){
 		return this.nick;
 	}
-	
+
+	 /**
+	  * Returns the difference between two players averaged win rate
+	  * 
+	  * @param Player compareTo
+	  * @return int Difference between two players win rate
+	  */
+	 public int compareTo(Player another) throws ClassCastException{
+		 if(!(another instanceof Player))
+			 throw new ClassCastException();
+
+		 return (int) (this.getAverageWinRate() - another.getAverageWinRate());
+	 }
+	 
 	/**
-	 * removes a player
+	 * removes a player, notifies the given Adapter. To be used within a ListView.
 	 * 
-	 * @returns success or failure
+	 * @param Adapter yourAdapter
+	 * @return Success or failure
 	 */
 	public boolean remove(BaseAdapter adapter){
 		PlayerList.getInstance().session.remove(this);
@@ -256,20 +270,11 @@ public class Player implements Comparable<Player>{
 		
 		try {
 			if(adapter!= null)adapter.notifyDataSetChanged();
-			//TODO: Das funktioniert so nicht.
 			MemoryPlayerDAO.getInstance().removePlayer(this);
 		} catch (Exception e) {
 			Log.e(TAG, "", e);
 			return false;
 		}
 		return true;
-	}
-	
-	
-	public int compareTo(Player another) throws ClassCastException{
-		if(!(another instanceof Player)){
-			throw new ClassCastException();
-		}
-		return (int) (this.getAverageWinRate() - another.getAverageWinRate());
 	}
 }

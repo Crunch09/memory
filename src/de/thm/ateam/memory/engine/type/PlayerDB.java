@@ -25,13 +25,11 @@ public class PlayerDB {
 	public static final String TURN	  = "turn";
 	
 	/**
-	 * Erzeugt ein neues ContentValues-Objekt mit dem Inhalt des übergebenen
-	 * Gamer-Objekts.
+	 * Creates ContentValues object with all informations about specified player object
 	 * 
-	 * @param player Spieler, dessen Informationen gespeichert werden sollen
+	 * @param player Player, whoes informations been stored
 	 * 
-	 * @return ContentValues Gibt ein ContentValues-Objekt zurück mit Inhalt des Spielers, wenn
-	 *    gamer==null, Rückgabe = null
+	 * @return ContentValues Returns ContentValues object with specified Player informations, if Player NULL returns NULL
 	 */
 	protected final ContentValues createContentValues(Player player) {
 		if (player == null)
@@ -44,7 +42,7 @@ public class PlayerDB {
 		cv.put(LOSE, player.getLose());
 		cv.put(DRAW, player.getDraw());
 		cv.put(HIT,  player.getHits());
-		cv.put(TURN, player.getShots());
+		cv.put(TURN, player.getTurns());
 		
 		return cv;
 	}

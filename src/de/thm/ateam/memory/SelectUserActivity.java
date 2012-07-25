@@ -29,6 +29,7 @@ public class SelectUserActivity extends ListActivity {
 
 	private BaseAdapter ba;
 	private final String TAG = this.getClass().getSimpleName();
+
 	/**
 	 * 
 	 * Function called when the activity is first created.

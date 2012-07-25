@@ -8,7 +8,9 @@ package de.thm.ateam.memory.game;
  */
 
 public class Card{
-
+	
+	private final String TAG =  this.getClass().getSimpleName();
+	
 	public int x;
 	public int y;
 	public int id;

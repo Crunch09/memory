@@ -3,6 +3,8 @@
 \documentclass[11pt,a4paper]{article}
 \usepackage[ngerman]{babel}
 \usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{hyperref}
 %\renewcommand{\ttdefault}{cmss}
 
 \usepackage{lmodern}
@@ -36,7 +38,6 @@ Muss
 \item Jeder Spieler bekommt einen Namen, der Ã¼ber Spielsitzungen hinweg gespeichert wird.
 \item Ãœber jeden Spieler wird eine Statistik angezeigt, wie z.B. Anzahl gewonnener \/ verlorener Spiele, oder Anzahl richtiger Treffer pro 100 ZÃ¼ge.
 \end{itemize}
-
 Kann
 \begin{itemize}
 \item Mehrspielermodus Ã¼ber mehrere Smartphones innerhalb eines LANs.
@@ -80,9 +81,24 @@ Wir haben uns selbst als Ziel gesetzt, dass wir in 2 Richtungen entwickeln: Das 
 Zum Framework gehÃ¶rt Game.java als Oberklasse aller implementierbaren rundenbasierten Spiele, eine Engine die im Wesentlichen Datenbankzugriffe kapselt, ein einfaches MenÃ¼system, das leicht konfigurier- und erweiterbar ist und einen statistischen Teil der mit der Datenbank zusammen arbeitet. Wir haben dann als Konkrete Implementierung fÃ¼r Memory die Klasse Memory.java von Game erben lassen und entsprechend fÃ¼r Memory angepasst. Ebenso wird die Netzwerkimplementierung eine von Game abgeleitete Klasse sein, natÃ¼rlich noch mit einigen spezifischen Anpassungen zur Kommunikation der GerÃ¤te.
 
 \subsection{Design}
-Icke
-\subsection{Engine / Datenbanken}
-zeyorama
+Wie in \autoref{fig:memorydesign} zu sehen ist entsteht das Framework vÃ¶llig unabhÃ¤ngig vom zu implementierenden Spiel.
+\begin{figure}[!h]
+\centering
+\includegraphics[scale=0.4]{pics/memorydesign.png}
+\caption{Konzept}
+\label{fig:memorydesign}
+\end{figure}
+
+\subsection{Engine und Datenbank}
+Die Engine umfasst die Typisierung der Spieler und Datenbankschnittstellen.
+\subsubsection{Spieler}
+Der Spieler liegt als Klasse vor, mit allen Informationen, wie Nickname, Siege, Niederlagen, Unentschieden, getroffene Züge, sowie allgemein getätigte Züge und eine ID. Die ID entspricht der ID des entsprechenden Datensatzes in der Datenbank. Diese ID wird nach dem Speichern in der Datenbank im jeweiligen Objekt gespeichert.
+\subsubsection{Nachladen eines Kartendecks}
+Das Nachladen eines Kartendecks wird über eine SD Karte organisiert. Das neue Deck wird in einer Zip auf dieser SD Karte gespeichert. Diese Zip Datei kann unter Settings->Load Deck ausgewählt werden und dann wird es automatisch entpackt, in die Datenbank geschrieben und damit ist das Nachladen des Decks abgeschlossen.\\
+Wichtig: Die Zip Datei muss im root-Verzeichnis der SD Karte zu finden sein. Ausserdem ist es wichtig, dass die Namensgebung der einzelnen JPG Dateien richtig gesetzt sind. Die Rückseite muss den Namen 0.jpg haben. Alle weiteren sind frei wählbar.
+\subsubsection{Datenbank}
+Die Datenbank umfasst 3 Tabellen. Diese Tabellen beinhalten die Informationen jedes einzelnen Spielers. Es wird der Nickname, die Siege, Niederlagen, sowie Unentschieden, getroffene Kartenpaare und die allgemeine durchgeführte Züge. Die jeweilige ID des Spielers entspricht dem jeweiligen Datensatz in der Datenbank.\\
+Neben dem Spieler werden auch zusätzliche Kartendecks gespeichert. Da zu jedem Kartendeck es eine Rückseite vorhanden sein muss und 32 Vorderseiten, handelt es sich um eine 1 -> n Beziehung. In der Datenbank werden zu jedem Kartendeck der Name gespeichert, dieser wird aus dem Dateinamen entnommen. Zusätzlich wird direkt die Rückseite in der Kartendeck Tabelle gespeichert, da die Rückseite nur einmal vorkommt und nicht noch aus der Kartentabelle gefiltert werden muss. Die Kartentabelle enthält die ID des jeweiligen Kartendecks als Referenz und einen Blob in dem die JPG Vorderseitenbilder als Byte Feld gespeichert wird.
 \subsection{Statistik}
 crunch
 \subsection{Memory}
@@ -94,7 +110,7 @@ crunch
 
 Die Benutzerdokumentation wird per {\em Help} in der App bereitgestellt. 
 
-\subsection*{Code Dokumentation}
+\subsection*{API Dokumentation}
 
 Die Code Dokumentation ist per JavaDoc im Quelltext abgewickelt.
 
