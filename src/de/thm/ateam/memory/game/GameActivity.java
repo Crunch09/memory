@@ -13,7 +13,9 @@ import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 import de.thm.ateam.memory.ImageAdapter;
+import de.thm.ateam.memory.R;
 import de.thm.ateam.memory.engine.type.Player;
 import de.thm.ateam.memory.network.NetworkMemory;
 
@@ -59,12 +61,15 @@ public class GameActivity extends Activity{
         if(message.startsWith("[token]")){
           currentPlayer.hasToken = true;
           Log.i(TAG, "client received the token");
+          Toast t = Toast.makeText(GameActivity.this, R.string.your_turn, Toast.LENGTH_SHORT);
+          t.show();
+          NetworkMemory.getInstance(GameActivity.this, null).infoView.setText(currentPlayer.nick);
         }else if(message.startsWith("[next]")){
           Log.i(TAG, "it's no longer this clients turn");
         }else if(message.startsWith("[field]")){
           Log.i(TAG, "received field");
-          NetworkMemory.getInstance(GameActivity.this, null).imageAdapter = new ImageAdapter(GameActivity.this, 2, 4);
-          NetworkMemory.getInstance(GameActivity.this, null).imageAdapter.buildField(message.substring(7));
+          NetworkMemory.getInstance(GameActivity.this, null).imageAdapter = new ImageAdapter(GameActivity.this, ROWS, COLUMNS);
+          NetworkMemory.getInstance(GameActivity.this, null).imageAdapter.buildField(message.substring(7), ROWS * COLUMNS);
           String field = "";
           for(Card[]c : NetworkMemory.getInstance(GameActivity.this, null).imageAdapter.getPositions()){
             field += c[0] +";"+ c[1] +"Ende";
@@ -87,6 +92,11 @@ public class GameActivity extends Activity{
         }else if(message.startsWith("[finish]")){
           setResult(Activity.RESULT_OK, getIntent().putExtra("msg", "foo"));
           finish();
+        }else if(message.startsWith("[currentPlayer]")){
+          String username = message.substring(15);
+          Toast t = Toast.makeText(GameActivity.this, "it's "+ username +"s turn!", Toast.LENGTH_SHORT);
+          t.show();
+          NetworkMemory.getInstance(GameActivity.this, null).infoView.setText(username);
         }
       }
 

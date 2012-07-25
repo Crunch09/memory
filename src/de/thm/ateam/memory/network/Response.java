@@ -38,9 +38,19 @@ public class Response implements Runnable{
         p = nextTurn();
       }
       try {
-        out = new PrintWriter(p.sock.getOutputStream(), true);
-        Log.i(TAG, "Server sends out new token");
-        out.println("[token]");
+        for(Player player : HostService.clients){
+          if(player.sock != null){
+            if(player.sock.getInetAddress().equals(p.sock.getInetAddress())){
+              Log.i(TAG, "Server sends out new token");
+              out = new PrintWriter(p.sock.getOutputStream(), true);
+              out.println("[token]");
+            }else{
+              out = new PrintWriter(player.sock.getOutputStream(), true);
+              out.println("[currentPlayer]"+ player.nick);
+            }
+          }
+        }
+        
       } catch (IOException e) {
         Log.e(TAG, "IOException");
       }
@@ -86,8 +96,8 @@ public class Response implements Runnable{
             String playerName = incMessage.substring(6, incMessage.length());
             if(player.sock.getLocalAddress().equals(sock.getLocalAddress())){
               player.nick = playerName;
-              out.println(playerName + " joined the Game");
             }
+            out.println(playerName + " joined the Game");
           }else if(incMessage.startsWith("[delete]")){
             Log.i(TAG, "a pair was found");
             // roundHits erhöhen, aber nur einmal

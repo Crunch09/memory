@@ -30,7 +30,6 @@ import de.thm.ateam.memory.game.Card;
 import de.thm.ateam.memory.game.Game;
 import de.thm.ateam.memory.game.MemoryAttributes;
 import de.thm.ateam.memory.game.PlayerList;
-import de.thm.ateam.memory.game.StatsUpdate;
 
 public class NetworkMemory extends Game{
 
@@ -47,7 +46,7 @@ public class NetworkMemory extends Game{
   private GridView mainView;
   private Theme theme;
   public ImageAdapter imageAdapter;
-  private TextView infoView;
+  public TextView infoView;
   private final String TAG = this.getClass().getSimpleName();
   Player currentPlayer = null;
   int numberOfClicks = 0;

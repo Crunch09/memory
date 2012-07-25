@@ -63,8 +63,8 @@ public class ImageAdapter extends BaseAdapter {
 	}
 	
 	
-	public void buildField(String fieldString){
-	  ImageView[] imageViewNew = new ImageView[8];
+	public void buildField(String fieldString, int size){
+	  ImageView[] imageViewNew = new ImageView[size];
 	  
 	  String[] pairs = fieldString.split("Ende");
 	  for(int i = 0; i < pairs.length; i++){
