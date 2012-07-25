@@ -15,7 +15,7 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
-import de.thm.ateam.memory.engine.type.Player;
+import de.thm.ateam.memory.engine.type.*;
 import de.thm.ateam.memory.game.PlayerList;
 import de.thm.ateam.memory.network.ChooseClientOrHostActivity;
 
@@ -131,7 +131,7 @@ public class SelectUserActivity extends ListActivity {
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
-		PlayerList.getInstance().currentPlayer = (Player)l.getAdapter().getItem(position);
+		PlayerList.getInstance().currentPlayer = new NetworkPlayer((Player)l.getAdapter().getItem(position));//(NetworkPlayer)l.getAdapter().getItem(position);
 		Log.i(TAG,"Setting currentPlayer: "+PlayerList.getInstance().currentPlayer.nick);
 		Intent i = new Intent(this, ChooseClientOrHostActivity.class);
 		startActivity(i);

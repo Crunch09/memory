@@ -9,14 +9,14 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 import android.util.Log;
-import de.thm.ateam.memory.engine.type.Player;
+import de.thm.ateam.memory.engine.type.*;
 
 
 public class HostService extends Service{
 
   private static final String TAG = HostService.class.getSimpleName();
 
-  public static ArrayList<Player> clients = null;
+  public static ArrayList<NetworkPlayer> clients = null;
   public static int current = 0;
   private static boolean gameAvailable = false;
   public static int afkCount = 0;
@@ -28,7 +28,7 @@ public class HostService extends Service{
   @Override
   public int onStartCommand(Intent intent, int flags, int startId){
     Log.i(TAG, "Starte Server Service!");
-    clients = new ArrayList<Player>();
+    clients = new ArrayList<NetworkPlayer>();
     gameAvailable = true;
     Thread t = new Thread(new ServerTask());
     t.start();
@@ -37,9 +37,9 @@ public class HostService extends Service{
   }
   
   
-  public static Player findPlayerBySocket(Socket sock){
+  public static NetworkPlayer findPlayerBySocket(Socket sock){
     if(clients.size() == 0) return null;
-    for(Player p : clients){
+    for(NetworkPlayer p : clients){
       if(p.sock != null && p.sock.getLocalAddress().equals(sock.getLocalAddress())){
         return p;
       }
@@ -69,7 +69,7 @@ public class HostService extends Service{
             break;
           }
           Log.i(TAG, "A Client has connected!");
-          clients.add(new Player(clientSock));
+          clients.add(new NetworkPlayer(clientSock));
           //prüfen ob schon ein Thread existiert
           Thread t = new Thread(new ClientConnection(clientSock));
           t.start();
