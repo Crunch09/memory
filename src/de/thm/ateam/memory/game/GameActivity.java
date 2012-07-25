@@ -84,6 +84,9 @@ public class GameActivity extends Activity{
           NetworkMemory.getInstance(GameActivity.this, null).reset(
               Integer.parseInt(pick[0]),
               Integer.parseInt(pick[1]));
+        }else if(message.startsWith("[finish]")){
+          setResult(Activity.RESULT_OK, getIntent().putExtra("msg", "foo"));
+          finish();
         }
       }
 

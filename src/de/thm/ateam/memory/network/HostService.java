@@ -35,6 +35,17 @@ public class HostService extends Service{
 
     return START_NOT_STICKY;
   }
+  
+  
+  public static Player findPlayerBySocket(Socket sock){
+    if(clients.size() == 0) return null;
+    for(Player p : clients){
+      if(p.sock != null && p.sock.getInetAddress().equals(sock.getInetAddress())){
+        return p;
+      }
+    }
+    return null;
+  }
 
   @Override
   public void onDestroy(){

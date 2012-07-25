@@ -70,6 +70,7 @@ public class Response implements Runnable{
         }
       }
     }else{
+      Player p = HostService.findPlayerBySocket(this.sock);
       for(Player player : HostService.clients){
         if(player.sock != null){
           try {
@@ -87,8 +88,15 @@ public class Response implements Runnable{
               player.nick = playerName;
               out.println(playerName + " joined the Game");
             }
+          }else if(incMessage.startsWith("[delete]")){
+            Log.i(TAG, "a pair was found");
+            // roundHits erhöhen, aber nur einmal
+            if(p != null && p.sock.getInetAddress().equals(player.sock.getInetAddress())){
+              p.roundHits += 1;
+            }
+            out.println(incMessage);
           }else{
-            /* z.B. [flip], [delete], [field], [reset] !!! */
+            /* z.B. [flip], [delete], [field], [reset], [finish] !!! */
             out.println(incMessage);
             //out.close();
           }

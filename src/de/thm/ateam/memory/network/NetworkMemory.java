@@ -301,24 +301,21 @@ public class NetworkMemory extends Game{
                 //Memory.this.getWinner();
                 numberOfPicks = 0;
                 String victoryMsg = "";
-                for(Player p : attr.getPlayers()){
-                  if(p.roundWin)
-                    victoryMsg += p.nick + ",";
-                }
-                // deletes last comma if there is a winner
-                if(!victoryMsg.equals("")){
-                  victoryMsg = victoryMsg.substring(0, victoryMsg.length()-1);
-                  victoryMsg += " has won!!!";
-                }else{
-                  victoryMsg = "Last round was a draw.";
-                }
-
-                Thread t = new Thread(new StatsUpdate(envActivity.getApplicationContext()));
-                t.run();
-
-
-                envActivity.setResult(Activity.RESULT_OK, envActivity.getIntent().putExtra("msg", victoryMsg));
-                envActivity.finish();
+                out.println("[finish]");
+//                for(Player p : attr.getPlayers()){
+//                  if(p.roundWin)
+//                    victoryMsg += p.nick + ",";
+//                }
+//                // deletes last comma if there is a winner
+//                if(!victoryMsg.equals("")){
+//                  victoryMsg = victoryMsg.substring(0, victoryMsg.length()-1);
+//                  victoryMsg += " has won!!!";
+//                }else{
+//                  victoryMsg = "Last round was a draw.";
+//                }
+//
+//                Thread t = new Thread(new StatsUpdate(envActivity.getApplicationContext()));
+//                t.run();
               }
 
 
