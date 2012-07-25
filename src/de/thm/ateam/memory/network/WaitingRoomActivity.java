@@ -64,6 +64,7 @@ public class WaitingRoomActivity extends FragmentActivity implements MyAlertDial
         Log.i(TAG, "Could not find Server");
       }
       try {
+        Log.i(TAG, "now waiting for chat messages");
         currentPlayer.sock = new Socket(adr, 6666);
         Log.i(TAG, "New Client has connected!");
         bf = new BufferedReader(new InputStreamReader(currentPlayer.sock.getInputStream()));
@@ -95,7 +96,7 @@ public class WaitingRoomActivity extends FragmentActivity implements MyAlertDial
 
     @Override
     protected void onProgressUpdate(String...messages){
-      Log.i(TAG, "Client on Serverside received "+ messages.length + " new message(s).");
+      Log.i(TAG, "Client received "+ messages.length + " new message(s).");
       for(String message : messages){
         if(message.startsWith("[start]")){
           gameHasStarted = true;
@@ -197,6 +198,7 @@ public class WaitingRoomActivity extends FragmentActivity implements MyAlertDial
     }
     wfc = new WaitForChatMessages();
     wfc.execute();
+    Log.i("status",wfc.getStatus().toString());
   }
 
   public void onButtonClick(View target){

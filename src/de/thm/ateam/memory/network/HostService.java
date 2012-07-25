@@ -5,13 +5,11 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 
-import de.thm.ateam.memory.engine.type.Player;
-
 import android.app.Service;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.IBinder;
 import android.util.Log;
+import de.thm.ateam.memory.engine.type.Player;
 
 
 public class HostService extends Service{
@@ -32,7 +30,9 @@ public class HostService extends Service{
     Log.i(TAG, "Starte Server Service!");
     clients = new ArrayList<Player>();
     gameAvailable = true;
-    new ServerTask().execute();
+    Thread t = new Thread(new ServerTask());
+    t.start();
+
     return START_NOT_STICKY;
   }
 
@@ -43,11 +43,9 @@ public class HostService extends Service{
     stopSelf();
   }
 
-  private class ServerTask extends AsyncTask<Void, Player, Void>{
+  private class ServerTask implements Runnable{
 
-    @Override
-    protected Void doInBackground(Void... params) {
-
+    public void run() {
       try {
         ServerSocket servSock = new ServerSocket(6666);
 
@@ -69,9 +67,8 @@ public class HostService extends Service{
       } catch (IOException e) {
         Log.e(TAG, "Server: Port 6666 could not be used ");
       }
-      return null;
-    }
 
+    }
 
   }
 
