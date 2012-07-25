@@ -5,6 +5,8 @@ import de.thm.ateam.memory.engine.type.Player;
 
 public class MemoryAttributes extends GameAttributes{
 	
+	private final String TAG = this.getClass().getSimpleName();
+	
 	private int rows, columns;
 	
 	public MemoryAttributes(ArrayList<Player> players, int rows, int columns){

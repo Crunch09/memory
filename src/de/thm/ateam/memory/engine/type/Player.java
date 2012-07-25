@@ -16,22 +16,9 @@ import de.thm.ateam.memory.engine.interfaces.PlayerDAO;
 import de.thm.ateam.memory.game.PlayerList;
 
 
-/**
- * @author fast nur Frank Kevin Zey
- * 
- */
 public class Player implements Comparable<Player>{
 
-	private final String tag = "Player";
-
-
-	/* 
-	 * Die private Geschichten sind zwar aus Softwaresicht sinnig
-	 * geh���ren aber unter Android spart man sich oft die Methodenaufrufe
-	 * aus Geschwindigkeitsgr���nden.
-	 * Falls ich damit was kaputt gemacht hab, es tut mir leid ;)
-	 */
-
+	private final String tag = this.getClass().getSimpleName();
 
 	public long id;
 	public String nick;
@@ -62,20 +49,36 @@ public class Player implements Comparable<Player>{
 		this.roundLose = false;
 		this.roundWin = false;
 	}
-
+	
+	/**
+	 * Notify Player, that it is his turn.
+	 * @return Player for further usage
+	 */
 	public Player myTurn(){
 		Log.i(tag, nick+": it's your turn!");
 		return this;
 	}
 
+	/**
+	 * Increases the number of hits
+	 * @return
+	 */
 	public int hit(){
 		return ++roundHits;
 	}
 
+	/**
+	 * Increases the number of turns
+	 * @return current number of turns in Game
+	 */
 	public int turn(){
 		return ++roundTurns;
 	}
-
+	
+	/**
+	 * Not currently required.
+	 */
+	@Deprecated
 	public void onChange(){
 
 	}
@@ -88,8 +91,7 @@ public class Player implements Comparable<Player>{
 	 */
 	public final void updatePlayer(PlayerDAO database) {
 
-		if (database.updatePlayer(this))
-			Log.i(PlayerDAO.LOG_TAG, "Database updated");
+		if (database.updatePlayer(this)) Log.i(PlayerDAO.LOG_TAG, "Database updated");
 		else
 			Log.i(PlayerDAO.LOG_TAG, "Database not updated");
 	}
@@ -157,7 +159,7 @@ public class Player implements Comparable<Player>{
 	 * 
 	 * @return int Number of all turns
 	 */
-	public final int getShots() {
+	public final int getTurns() {
 		return this.turn;
 	}
 
@@ -209,9 +211,9 @@ public class Player implements Comparable<Player>{
 	}
 
 	/**
-	 * for printing the object
+	 * Prints the Player
 	 * 
-	 * @return The nickname of the user
+	 * @return The nickname
 	 */
 	public String toString(){
 		return this.nick;
@@ -220,6 +222,7 @@ public class Player implements Comparable<Player>{
 	 /**
 	  * Returns the difference between two players averaged win rate
 	  * 
+	  * @param Player compareTo
 	  * @return int Difference between two players win rate
 	  */
 	 public int compareTo(Player another) throws ClassCastException{
@@ -230,9 +233,10 @@ public class Player implements Comparable<Player>{
 	 }
 	 
 	/**
-	 * removes a player
+	 * removes a player, notifies the given Adapter. To be used within a ListView.
 	 * 
-	 * @returns success or failure
+	 * @param Adapter yourAdapter
+	 * @return Success or failure
 	 */
 	public boolean remove(BaseAdapter adapter){
 		PlayerList.getInstance().session.remove(this);
@@ -240,7 +244,6 @@ public class Player implements Comparable<Player>{
 		
 		try {
 			if(adapter!= null)adapter.notifyDataSetChanged();
-			//TODO: Das funktioniert so nicht.
 			MemoryPlayerDAO.getInstance().removePlayer(this);
 		} catch (Exception e) {
 			Log.e(tag, "", e);

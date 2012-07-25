@@ -59,6 +59,21 @@ public class Deck {
 	}
 	
 	/**
+	 * This constructor build Deck object with back side image, name, ArrayList of images for front side and ID
+	 * 
+	 * @param ID id of new deck
+	 * @param Name name of this deck
+	 * @param backSide the back side image
+	 * @param frontSide List of all front side images
+	 */
+	public Deck(long ID, String name, Bitmap backSide, ArrayList<Bitmap> frontSide) {
+		this.backSide = backSide;
+		this.ID = ID;
+		this.name = name;
+		this.frontSide = frontSide;
+	}
+	
+	/**
 	 * Creates Deck object and loads front images for deck.
 	 * 
 	 * @param memoryDeckDAO Database interface
@@ -104,7 +119,7 @@ public class Deck {
 			Log.i(TAG,entry.getName());
 		}
 		
-		this.name = zip.getName();
+		this.name = zip.getName().split("/")[0].substring(0, 4);
 		dao = new MemoryDeckDAO(ctx);
 		if (dao.storeDeck(this))
 			Log.i(TAG, "stored");

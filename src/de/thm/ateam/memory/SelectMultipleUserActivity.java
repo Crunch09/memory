@@ -31,7 +31,7 @@ import de.thm.ateam.memory.game.PlayerList;
 public class SelectMultipleUserActivity extends ListActivity {
 	
 	@SuppressWarnings("unused")
-	private final String tag = this.getClass().getSimpleName();
+	private final String TAG = this.getClass().getSimpleName();
 
 	private ListView listView;
 
@@ -80,10 +80,15 @@ public class SelectMultipleUserActivity extends ListActivity {
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
 		switch (item.getItemId()) {
 			case R.id.delete_user:
-				// TODO If selected remove from playerlist
 				Player selected = (Player)adapter.getItem(info.position);
-				PlayerList.getInstance().session.remove(selected);
-				MemoryPlayerDAO.getInstance(this).removePlayer(selected);
+			   /*
+				* PlayerList.getInstance().session.remove(selected);
+				* MemoryPlayerDAO.getInstance(this).removePlayer(selected);
+				* 
+				* is this a joke? see SelectMultipleUser Activity at the same spot. 
+				*/
+				if(!selected.remove(adapter))Log.i(TAG, "Could not delete " + selected.nick + "!");
+				getListView().setItemChecked(info.position, false);
 				return true;
 			default:
 				return super.onContextItemSelected(item);
@@ -188,7 +193,6 @@ public class SelectMultipleUserActivity extends ListActivity {
 							SelectMultipleUserActivity.this.startActivityForResult(i, GAME_HAS_FINISHED);
 							break;
 						}
-
 					}
 				};
 				AlertDialog.Builder dialog = new AlertDialog.Builder(this);

@@ -6,6 +6,7 @@ import java.util.TimerTask;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -76,6 +77,8 @@ public class Memory extends Game{
 		infoView = new TextView(ctx);
 		infoView.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT, 0.05f)); //this is fixed value, should be fine though
 		infoView.setText("Initializing ...");
+		infoView.setTypeface(null,Typeface.BOLD_ITALIC);
+		infoView.setTextSize(20); // looks good to me
 
 		newGame();
 		
@@ -130,11 +133,9 @@ public class Memory extends Game{
 	 * 
 	 */
 	public void reset(int pos, int pos2) {
-
 		ResetTask task = new ResetTask(pos, pos2);
 		Timer t = new Timer(false);
 		t.schedule(task, 1000);
-
 	}
 
 	/**

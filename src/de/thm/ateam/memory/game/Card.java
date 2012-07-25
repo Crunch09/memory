@@ -9,7 +9,9 @@ import android.widget.Button;
  */
 
 public class Card{
-
+	
+	private final String TAG =  this.getClass().getSimpleName();
+	
 	public int x;
 	public int y;
 	public Button button;

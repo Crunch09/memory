@@ -11,7 +11,7 @@ import de.thm.ateam.memory.engine.type.Player;
 
 public class Game {
 
-	private final String TAG =  "Game.java";
+	private final String TAG =  this.getClass().getSimpleName();
 	private GameAttributes attr;
 	private ArrayList<Player> list;
 	private int current = -1;
@@ -104,10 +104,17 @@ public class Game {
 	}
 	
 	/**
-	 * To be  overridden if required.
+	 * To be  overridden, if required.
 	 */
 	public void newGame(){
 		Log.i(TAG, "new Game()");
+	}
+	
+	/**
+	 * This Method is used to controll how the game ends.
+	 */
+	public void onDestroy(){
+		Log.i(TAG, "onDestroy()");
 	}
 
 }
