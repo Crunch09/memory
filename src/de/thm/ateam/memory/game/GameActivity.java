@@ -46,6 +46,9 @@ public class GameActivity extends Activity{
         while ((inputLine = bf.readLine()) != null) {
           Log.i(TAG, "Received a message");
           publishProgress(inputLine);
+          if(inputLine.startsWith("[finish]")){
+            break;
+          }
         }
         Log.i(TAG, "Client waiting loop has ended");
       } catch (IOException e) {

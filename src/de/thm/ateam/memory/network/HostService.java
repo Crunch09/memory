@@ -18,7 +18,7 @@ public class HostService extends Service{
 
   public static ArrayList<Player> clients = null;
   public static int current = 0;
-  private static boolean gameAvailable = false;
+  public static boolean gameAvailable = false;
   public static int afkCount = 0;
   @Override
   public IBinder onBind(Intent arg0) {
@@ -66,13 +66,13 @@ public class HostService extends Service{
           Socket clientSock = servSock.accept();
           if(!gameAvailable){
             Log.i(TAG, "Client tried to connect, but Server is full.");
-            break;
+          }else{
+            Log.i(TAG, "A Client has connected!");
+            clients.add(new Player(clientSock));
+            //prüfen ob schon ein Thread existiert
+            Thread t = new Thread(new ClientConnection(clientSock));
+            t.start();
           }
-          Log.i(TAG, "A Client has connected!");
-          clients.add(new Player(clientSock));
-          //prüfen ob schon ein Thread existiert
-          Thread t = new Thread(new ClientConnection(clientSock));
-          t.start();
         }
 
       } catch (IOException e) {
@@ -96,6 +96,8 @@ public class HostService extends Service{
         }else if(p.roundHits == highscore){
           numberOfWinners++;
         }
+        //reset it for the next round
+        p.roundHits = 0;
     }
     if(numberOfWinners == 1){
       return winner;

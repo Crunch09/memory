@@ -65,8 +65,8 @@
         </activity>
         <activity android:name="de.thm.ateam.memory.network.ChooseClientOrHostActivity"></activity>
         <activity android:name="de.thm.ateam.memory.network.EnterIpAddress"></activity>
-        <activity android:name="de.thm.ateam.memory.network.NetworkMemory"></activity>
-        <activity android:name="de.thm.ateam.memory.network.WaitingRoomActivity"></activity>
+        <activity android:name="de.thm.ateam.memory.network.NetworkMemory" android:configChanges="orientation|keyboardHidden"></activity>
+        <activity android:name="de.thm.ateam.memory.network.WaitingRoomActivity" android:configChanges="orientation|keyboardHidden"></activity>
     </application>
 
 </manifest>

@@ -45,6 +45,7 @@ public class WaitingRoomActivity extends FragmentActivity implements MyAlertDial
   private Player currentPlayer = null;
   private PrintWriter out = null;
   private BufferedReader bf = null;
+  private boolean resumed = false;
 
   public void onDestroy(){
     super.onDestroy();
@@ -71,8 +72,10 @@ public class WaitingRoomActivity extends FragmentActivity implements MyAlertDial
         String inputLine;
         
         out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(currentPlayer.sock.getOutputStream())), true);
-        //send name to Server
-        out.println("[nick]"+ currentPlayer.nick);
+        //send name to Server if this activity is not resumed
+        if(!resumed){
+          out.println("[nick]"+ currentPlayer.nick);
+        }
         while ((inputLine = bf.readLine()) != null && !gameHasStarted) {
           publishProgress(inputLine);
           if(inputLine.equals("[start]")) break;
@@ -168,6 +171,7 @@ public class WaitingRoomActivity extends FragmentActivity implements MyAlertDial
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     Bundle b = getIntent().getExtras();
+    resumed = false;
     gameHasStarted = false;
     if(b != null){
       //client
@@ -198,7 +202,6 @@ public class WaitingRoomActivity extends FragmentActivity implements MyAlertDial
     }
     wfc = new WaitForChatMessages();
     wfc.execute();
-    Log.i("status",wfc.getStatus().toString());
   }
 
   public void onButtonClick(View target){
@@ -219,5 +222,27 @@ public class WaitingRoomActivity extends FragmentActivity implements MyAlertDial
   public void onFinishAlertDialog() {
     finish();
 
+  }
+  
+  @Override
+  protected void onResume(){
+    super.onResume();
+    if(wfc.getStatus() == AsyncTask.Status.FINISHED){
+      wfc = new WaitForChatMessages();
+      wfc.execute();
+      Log.i(TAG, "Chat-AsyncTask was restarted");
+      gameHasStarted = false;
+      findViewById(R.id.send_btn).setClickable(true);
+      if(serverAddress.equals("127.0.0.1")){
+        findViewById(R.id.start_game_btn).setClickable(true);
+        HostService.gameAvailable = true;
+      }
+      findViewById(R.id.chat_edit).setEnabled(true);
+    }
+  }
+  
+  protected void onPause(){
+    super.onPause();
+    resumed = true;
   }
 }
