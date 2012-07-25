@@ -110,27 +110,35 @@ public class MemoryDeckDAO extends DeckDB implements DeckDAO {
 	public Deck getDeck(long id) {
 		SQLiteDatabase db = sql.getReadableDatabase();
 		String[] projection = new String[] { ID, NAME, BACK_CARD };
-		Cursor c = db.query(TABLE_NAME, projection, ID + "=?", new String[]{String.valueOf(id)}, null, null, ID);
+		Cursor c = db.query(TABLE_NAME, projection, ID + " = ?", new String[]{String.valueOf(id)}, null, null, ID);
 		
 		c.moveToNext();
-		if (c.getCount() <= 0)
+		if (c.getCount() <= 0) {
+			c.close();
+			db.close();
 			return null;
+		}
 		
 		String[] projectionCards = new String[] { CARD_ID, CARD_DECK_ID, CARD_BLOB };
-		Cursor cc = db.query(CARD_TABLE_NAME, projectionCards, CARD_DECK_ID, new String[] { String.valueOf(c.getLong(0)) }, null, null, CARD_ID);
-		db.close();
+		Cursor cc = db.query(CARD_TABLE_NAME, projectionCards, CARD_DECK_ID + " = ?", new String[] { String.valueOf(c.getLong(0)) }, null, null, CARD_ID);
 		
-		if (cc.getCount() <= 0)
+		if (cc.getCount() <= 0) {
+			c.close();
+			cc.close();
+			db.close();
 			return null;
+		}
 		
 		ArrayList<Bitmap> al = new ArrayList<Bitmap>();
 		while (cc.moveToNext())
-			al.add(BitmapFactory.decodeByteArray(cc.getBlob(2), 0, c.getBlob(2).length));
+			al.add(BitmapFactory.decodeByteArray(cc.getBlob(2), 0, cc.getBlob(2).length));
 			
+		Deck deck = new Deck(c.getLong(0), c.getString(1), BitmapFactory.decodeByteArray(c.getBlob(2), 0, c.getBlob(2).length), al);
 		c.close();
 		cc.close();
+		db.close();
 		
-		return new Deck(c.getLong(0), c.getString(1), BitmapFactory.decodeByteArray(c.getBlob(2), 0, c.getBlob(2).length), al);
+		return deck;
 	}
 
 	/* (non-Javadoc)

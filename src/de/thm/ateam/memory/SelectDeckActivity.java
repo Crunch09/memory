@@ -24,8 +24,10 @@ public class SelectDeckActivity extends ListActivity {
 	  MemoryDeckDAO db = new MemoryDeckDAO(getApplicationContext());
 	  String[][] decks = db.getAllDecks();
 	  ArrayList<String> deckNames = new ArrayList<String>();
-	  for(int i = 0; i < decks.length; i++) {
-	  	deckNames.add(decks[i][0]);
+	  if(decks != null) {
+		  for(int i = 0; i < decks.length; i++) {
+		  	deckNames.add(decks[i][0]);
+		  }
 	  }
 	  deckNames.add("Default");
 	  
@@ -37,7 +39,11 @@ public class SelectDeckActivity extends ListActivity {
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		MemoryDeckDAO db = new MemoryDeckDAO(getApplicationContext());
 		String[][] decks = db.getAllDecks();
-		int count = decks.length;
+		
+		int count = 0;
+		if(decks != null) {
+			count = decks.length;
+		}
 		
 		Properties configFile = new Properties();
 		try {
