@@ -24,8 +24,8 @@ public class GameActivity extends Activity{
 
 
   Game game = null;
-	private static final int ROWS = 2;
-	private static final int COLUMNS = 4;
+	private final int ROWS = 2;
+	private final int COLUMNS = 4;
 	
 	
 	private static final String TAG = GameActivity.class.getSimpleName();
@@ -91,6 +91,12 @@ public class GameActivity extends Activity{
               Integer.parseInt(pick[0]),
               Integer.parseInt(pick[1]));
         }else if(message.startsWith("[finish]")){
+          String winner = message.substring(8);
+          if(winner.equals("")){
+            Toast.makeText(GameActivity.this, "No single winner is here", Toast.LENGTH_SHORT).show();
+          }else{
+            Toast.makeText(GameActivity.this, winner + " has won!", Toast.LENGTH_SHORT).show();
+          }
           setResult(Activity.RESULT_OK, getIntent().putExtra("msg", "foo"));
           finish();
         }else if(message.startsWith("[currentPlayer]")){

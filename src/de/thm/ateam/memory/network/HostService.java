@@ -83,4 +83,25 @@ public class HostService extends Service{
 
   }
 
+  public static Player computeWinner() {
+    if(clients.size() == 0) return null;
+    int highscore = 0;
+    Player winner = null;
+    int numberOfWinners = 0;
+    for(Player p : clients){
+        if(p.roundHits > highscore){
+          highscore = p.roundHits;
+          numberOfWinners = 1;
+          winner = p;
+        }else if(p.roundHits == highscore){
+          numberOfWinners++;
+        }
+    }
+    if(numberOfWinners == 1){
+      return winner;
+    }
+    return null;
+    
+  }
+
 }
