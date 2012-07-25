@@ -181,7 +181,6 @@ public class GameActivity extends Activity{
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		out.close();
 		if(mem != null) mem.onDestroy();
 		if(netMem != null) netMem.onDestroy();
 	}
