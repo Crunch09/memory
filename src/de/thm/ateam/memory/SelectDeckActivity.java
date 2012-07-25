@@ -1,6 +1,5 @@
 package de.thm.ateam.memory;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -15,8 +14,20 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+/**
+ * 
+ * ListActivity to select the Deck
+ *
+ */
 public class SelectDeckActivity extends ListActivity {
 
+	/**
+	 * 
+	 * Function called on create and generate the Activity
+	 * 
+	 * @param Bundle savedInstanceState
+	 * 
+	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 	  super.onCreate(savedInstanceState);
@@ -36,6 +47,16 @@ public class SelectDeckActivity extends ListActivity {
 		getListView().setAdapter(adapter);
 	}
 	
+	/**
+	 * 
+	 * Function called when item was clicked
+	 * 
+	 * @param ListView l
+	 * @param View v
+	 * @param int position
+	 * @param long id
+	 * 
+	 */
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		MemoryDeckDAO db = new MemoryDeckDAO(getApplicationContext());
 		String[][] decks = db.getAllDecks();
@@ -66,5 +87,7 @@ public class SelectDeckActivity extends ListActivity {
     } catch (Exception e) {
       e.printStackTrace();
     }
+		
+		finish();
 	}
 }

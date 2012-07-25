@@ -8,7 +8,6 @@ import de.thm.ateam.memory.game.PlayerList;
 
 import android.app.Activity;
 import android.content.Context;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -22,6 +21,7 @@ import android.widget.ImageView;
  */
 public class ImageAdapter extends BaseAdapter {
 	private Context mContext;
+	// Contains the pictures
 	private List<ImageView> listImageView;
 
 	private Theme theme;
@@ -30,7 +30,10 @@ public class ImageAdapter extends BaseAdapter {
 	 * 
 	 * Constructor which initialize the imageViews with the theme
 	 * 
-	 * @param c
+	 * @param Context c
+	 * @param int row
+	 * @param int col
+	 * 
 	 */
 	public ImageAdapter(Context c, int row, int col) {
 		mContext = c;
@@ -65,6 +68,7 @@ public class ImageAdapter extends BaseAdapter {
 	 * Function which returns the amount of the imageViews
 	 * 
 	 * @return int - count
+	 * 
 	 */
 	public int getCount() {
 		return listImageView.size();
@@ -73,12 +77,16 @@ public class ImageAdapter extends BaseAdapter {
 	/**
 	 * 
 	 * Function which return the imageView at position
+	 * When position invalid then the function will return null
 	 * 
+	 * @param int position
 	 * @return Object - ImageView
 	 * 
 	 */
 	public Object getItem(int position) {
-		return listImageView.get(position);
+		if(position < listImageView.size())
+			return listImageView.get(position);
+		return null;
 	}
 
 	/**
@@ -86,6 +94,7 @@ public class ImageAdapter extends BaseAdapter {
 	 * Function which returns the theme
 	 * 
 	 * @return Theme
+	 * 
 	 */
 	public Theme getTheme() {
 		return theme;
@@ -96,6 +105,7 @@ public class ImageAdapter extends BaseAdapter {
 	 * Function which returns the image id of the imageView at position
 	 * 
 	 * @return long - imageId
+	 * @param int position
 	 * 
 	 */
 	public long getItemId(int position) {
@@ -107,6 +117,9 @@ public class ImageAdapter extends BaseAdapter {
 	 * Function for the the gridView to be handled as an Adapter
 	 * 
 	 * @return View - ImageView
+	 * @param int position
+	 * @param View convertView
+	 * @param ViewGroup parent
 	 * 
 	 */
 	public View getView(int position, View convertView, ViewGroup parent) {
@@ -114,6 +127,8 @@ public class ImageAdapter extends BaseAdapter {
 	}
 
 	/**
+	 * 
+	 * Returns the the pixel size of the little display size
 	 * 
 	 * @return int - max size we should use for width
 	 * 

@@ -1,20 +1,13 @@
 package de.thm.ateam.memory;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
 
 import de.thm.ateam.memory.engine.MemoryDeckDAO;
 import de.thm.ateam.memory.engine.type.Deck;
-import de.thm.ateam.memory.game.PlayerList;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.util.Log;
 
 /**
  * 
@@ -64,13 +57,16 @@ public class Theme {
 
 	/**
 	 * 
-	 * Default constructor Initialize the default theme
+	 * Default constructor initialize the default theme if ID < 0
+	 * otherwise it will load the deck from db
 	 * 
 	 * @param ctx
+	 * @param long ID
 	 * 
 	 */
 	public Theme(Context ctx, long ID) {
 		if (ID < 0) {
+			// Default Theme
 			backSide = BitmapFactory.decodeResource(ctx.getResources(), defaultBackside);
 			bitmapList = new ArrayList<Bitmap>();
 			for (int id : defaultImage) {
@@ -78,27 +74,15 @@ public class Theme {
 				bitmapList.add(tmp);
 			}
 		} else {
+			// Theme from db
 			MemoryDeckDAO tmp = new MemoryDeckDAO(ctx);
 			Deck deck = tmp.getDeck(ID);
-			backSide = deck.getBackSide();
-			bitmapList = deck.getFrontSide();
+			if(deck != null) {
+				backSide = deck.getBackSide();
+				bitmapList = deck.getFrontSide();
+			}
 		}
 	}
-
-	/*
-	 * public Theme(Context ctx, long ID) { MemoryDeckDAO sql = new
-	 * MemoryDeckDAO(ctx); Properties configFile = new Properties(); try { File
-	 * file = new File(ctx.getFilesDir() + "config.properties");
-	 * if(!file.exists()) { file.createNewFile(); } configFile.load(new
-	 * FileInputStream(file)); } catch (IOException e) { e.printStackTrace(); }
-	 * int current = Integer.parseInt(configFile.getProperty("deck"));
-	 * 
-	 * Log.i("Theme current", String.valueOf(current));
-	 * 
-	 * deck = sql.getDeck(current);
-	 * 
-	 * }
-	 */
 
 	/**
 	 * 
@@ -112,7 +96,8 @@ public class Theme {
 
 	/**
 	 * 
-	 * Function to return the bitmap at the position i
+	 * Function to return the bitmap at the position i 
+	 * otherwise the backside
 	 * 
 	 * @param i
 	 * @return Bitmap

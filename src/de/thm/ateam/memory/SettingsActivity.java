@@ -7,10 +7,22 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+/**
+ * 
+ * Activity who List some options for the themes
+ * 
+ */
 public class SettingsActivity extends ListActivity {
 	
 	private String[] settings = {"Load Deck", "Set Deck", "Remove Deck"};
 	
+	/**
+	 * 
+	 * Called when Activity creates
+	 * 
+	 * @param Bundle savedInstanceState
+	 * 
+	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 	  super.onCreate(savedInstanceState);
@@ -21,6 +33,16 @@ public class SettingsActivity extends ListActivity {
 		getListView().setAdapter(adapter);
 	}
 	
+	/**
+	 * 
+	 * Function called when user click an entry
+	 * 
+	 * @param ListView l
+	 * @param View v
+	 * @param int position
+	 * @param long id
+	 * 
+	 */
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		

@@ -1,10 +1,6 @@
 package de.thm.ateam.memory;
 
 
-import java.util.ArrayList;
-
-import de.thm.ateam.memory.R.id;
-import de.thm.ateam.memory.engine.MemoryPlayerDAO;
 import de.thm.ateam.memory.engine.type.Player;
 import de.thm.ateam.memory.game.PlayerList;
 
@@ -140,6 +136,12 @@ public class SelectUserActivity extends ListActivity {
 		return true;
 	}
 	
+	/**
+	 * 
+	 * Function starts the adding user activity
+	 * 
+	 * @param View view
+	 */
 	public void createUser(View view){
 		Intent i = new Intent(getApplicationContext(),CreateUserActivity.class);
 		startActivity(i);
@@ -149,10 +151,10 @@ public class SelectUserActivity extends ListActivity {
 	 * 
 	 * Function when user clicked on a user
 	 * 
-	 * @param l
-	 * @param v
-	 * @param position
-	 * @param id
+	 * @param ListView l
+	 * @param View v
+	 * @param int position
+	 * @param long id
 	 * 
 	 */
 	@Override

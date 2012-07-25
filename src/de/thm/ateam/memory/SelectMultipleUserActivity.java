@@ -18,7 +18,6 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 import android.widget.AdapterView.AdapterContextMenuInfo;
-import de.thm.ateam.memory.engine.MemoryPlayerDAO;
 import de.thm.ateam.memory.engine.type.Player;
 import de.thm.ateam.memory.game.GameActivity;
 import de.thm.ateam.memory.game.PlayerList;
@@ -30,7 +29,6 @@ import de.thm.ateam.memory.game.PlayerList;
  */
 public class SelectMultipleUserActivity extends ListActivity {
 	
-	@SuppressWarnings("unused")
 	private final String TAG = this.getClass().getSimpleName();
 
 	private ListView listView;
@@ -68,6 +66,11 @@ public class SelectMultipleUserActivity extends ListActivity {
 	}
 
 
+	/**
+	 * 
+	 * Function creates contextmenue with delete entry
+	 * 
+	 */
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);

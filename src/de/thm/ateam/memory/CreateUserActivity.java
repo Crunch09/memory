@@ -16,7 +16,10 @@ import android.widget.EditText;
 public class CreateUserActivity extends Activity {
 
 	/**
+	 * 
 	 * Create the Activity View
+	 * 
+	 * @param Bundle savedInstanceState
 	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

@@ -116,6 +116,11 @@ public class Memory extends Game{
 
 	}
 
+	/**
+	 * 
+	 * Function to recyle the bitmaps after the weren't needed to avoid memory fault
+	 * 
+	 */
 	public void onDestroy() {
 		for(int i = 0; i < theme.getCount(); i++) {
 			if(theme.getPicture(i) != null)
@@ -128,8 +133,8 @@ public class Memory extends Game{
 	 * Function is exclusively used to turn a pair of cards to the back side.
 	 * Launches a TimedTask, a ResetTask to be exact.
 	 * 
-	 * @param pos
-	 * @param pos2
+	 * @param int pos
+	 * @param int pos2
 	 * 
 	 */
 	public void reset(int pos, int pos2) {
@@ -240,8 +245,8 @@ public class Memory extends Game{
 			 * simple recognition of hits or misses,
 			 * must be overridden by a round-based player system
 			 */
-
 			synchronized (lock) { //just to avoid unwanted behavior
+
 				if(card == -1){
 					flip(position);
 					card = position;

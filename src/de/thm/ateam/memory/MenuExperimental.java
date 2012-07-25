@@ -2,7 +2,6 @@ package de.thm.ateam.memory;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -14,8 +13,6 @@ import de.thm.ateam.memory.engine.MemoryPlayerDAO;
 import de.thm.ateam.memory.engine.type.Player;
 import de.thm.ateam.memory.game.PlayerList;
 import de.thm.ateam.memory.statistics.ChartFragment;
-import de.thm.ateam.memory.statistics.HitProbabilityChart;
-import de.thm.ateam.memory.statistics.WinningProbabilityChart;
 
 import android.app.Activity;
 import android.app.ListActivity;
