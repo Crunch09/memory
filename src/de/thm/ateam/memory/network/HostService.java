@@ -40,7 +40,7 @@ public class HostService extends Service{
   public static Player findPlayerBySocket(Socket sock){
     if(clients.size() == 0) return null;
     for(Player p : clients){
-      if(p.sock != null && p.sock.getInetAddress().equals(sock.getInetAddress())){
+      if(p.sock != null && p.sock.getLocalAddress().equals(sock.getLocalAddress())){
         return p;
       }
     }

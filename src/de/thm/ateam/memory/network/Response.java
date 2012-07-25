@@ -10,47 +10,57 @@ import de.thm.ateam.memory.engine.type.Player;
 
 public class Response implements Runnable{
 
-  private static final String TAG = Response.class.getSimpleName();
+  private final String TAG = this.getClass().getSimpleName();
 
   String incMessage;
-  Socket sock;
+  Socket incSocket;
 
-  public Response(String incMessage, Socket sock){
+  public Response(String incMessage, Socket incSocket){
     this.incMessage = incMessage;
-    this.sock = sock;
+    this.incSocket = incSocket;
   }
 
+  /**
+   * Sets the current Player to the next one, "Round Robin"
+   * @return current Player
+   */
   public Player nextTurn(){
     return HostService.clients.get((++HostService.current)%HostService.clients.size());
   }
 
+  /**
+   * Gets the current Player (the one with the token) from the list
+   * @return current Player
+   */
   public Player currentPlayer(){
     return HostService.clients.get(HostService.current%HostService.clients.size());
   }
 
+  /**
+   * send Responses to one or multiple players
+   */
   public void run() {
     PrintWriter out = null;
     if(incMessage.startsWith("[token]")){
       // aktueller Spieler hat seinen Zug gemacht, also nächsten Spieler benachrichtigen
-      Player p = nextTurn();
+      Player nextPlayer = nextTurn();
       // möglicherweise solange nächsten Spieler auswählen, bis einer gefunden wurde, der anwesend ist
-      while(p.afk){
-        p = nextTurn();
+      while(nextPlayer.afk){
+        nextPlayer = nextTurn();
       }
       try {
         for(Player player : HostService.clients){
           if(player.sock != null){
-            if(player.sock.getInetAddress().equals(p.sock.getInetAddress())){
+            out = new PrintWriter(player.sock.getOutputStream(), true);
+            if(player.sock.getLocalAddress().equals(nextPlayer.sock.getLocalAddress())){
               Log.i(TAG, "Server sends out new token");
-              out = new PrintWriter(p.sock.getOutputStream(), true);
               out.println("[token]");
             }else{
-              out = new PrintWriter(player.sock.getOutputStream(), true);
-              out.println("[currentPlayer]"+ player.nick);
+              out.println("[currentPlayer]"+ nextPlayer.nick);
             }
           }
         }
-        
+
       } catch (IOException e) {
         Log.e(TAG, "IOException");
       }
@@ -69,18 +79,11 @@ public class Response implements Runnable{
       }
     }else if(incMessage.startsWith("[afk]") || incMessage.startsWith("[resume]")){
       Log.i(TAG, "Player switched AFK status");
-      for(Player p : HostService.clients){
-        if(p.sock.getLocalAddress().equals(sock.getLocalAddress())){
-          if(incMessage.startsWith("[afk]")){
-            p.afk = true;
-          }else{
-            p.afk = false;
-          }
-          break;
-        }
-      }
+      Player p = HostService.findPlayerBySocket(incSocket);
+      p.afk = incMessage.startsWith("[afk]") ? true : false;
     }else{
-      Player p = HostService.findPlayerBySocket(this.sock);
+      /* here are the messages for all clients */
+      Player playerWhoSentThisMessage = HostService.findPlayerBySocket(this.incSocket);
       for(Player player : HostService.clients){
         if(player.sock != null){
           try {
@@ -92,23 +95,23 @@ public class Response implements Runnable{
             Log.i(TAG, "Sending start message to a client");
             out.println("[start]");
           }else if(incMessage.startsWith("[nick]")){
-            Log.i(TAG, "Sending join message to clients");
+            Log.i(TAG, "Sending join message to a client");
             String playerName = incMessage.substring(6, incMessage.length());
-            if(player.sock.getLocalAddress().equals(sock.getLocalAddress())){
+            // set nickname of this player in the client list
+            if(player.sock.getLocalAddress().equals(incSocket.getLocalAddress())){
               player.nick = playerName;
             }
             out.println(playerName + " joined the Game");
           }else if(incMessage.startsWith("[delete]")){
             Log.i(TAG, "a pair was found");
-            // roundHits erhöhen, aber nur einmal
-            if(p != null && p.sock.getInetAddress().equals(player.sock.getInetAddress())){
-              p.roundHits += 1;
+            // increase round hits of the message's sender
+            if(playerWhoSentThisMessage != null && playerWhoSentThisMessage.sock.getLocalAddress().equals(player.sock.getLocalAddress())){
+              playerWhoSentThisMessage.roundHits += 1;
             }
             out.println(incMessage);
           }else{
-            /* z.B. [flip], [delete], [field], [reset], [finish] !!! */
+            /* e.g. [flip], [field], [reset], [finish] !!! */
             out.println(incMessage);
-            //out.close();
           }
         }
       }
