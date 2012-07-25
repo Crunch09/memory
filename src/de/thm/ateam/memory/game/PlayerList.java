@@ -11,8 +11,15 @@ public class PlayerList {
 	public ArrayList<Player> session = null; //just the ones selected for a match
 	public Player multiPlayer = null;
 	
+	public int deckNum;
+	public int row;
+	public int col;
+	
 	private PlayerList(){
 		super();
+		deckNum = -1;
+		row = 2;
+		col = 2;
 		this.players = new ArrayList<Player>();
 		this.session = new ArrayList<Player>();
 	}
@@ -23,7 +30,7 @@ public class PlayerList {
 		return instance;
 	}
 	
-	public static int getMaxGames(){
+	public static int getMaxGames() {
 	  int max = 0;
 	  if(instance == null) return max;
 	  for(Player p : instance.players){

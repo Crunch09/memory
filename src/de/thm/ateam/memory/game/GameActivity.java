@@ -29,7 +29,7 @@ public class GameActivity extends Activity{
 		 * assembleLayout() does not need any kind of XML File, which makes it very versatile in its use.
 		 * 
 		 */
-		mem = new Memory(this,new MemoryAttributes(players, 2, 4));
+		mem = new Memory(this,new MemoryAttributes(players, PlayerList.getInstance().row, PlayerList.getInstance().col));
 		setContentView(mem.assembleLayout());
 	}
 	

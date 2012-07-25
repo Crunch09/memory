@@ -9,7 +9,7 @@ import android.widget.ListView;
 
 public class SettingsActivity extends ListActivity {
 	
-	private String[] settings = {"LoadDeck", "SetDeck", "RemoveDeck"};
+	private String[] settings = {"Load Deck", "Set Deck", "Remove Deck"};
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -33,8 +33,8 @@ public class SettingsActivity extends ListActivity {
 			startActivity(intent);
 			break;
 		case 1:
-			//intent = new Intent(this, SelectDeckPackageActivity.class);
-			//startActivity(intent);
+			intent = new Intent(this, SelectDeckActivity.class);
+			startActivity(intent);
 			break;
 		case 2:
 			//intent = new Intent(this, SelectDeckPackageActivity.class);

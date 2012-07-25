@@ -1,79 +1,104 @@
 package de.thm.ateam.memory;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 import de.thm.ateam.memory.engine.MemoryDeckDAO;
 import de.thm.ateam.memory.engine.type.Deck;
+import de.thm.ateam.memory.game.PlayerList;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 
 /**
  * 
  * Class Theme to handle the pictures for the memory
- *
+ * 
  */
 public class Theme {
-
-	private Bitmap backSide;
-	private List<Bitmap> bitmapList;
+	Bitmap backSide;
+	ArrayList<Bitmap> bitmapList;
 
 	// references to our default images
 	private Integer defaultBackside = R.drawable.backside;
 	private Integer[] defaultImage = { 
-			R.drawable.anglerfisch_card,
-			R.drawable.frosch_card,
-			R.drawable.koralle_card,
-			R.drawable.krabbe_card,
-			R.drawable.kugelfisch_card,
-			R.drawable.muschel_card,
-			R.drawable.piranha_card,
-			R.drawable.qualle_card,
-			R.drawable.schildkroete_card,
-			R.drawable.schwamm_card,
-			R.drawable.schwertfisch_card,
-			R.drawable.seekuh_card,
-			R.drawable.seepferd_card,
-			R.drawable.seestern_card,
-			R.drawable.thunfisch_card,
-			R.drawable.tintenfisch_card
-	};
+				R.drawable.aal,
+				R.drawable.alge,
+				R.drawable.anglerfisch,
+				R.drawable.ente,
+				R.drawable.flaschenpost,
+				R.drawable.frosch,
+				R.drawable.koi,
+				R.drawable.koralle,
+				R.drawable.krabbe,
+				R.drawable.krokodil,
+				R.drawable.kugelfisch,
+				R.drawable.meerjungfrau,
+				R.drawable.moewe,
+				R.drawable.muschel,
+				R.drawable.pinguin,
+				R.drawable.piranha,
+				R.drawable.qualle,
+				R.drawable.rochen,
+				R.drawable.schildkroete,
+				R.drawable.schwamm,
+				R.drawable.schwan,
+				R.drawable.schwertfisch,
+				R.drawable.seegurke,
+				R.drawable.seekuh,
+				R.drawable.seepferd,
+				R.drawable.seestern,
+				R.drawable.shrimp,
+				R.drawable.sonne,
+				R.drawable.thunfisch,
+				R.drawable.tintenfisch,
+				R.drawable.treibholz,
+				R.drawable.wassertropfen
+			};
 
 	/**
 	 * 
-	 * Default constructor
-	 * Initialize the default theme
+	 * Default constructor Initialize the default theme
 	 * 
 	 * @param ctx
 	 * 
 	 */
-	public Theme(Context ctx, boolean useDefault, long ID) {
-		if (useDefault) {
-			backSide = BitmapFactory
-		    .decodeResource(ctx.getResources(), defaultBackside);
+	public Theme(Context ctx, long ID) {
+		if (ID < 0) {
+			backSide = BitmapFactory.decodeResource(ctx.getResources(), defaultBackside);
 			bitmapList = new ArrayList<Bitmap>();
 			for (int id : defaultImage) {
 				Bitmap tmp = BitmapFactory.decodeResource(ctx.getResources(), id);
 				bitmapList.add(tmp);
 			}
 		} else {
-			if (ID < 0) {
-				backSide = BitmapFactory
-			    .decodeResource(ctx.getResources(), defaultBackside);
-				bitmapList = new ArrayList<Bitmap>();
-				for (int id : defaultImage)
-					bitmapList.add(BitmapFactory.decodeResource(ctx.getResources(), id));
-				
-			} else {
-				MemoryDeckDAO dao = new MemoryDeckDAO(ctx);
-				Deck d = dao.getDeck(ID);
-				backSide = d.getBackSide();
-				bitmapList = d.getFrontSide();
-			}
+			MemoryDeckDAO tmp = new MemoryDeckDAO(ctx);
+			Deck deck = tmp.getDeck(ID);
+			backSide = deck.getBackSide();
+			bitmapList = deck.getFrontSide();
 		}
 	}
+
+	/*
+	 * public Theme(Context ctx, long ID) { MemoryDeckDAO sql = new
+	 * MemoryDeckDAO(ctx); Properties configFile = new Properties(); try { File
+	 * file = new File(ctx.getFilesDir() + "config.properties");
+	 * if(!file.exists()) { file.createNewFile(); } configFile.load(new
+	 * FileInputStream(file)); } catch (IOException e) { e.printStackTrace(); }
+	 * int current = Integer.parseInt(configFile.getProperty("deck"));
+	 * 
+	 * Log.i("Theme current", String.valueOf(current));
+	 * 
+	 * deck = sql.getDeck(current);
+	 * 
+	 * }
+	 */
 
 	/**
 	 * 

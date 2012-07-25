@@ -1,7 +1,13 @@
 package de.thm.ateam.memory;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 import java.util.Vector;
 
 import de.thm.ateam.memory.engine.MemoryPlayerDAO;
@@ -61,6 +67,44 @@ public class MenuExperimental extends ListActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
+		
+		
+		//TODO Thread
+		Properties configFile = new Properties();
+		File file = null;
+		try {
+			file = new File(getFilesDir() + "config.properties");
+			if(!file.exists()) {
+				file.createNewFile();
+			}
+	    configFile.load(new FileInputStream(file));
+    } catch (IOException e) {
+	    e.printStackTrace();
+    }
+	
+		String tmp = configFile.getProperty("deck");
+		String tmp2 = configFile.getProperty("row");
+		String tmp3 = configFile.getProperty("col");
+		if(tmp == null || tmp2 == null || tmp3 == null) {
+			configFile.setProperty("deck", "-1");
+			configFile.setProperty("row", "4");
+			configFile.setProperty("col", "4");
+			
+			PlayerList.getInstance().deckNum = Integer.parseInt("-1");
+			PlayerList.getInstance().row = Integer.parseInt("4");
+			PlayerList.getInstance().col = Integer.parseInt("4");
+			
+			try {
+	      configFile.store(new FileOutputStream(file), null);
+      } catch (Exception e) {
+	      e.printStackTrace();
+      }
+		} else {
+			PlayerList.getInstance().deckNum = Integer.parseInt(tmp);
+			PlayerList.getInstance().row = Integer.parseInt(tmp2);
+			PlayerList.getInstance().col = Integer.parseInt(tmp3);
+		}
+		
 		mInflater = (LayoutInflater) getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
 		data = new Vector<RowData>();
 		for(int i=0;i<title.length;i++){

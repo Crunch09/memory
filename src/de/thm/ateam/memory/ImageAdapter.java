@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import de.thm.ateam.memory.game.PlayerList;
+
 import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
@@ -34,7 +36,7 @@ public class ImageAdapter extends BaseAdapter {
 		mContext = c;
 		listImageView = new ArrayList<ImageView>();
 
-		theme = new Theme(c, false, -1);
+		theme = new Theme(c, PlayerList.getInstance().deckNum);
 		
 		int size = (int) (maxSize() / col)-4;
 

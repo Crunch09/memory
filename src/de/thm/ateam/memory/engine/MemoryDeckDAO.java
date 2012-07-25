@@ -71,7 +71,7 @@ public class MemoryDeckDAO extends DeckDB implements DeckDAO {
 		ContentValues cv = new ContentValues();
 		cv.put(NAME, d.getName());
 		d.getBackSide().compress(Bitmap.CompressFormat.JPEG, 100, out);
-		cv.put(CARD_BLOB, out.toByteArray());
+		cv.put(BACK_CARD, out.toByteArray());
 		
 		r = db.insert(TABLE_NAME, null, cv);
 		
@@ -110,21 +110,22 @@ public class MemoryDeckDAO extends DeckDB implements DeckDAO {
 		SQLiteDatabase db = sql.getReadableDatabase();
 		String[] projection = new String[] { ID, NAME, BACK_CARD };
 		
-		Cursor c = db.query(TABLE_NAME, projection, ID, new String[]{String.valueOf(id)}, null, null, ID);
+		Cursor c = db.query(TABLE_NAME, projection, ID + "=?", new String[]{String.valueOf(id)}, null, null, ID);
 		c.moveToFirst();
 		
 		String[] projectionCards = new String[] { CARD_ID, CARD_DECK_ID, CARD_BLOB };
 		
-		Cursor cc = db.query(CARD_TABLE_NAME, projectionCards, CARD_DECK_ID, new String[] { String.valueOf(c.getInt(0)) }, null, null, CARD_ID);
+		Cursor cc = db.query(CARD_TABLE_NAME, projectionCards, CARD_DECK_ID + "=?", new String[] { String.valueOf(c.getLong(0)) }, null, null, CARD_ID);
 		db.close();
 		
+		Deck tmp = null;
 		if (cc.moveToFirst())
-			return new Deck(this, c.getLong(0), c.getString(1), BitmapFactory.decodeByteArray(c.getBlob(2), 0, c.getBlob(2).length));
+			tmp = new Deck(this, c.getLong(0), c.getString(1), BitmapFactory.decodeByteArray(c.getBlob(2), 0, c.getBlob(2).length));
 		
 		c.close();
 		cc.close();
 		
-		return null;
+		return tmp;
 	}
 
 	/* (non-Javadoc)
