@@ -79,6 +79,11 @@ public class GameActivity extends Activity{
           NetworkMemory.getInstance(GameActivity.this, null).delete(
               Integer.parseInt(pick[0]), 
               Integer.parseInt(pick[1]));
+        }else if(message.startsWith("[reset]")){
+          String[] pick = message.substring(7).split(",");
+          NetworkMemory.getInstance(GameActivity.this, null).reset(
+              Integer.parseInt(pick[0]),
+              Integer.parseInt(pick[1]));
         }
       }
 
@@ -163,6 +168,7 @@ public class GameActivity extends Activity{
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
+		out.close();
 		if(mem != null) mem.onDestroy();
 		if(netMem != null) netMem.onDestroy();
 	}

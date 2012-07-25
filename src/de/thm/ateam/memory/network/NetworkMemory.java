@@ -289,9 +289,7 @@ public class NetworkMemory extends Game{
           if(card != position) {
             numberOfPicks++;
             out.println("[flip]"+ position);
-            //Token verschicken
-            currentPlayer.hasToken = false;
-            out.println("[token]");
+            
             
             if(imageAdapter.getItemId(card) == imageAdapter.getItemId(position)){
               out.println("[delete]"+ position +","+ card); 
@@ -325,9 +323,13 @@ public class NetworkMemory extends Game{
 
 
             }else{
+              currentPlayer.hasToken = false;
               //Toast.makeText(ctx,"card "+ " select " +position+ "miss, next player", Toast.LENGTH_SHORT).show();
-              reset(position, card);
+              out.println("[reset]"+ position +","+ card);
               card = -1;
+              //Token verschicken
+              
+              out.println("[token]");
               //current = turn();
               //infoView.setText(current.nick);
             }

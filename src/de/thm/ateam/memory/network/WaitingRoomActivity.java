@@ -43,6 +43,8 @@ public class WaitingRoomActivity extends FragmentActivity implements MyAlertDial
   private boolean gameHasStarted = false;
   private String serverAddress = "";
   private Player currentPlayer = null;
+  private PrintWriter out = null;
+  private BufferedReader bf = null;
 
   public void onDestroy(){
     super.onDestroy();
@@ -64,9 +66,9 @@ public class WaitingRoomActivity extends FragmentActivity implements MyAlertDial
       try {
         currentPlayer.sock = new Socket(adr, 6666);
         Log.i(TAG, "New Client has connected!");
-        BufferedReader bf = new BufferedReader(new InputStreamReader(currentPlayer.sock.getInputStream()));
+        bf = new BufferedReader(new InputStreamReader(currentPlayer.sock.getInputStream()));
         String inputLine;
-        PrintWriter out = null;
+        
         out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(currentPlayer.sock.getOutputStream())), true);
         //send name to Server
         out.println("[nick]"+ currentPlayer.nick);
@@ -99,7 +101,9 @@ public class WaitingRoomActivity extends FragmentActivity implements MyAlertDial
           gameHasStarted = true;
           //TODO: send stop message to all clients
           findViewById(R.id.send_btn).setClickable(false);
-          findViewById(R.id.start_game_btn).setClickable(false);
+          if(serverAddress.equals("127.0.0.1")){
+            findViewById(R.id.start_game_btn).setClickable(false);
+          }
           findViewById(R.id.chat_edit).setEnabled(false);
 
           final ProgressDialog dialog = new ProgressDialog(WaitingRoomActivity.this);
@@ -107,7 +111,6 @@ public class WaitingRoomActivity extends FragmentActivity implements MyAlertDial
           dialog.setCancelable(false);
           dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
           dialog.show();
-          PrintWriter out = null;
 //          try {
 //            out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(currentPlayer.sock.getOutputStream())), true);
 //          } catch (IOException e) {
@@ -164,6 +167,7 @@ public class WaitingRoomActivity extends FragmentActivity implements MyAlertDial
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     Bundle b = getIntent().getExtras();
+    gameHasStarted = false;
     if(b != null){
       //client
       serverAddress = b.getString("serverAddress");
@@ -196,33 +200,15 @@ public class WaitingRoomActivity extends FragmentActivity implements MyAlertDial
   }
 
   public void onButtonClick(View target){
-    PrintWriter out = null;
     switch(target.getId()){
     case R.id.start_game_btn:
       Log.i(TAG, "Game about to begin...");
       // set game availability to false
-      try {
-        out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(currentPlayer.sock.getOutputStream())), true);
         out.println("[system]Game about to begin!");
-      } catch (IOException e1) {
-        Log.e(TAG, "Could not send start game message");
-        MyAlertDialog alertDialog = new MyAlertDialog(R.string.could_not_notify_about_game_start);
-        alertDialog.show(fm, "dialog");
-      }
       break;
     case R.id.send_btn:
-      try {
-        out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(currentPlayer.sock.getOutputStream())), true);
         out.println(currentPlayer.nick +": "+ text.getText());
-        out.flush();
         text.setText("");
-      } catch (IOException e) {
-        Log.i(TAG, "ERROR: Client could not send chat message");
-        MyAlertDialog alertDialog = new MyAlertDialog(R.string.message_could_not_be_send);
-        alertDialog.show(fm, "dialog");
-      } finally{
-        //out.close();
-      }
       break;
     }
   }

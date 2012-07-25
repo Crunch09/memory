@@ -131,6 +131,7 @@ public class SelectUserActivity extends ListActivity {
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
 		PlayerList.getInstance().currentPlayer = (Player)l.getAdapter().getItem(position);
+		Log.i(TAG,"Setting currentPlayer: "+PlayerList.getInstance().currentPlayer.nick);
 		Intent i = new Intent(this, ChooseClientOrHostActivity.class);
 		startActivity(i);
 	}

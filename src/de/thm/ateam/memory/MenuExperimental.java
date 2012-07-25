@@ -1,5 +1,6 @@
 package de.thm.ateam.memory;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
@@ -33,6 +34,7 @@ public class MenuExperimental extends ListActivity {
 	private LayoutInflater mInflater;
 	private Vector<RowData> data;
 	RowData rd;
+	public final String TAG = this.getClass().getSimpleName();
 	
 	
 	private static final int LocalGame = 0;
@@ -61,6 +63,16 @@ public class MenuExperimental extends ListActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
+		if(PlayerList.getInstance().currentPlayer != null && PlayerList.getInstance().currentPlayer.sock != null){
+		  try {
+        PlayerList.getInstance().currentPlayer.sock.close();
+        PlayerList.getInstance().currentPlayer.sock = null;
+      } catch (IOException e) {
+        Log.e(TAG, "could not close socket");
+        e.printStackTrace();
+      }
+		  
+		}
 		mInflater = (LayoutInflater) getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
 		data = new Vector<RowData>();
 		for(int i=0;i<title.length;i++){

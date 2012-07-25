@@ -69,15 +69,6 @@ public class Response implements Runnable{
           break;
         }
       }
-    }else if(incMessage.startsWith("[field]")){
-      Log.i(TAG, incMessage);
-      try {
-        out = new PrintWriter(sock.getOutputStream(), true);
-        out.println(incMessage);
-      } catch (IOException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      }
     }else{
       for(Player player : HostService.clients){
         if(player.sock != null){
@@ -97,7 +88,7 @@ public class Response implements Runnable{
               out.println(playerName + " joined the Game");
             }
           }else{
-            /* z.B. [flip], [delete] !!! */
+            /* z.B. [flip], [delete], [field], [reset] !!! */
             out.println(incMessage);
             //out.close();
           }
