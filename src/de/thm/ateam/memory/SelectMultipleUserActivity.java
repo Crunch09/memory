@@ -88,6 +88,7 @@ public class SelectMultipleUserActivity extends ListActivity {
 				* is this a joke? see SelectMultipleUser Activity at the same spot. 
 				*/
 				if(!selected.remove(adapter))Log.i(TAG, "Could not delete " + selected.nick + "!");
+				getListView().setItemChecked(info.position, false);
 				return true;
 			default:
 				return super.onContextItemSelected(item);
