@@ -119,7 +119,7 @@ public class Deck {
 			Log.i(TAG,entry.getName());
 		}
 		
-		this.name = zip.getName();
+		this.name = zip.getName().split("/")[0].substring(0, 4);
 		dao = new MemoryDeckDAO(ctx);
 		if (dao.storeDeck(this))
 			Log.i(TAG, "stored");
