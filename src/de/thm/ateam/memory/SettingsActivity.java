@@ -14,7 +14,7 @@ import android.widget.ListView;
  */
 public class SettingsActivity extends ListActivity {
 	
-	private String[] settings = {"Load Deck", "Set Deck", "Remove Deck"};
+	private String[] settings = {"Load Deck", "Set Deck", "Remove Deck", "Memory Size"};
 	
 	/**
 	 * 
@@ -59,10 +59,13 @@ public class SettingsActivity extends ListActivity {
 			startActivity(intent);
 			break;
 		case 2:
+			//TODO Remove Deck
 			//intent = new Intent(this, SelectDeckPackageActivity.class);
 			//startActivity(intent);
 			break;
-
+		case 3:
+			intent = new Intent(this, SelectMemorySizeActivity.class);
+			startActivity(intent);
 		default:
 			break;
 		}

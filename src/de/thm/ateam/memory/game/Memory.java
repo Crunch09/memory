@@ -25,7 +25,7 @@ import de.thm.ateam.memory.Theme;
 import de.thm.ateam.memory.engine.type.Player;
 
 
-
+//TODO In the issues discussed Bug #7
 public class Memory extends Game{
 
 	/*environement stuff*/
@@ -255,7 +255,6 @@ public class Memory extends Game{
 					//Toast.makeText(ctx,"select " +position+ " first move", Toast.LENGTH_SHORT).show();
 				}else{ 
 					if(card != position) {
-						numberOfPicks++;
 						flip(position);
 						if(imageAdapter.getItemId(card) == imageAdapter.getItemId(position)){
 							delete(position, card); 
@@ -299,6 +298,8 @@ public class Memory extends Game{
 							current = turn();
 							infoView.setText(current.nick);
 						}
+					} else {
+						numberOfPicks--;
 					}
 				}
 			}
