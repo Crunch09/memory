@@ -27,6 +27,7 @@ public class SelectRemoveDeckActivity extends ListActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 	  super.onCreate(savedInstanceState);
 	  
+	  // get all decks and list them in the ListView
 	  MemoryDeckDAO db = new MemoryDeckDAO(getApplicationContext());
 	  String[][] decks = db.getAllDecks();
 	  ArrayList<String> deckNames = new ArrayList<String>();
@@ -56,6 +57,7 @@ public class SelectRemoveDeckActivity extends ListActivity {
 		MemoryDeckDAO db = new MemoryDeckDAO(getApplicationContext());
 		String[][] decks = db.getAllDecks();
 		
+		// load config to store changes if the selected deck will be deleted
 		Properties configFile = new Properties();
 		try {
 			configFile.load(new FileInputStream(getFilesDir() + "config.properties"));
@@ -63,6 +65,7 @@ public class SelectRemoveDeckActivity extends ListActivity {
 	    e.printStackTrace();
     }
 		
+		// Then set default deck
 		if(decks[position][1].equals(configFile.getProperty("deck"))) {
 			configFile.setProperty("deck", "-1");
 			PlayerList.getInstance().deckNum = -1;

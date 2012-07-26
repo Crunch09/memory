@@ -63,7 +63,7 @@ public class SelectMemorySizeActivity extends Activity implements OnClickListene
 	 */
 	private View createView() {
 		
-		
+		// Linear Layout where a Spinner and a Button will be placed
 		LinearLayout linLay = new LinearLayout(this);
 		linLay.setOrientation(LinearLayout.VERTICAL);
 		
@@ -73,6 +73,7 @@ public class SelectMemorySizeActivity extends Activity implements OnClickListene
     ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, getList());
 		spin.setAdapter(adapter);
 		
+		// Because of some Mathematics we can use col/2 -1
 		spin.setSelection(PlayerList.getInstance().col/2 - 1);
 		
 		Button but = new Button(this);
@@ -96,19 +97,23 @@ public class SelectMemorySizeActivity extends Activity implements OnClickListene
 	public void onClick(View v) {
 	  switch(v.getId()) {
 	  case 6:
+	  	// When button clicked pick up the selected item position
 	  	Spinner tmp = (Spinner)findViewById(5);
 	  	int pos = tmp.getSelectedItemPosition();
 	  	
+	  	// Load config file to store the changes
 	  	Properties configFile = new Properties();
 			try {
 		    configFile.load(new FileInputStream(new File(getFilesDir() + "config.properties")));
 	    } catch (IOException e) {
 		    e.printStackTrace();
 	    }
-			
+
+			// Because of some Mathematics we can use (pos + 1) * 2
 			configFile.setProperty("row", String.valueOf((pos+1) * 2));
 			configFile.setProperty("col", String.valueOf((pos+1) * 2));
 			
+			// Also set row and col for the global PlayerList used for the Memory field dimensions
 			PlayerList.getInstance().row = (pos+1) * 2;
 			PlayerList.getInstance().col = (pos+1) * 2;
 			

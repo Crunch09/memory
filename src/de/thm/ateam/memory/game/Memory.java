@@ -286,7 +286,6 @@ public class Memory extends Game{
 								for (Player p : attr.getPlayers()) {
 									Log.i(TAG,p.nick+" turns: "+p.roundTurns+" hits: "+p.roundHits);
 								}
-
 								envActivity.setResult(Activity.RESULT_OK, envActivity.getIntent().putExtra("msg", victoryMsg));
 								envActivity.finish();
 							}

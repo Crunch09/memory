@@ -32,9 +32,12 @@ public class SelectDeckActivity extends ListActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 	  super.onCreate(savedInstanceState);
 	  
+	  // Get all decks from db(only name and id)
 	  MemoryDeckDAO db = new MemoryDeckDAO(getApplicationContext());
 	  String[][] decks = db.getAllDecks();
 	  ArrayList<String> deckNames = new ArrayList<String>();
+	  
+	  // if there aren't one than only Default will added to List else all names will append
 	  if(decks != null) {
 		  for(int i = 0; i < decks.length; i++) {
 		  	deckNames.add(decks[i][0]);
@@ -65,7 +68,8 @@ public class SelectDeckActivity extends ListActivity {
 		if(decks != null) {
 			count = decks.length;
 		}
-		
+	  
+		// Load the config file
 		Properties configFile = new Properties();
 		try {
 			configFile.load(new FileInputStream(getFilesDir() + "config.properties"));
@@ -73,15 +77,16 @@ public class SelectDeckActivity extends ListActivity {
 	    e.printStackTrace();
     }
 		
+		// If user clicked the one which is active
 		if(position == count) {
 			PlayerList.getInstance().deckNum = -1;
 			configFile.setProperty("deck", "-1");
-			
 		} else {
 			PlayerList.getInstance().deckNum = Integer.parseInt(decks[position][1]);
 			configFile.setProperty("deck", decks[position][1]);
 		}
 		
+		// Save the config file
 		try {
       configFile.store(new FileOutputStream(getFilesDir() + "config.properties"), null);
     } catch (Exception e) {

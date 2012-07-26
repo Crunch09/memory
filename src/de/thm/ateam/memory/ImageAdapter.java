@@ -39,13 +39,17 @@ public class ImageAdapter extends BaseAdapter {
 		mContext = c;
 		listImageView = new ArrayList<ImageView>();
 
+		// Create Theme with the deckNum which is saved in the config file
 		theme = new Theme(c, PlayerList.getInstance().deckNum);
 		
+		// Width of the Grifview that it fit on landscape and the other mode
 		int size = (int) (maxSize() / col)-4;
 
+		// We need row * col / 2 pictures
 		for (int i = 0; i < row*col/2; i++) {
 			ImageView imageView;
 
+			// From every picture we need 2
 			for (int j = 0; j < 2; j++) {
 				imageView = new ImageView(mContext);
 				imageView.setLayoutParams(new GridView.LayoutParams(size, size));
@@ -60,6 +64,7 @@ public class ImageAdapter extends BaseAdapter {
 				listImageView.add(imageView);
 			}
 		}
+		// We let java shuffle for us
 		Collections.shuffle(listImageView);
 	}
 

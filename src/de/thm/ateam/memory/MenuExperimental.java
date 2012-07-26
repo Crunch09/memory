@@ -70,41 +70,52 @@ public class MenuExperimental extends ListActivity {
 		setContentView(R.layout.main);
 		
 		
-		//TODO Thread
-		Properties configFile = new Properties();
-		File file = null;
-		try {
-			file = new File(getFilesDir() + "config.properties");
-			if(!file.exists()) {
-				file.createNewFile();
-			}
-	    configFile.load(new FileInputStream(file));
-    } catch (IOException e) {
-	    e.printStackTrace();
-    }
-	
-		String tmp = configFile.getProperty("deck");
-		String tmp2 = configFile.getProperty("row");
-		String tmp3 = configFile.getProperty("col");
-		if(tmp == null || tmp2 == null || tmp3 == null) {
-			configFile.setProperty("deck", "-1");
-			configFile.setProperty("row", "4");
-			configFile.setProperty("col", "4");
-			
-			PlayerList.getInstance().deckNum = Integer.parseInt("-1");
-			PlayerList.getInstance().row = Integer.parseInt("4");
-			PlayerList.getInstance().col = Integer.parseInt("4");
-			
-			try {
-	      configFile.store(new FileOutputStream(file), null);
-      } catch (Exception e) {
-	      e.printStackTrace();
-      }
-		} else {
-			PlayerList.getInstance().deckNum = Integer.parseInt(tmp);
-			PlayerList.getInstance().row = Integer.parseInt(tmp2);
-			PlayerList.getInstance().col = Integer.parseInt(tmp3);
-		}
+		// Loads config file in a thread
+    Runnable r = new Runnable() {
+	    public void run() {
+	      
+	  		Properties configFile = new Properties();
+	  		File file = null;
+	  		try {
+	  			file = new File(getFilesDir() + "config.properties");
+	  			// if file not exist create one because fileinputstream(File) needs an file
+	  			if(!file.exists()) {
+	  				file.createNewFile();
+	  			}
+	  	    configFile.load(new FileInputStream(file));
+	      } catch (IOException e) {
+	  	    e.printStackTrace();
+	      }
+	  	
+	  		String tmp = configFile.getProperty("deck");
+	  		String tmp2 = configFile.getProperty("row");
+	  		String tmp3 = configFile.getProperty("col");
+	  		
+	  		// If any of the config propertys are null than it will store/set the defaults
+	  		if(tmp == null || tmp2 == null || tmp3 == null) {
+	  			configFile.setProperty("deck", "-1");
+	  			configFile.setProperty("row", "4");
+	  			configFile.setProperty("col", "4");
+	  			
+	  			PlayerList.getInstance().deckNum = Integer.parseInt("-1");
+	  			PlayerList.getInstance().row = Integer.parseInt("4");
+	  			PlayerList.getInstance().col = Integer.parseInt("4");
+	  			
+	  			try {
+	  				// Save to config file
+	  	      configFile.store(new FileOutputStream(file), null);
+	        } catch (Exception e) {
+	  	      e.printStackTrace();
+	        }
+	  		} else {
+	  			PlayerList.getInstance().deckNum = Integer.parseInt(tmp);
+	  			PlayerList.getInstance().row = Integer.parseInt(tmp2);
+	  			PlayerList.getInstance().col = Integer.parseInt(tmp3);
+	  		}
+	    }
+    };
+    Thread t = new Thread(r);
+    t.start();
 		
 		mInflater = (LayoutInflater) getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
 		data = new Vector<RowData>();
@@ -123,6 +134,17 @@ public class MenuExperimental extends ListActivity {
 		PlayerList.getInstance().players = (ArrayList<Player>)MemoryPlayerDAO.getInstance(this).getAllPlayers();
 		
 	}
+	
+	/**
+	 * 
+	 * Function called when user click an item
+	 * 
+	 * @param ListView l
+	 * @param View v
+	 * @param int position
+	 * @param long id
+	 * 
+	 */
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
 		
@@ -130,21 +152,25 @@ public class MenuExperimental extends ListActivity {
 		
 		switch (position) {
 		case LocalGame:
+			// starts a LocalGame
 			intent = new Intent(getApplicationContext(), SelectMultipleUserActivity.class);
 			startActivity(intent);
 			break;
 		
 		case NetworkGame:
+			// starts a NetworkGame
 			intent = new Intent(getApplicationContext(),SelectUserActivity.class);
 			startActivity(intent);
 			break;
 		
 		case Stats:
+			// List the Stats of all users
 			intent = new Intent(getApplicationContext(),ChartFragment.class);
 			startActivity(intent);
 			break;
 		
 		case Settings:
+			// Settings menu to change some things
 			intent = new Intent(this, SettingsActivity.class);
 			startActivity(intent);
 			break;
