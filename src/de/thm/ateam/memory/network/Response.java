@@ -8,11 +8,17 @@ import android.util.Log;
 import de.thm.ateam.memory.engine.type.*;
 
 
+/**
+ * 
+ * process incoming messages and send responses to client(s)
+ *
+ */
 public class Response implements Runnable{
 
   private final String TAG = this.getClass().getSimpleName();
 
   String incMessage;
+  /** socket from the sender of this message */
   Socket incSocket;
 
   public Response(String incMessage, Socket incSocket){
@@ -41,14 +47,9 @@ public class Response implements Runnable{
    */
   public void run() {
     PrintWriter out = null;
-    boolean winnerIsChosen = false;
     if(incMessage.startsWith("[token]")){
-      // aktueller Spieler hat seinen Zug gemacht, also nächsten Spieler benachrichtigen
+      // currentPlayer made his move so notify the next player
       NetworkPlayer nextPlayer = nextTurn();
-      // möglicherweise solange nächsten Spieler auswählen, bis einer gefunden wurde, der anwesend ist
-      while(nextPlayer.afk){
-        nextPlayer = nextTurn();
-      }
       try {
         for(NetworkPlayer player : HostService.clients){
           if(player.sock != null){
@@ -57,6 +58,9 @@ public class Response implements Runnable{
               Log.i(TAG, "Server sends out new token");
               out.println("[token]");
             }else{
+              /* notify the other player with the name of the currentPlayer so they can
+               * display a toast message or something
+               */
               out.println("[currentPlayer]"+ nextPlayer.nick);
             }
           }
@@ -65,24 +69,11 @@ public class Response implements Runnable{
       } catch (IOException e) {
         Log.e(TAG, "IOException");
       }
-    }else if(incMessage.startsWith("[next]")){
-      Log.i(TAG, "received next token");
-      NetworkPlayer p = currentPlayer();
-      try {
-        out = new PrintWriter(p.sock.getOutputStream(), true);
-        out.println("[next]");
-        p = nextTurn();
-        Log.i(TAG, "Server sends out new token");
-        out = new PrintWriter(p.sock.getOutputStream(), true);
-        out.println("[token]");
-      } catch (IOException e) {
-        Log.e(TAG, "IOException");
-      }
-    }else if(incMessage.startsWith("[afk]") || incMessage.startsWith("[resume]")){
-      Log.i(TAG, "Player switched AFK status");
-      NetworkPlayer p = HostService.findPlayerBySocket(incSocket);
-      p.afk = incMessage.startsWith("[afk]") ? true : false;
     }else if(incMessage.startsWith("[finish]")){
+      /* Game was finished so notify the players
+       * with the name of the Winner if there is one
+       *  
+       */
       Player winner = HostService.computeWinner();
       try {
         for(NetworkPlayer player : HostService.clients){
@@ -104,6 +95,7 @@ public class Response implements Runnable{
       HostService.clients.remove(p);
     }else{
       /* here are the messages for all clients */
+      
       NetworkPlayer playerWhoSentThisMessage = HostService.findPlayerBySocket(this.incSocket);
       for(NetworkPlayer player : HostService.clients){
         if(player.sock != null){
@@ -131,7 +123,7 @@ public class Response implements Runnable{
             }
             out.println(incMessage);
           }else{
-            /* e.g. [flip], [field], [reset], [finish] !!! */
+            /* e.g. [flip], [field], [reset] !!! */
             out.println(incMessage);
           }
         }

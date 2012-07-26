@@ -11,15 +11,20 @@ import android.os.IBinder;
 import android.util.Log;
 import de.thm.ateam.memory.engine.type.*;
 
-
+/**
+ * 
+ * Service which starts a Task, responsible for handling connecting Clients
+ *
+ */
 public class HostService extends Service{
 
   private static final String TAG = HostService.class.getSimpleName();
 
   public static ArrayList<NetworkPlayer> clients = null;
   public static int current = 0;
+  /** Clients can join the game or not */
   public static boolean gameAvailable = false;
-  public static int afkCount = 0;
+
   @Override
   public IBinder onBind(Intent arg0) {
     return null;
@@ -27,7 +32,7 @@ public class HostService extends Service{
 
   @Override
   public int onStartCommand(Intent intent, int flags, int startId){
-    Log.i(TAG, "Starte Server Service!");
+    Log.i(TAG, "Start Host Service!");
     clients = new ArrayList<NetworkPlayer>();
     gameAvailable = true;
     Thread t = new Thread(new ServerTask());
@@ -36,7 +41,11 @@ public class HostService extends Service{
     return START_NOT_STICKY;
   }
 
-
+  /**
+   * Finds a player from the client list by a given socket
+   * @param sock Socket, which is compared to each client
+   * @return null if no Player was found, the found NetworkPlayer otherwise
+   */
   public static NetworkPlayer findPlayerBySocket(Socket sock){
     if(clients.size() == 0) return null;
     for(NetworkPlayer p : clients){
@@ -65,11 +74,12 @@ public class HostService extends Service{
         while(true){
           Socket clientSock = servSock.accept();
           if(!gameAvailable){
-            Log.i(TAG, "Client tried to connect, but Server is full.");
+            Log.i(TAG, "Client tried to connect, but Host doesn't accep connections anymore.");
           }else{
             Log.i(TAG, "A Client has connected!");
+            // add this client to the client List
             clients.add(new NetworkPlayer(clientSock));
-            //prüfen ob schon ein Thread existiert
+            // create a new thread for this client
             Thread t = new Thread(new ClientConnection(clientSock));
             t.start();
           }
@@ -83,6 +93,12 @@ public class HostService extends Service{
 
   }
 
+  /**
+   * Compute the winner of  a network game
+   * @return the Player who has won if he/she has the single most pairs
+   *          if there is more than one player with the highest amount of pairs
+   *          it is a draw and null is returned 
+   */
   public static Player computeWinner() {
     if(clients.size() == 0) return null;
     int highscore = 0;
@@ -96,7 +112,7 @@ public class HostService extends Service{
       }else if(p.roundHits == highscore){
         numberOfWinners++;
       }
-      //reset it for the next round
+      //reset the hits of each player for the next round
       p.roundHits = 0;
     }
     if(numberOfWinners == 1){

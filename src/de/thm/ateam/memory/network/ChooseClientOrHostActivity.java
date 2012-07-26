@@ -18,18 +18,19 @@ public class ChooseClientOrHostActivity extends Activity{
     setContentView(R.layout.client_or_host);
   }
 
-
+  /**
+   * Is triggered when the user chooses to be host or client
+   * @param target the button which was touched
+   */
   public void onButtonClick(View target){
     Intent i = null;
     switch(target.getId()){
     case R.id.btn_host:
-      //if(startService(new Intent(getApplicationContext(),HostService.class))){
+      // TODO: check if service could be started
+      /* start Service */
       startService(new Intent(getApplicationContext(),HostService.class));
       i = new Intent(this, WaitingRoomActivity.class);
       startActivity(i);
-      //}else{
-      //  Log.i("demo", "Service could not be started.");
-      //}
       break;
     case R.id.btn_client:
       i = new Intent(this, EnterIpAddress.class);
@@ -37,11 +38,14 @@ public class ChooseClientOrHostActivity extends Activity{
       break;
     }
   }
-
+  
+  /**
+   * Returns from EnterIpAddress-Activity
+   */
   @Override
   protected void onActivityResult(int requestCode, int resultCode,
       Intent data){
-    Log.i(TAG, "Adresse wurde eingegeben und empfangen");
+    Log.i(TAG, "Adress was entered and received");
     if(requestCode == IPFORM){
       if(resultCode == RESULT_OK){
         Bundle b = data.getExtras();

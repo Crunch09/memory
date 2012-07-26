@@ -6,14 +6,13 @@ import android.database.Cursor;
 
 public class NetworkPlayer extends Player{
 
-	public boolean afk, hasToken;
+	public boolean hasToken;
 	public Socket sock;
 
 
 	public NetworkPlayer(Cursor c){
 		super(c);
 		this.sock = null;
-		this.afk = false;
 		this.hasToken = false;
 	}
 
@@ -22,7 +21,6 @@ public class NetworkPlayer extends Player{
 	public NetworkPlayer(String nick){
 		super(nick);
 		this.sock = null;
-		this.afk = false;
 		this.hasToken = false;
 	}
 	
@@ -35,7 +33,6 @@ public class NetworkPlayer extends Player{
 		this.hit = p.hit;
 		this.turn = p.turn;
 		this.sock = null;
-		this.afk = false;
 		this.hasToken = false;
 	}
 
@@ -50,7 +47,6 @@ public class NetworkPlayer extends Player{
 		this.roundDraw = false;
 		this.roundLose = false;
 		this.roundWin = false;
-		this.afk = false;
 		this.hasToken = false;
 	}
 
