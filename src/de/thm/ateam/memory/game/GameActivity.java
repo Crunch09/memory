@@ -94,6 +94,10 @@ public class GameActivity extends FragmentActivity implements MyAlertDialogListe
           NetworkMemory.getInstance(GameActivity.this, null).flip(pos);
         }else if(message.startsWith("[delete]")){
           String[] pick = message.substring(8).split(",");
+          
+          NetworkMemory.getInstance(GameActivity.this, null).deleted.add(Integer.parseInt(pick[0])); //TODO: test
+          NetworkMemory.getInstance(GameActivity.this, null).deleted.add(Integer.parseInt(pick[1]));
+          
           NetworkMemory.getInstance(GameActivity.this, null).delete(
               Integer.parseInt(pick[0]), 
               Integer.parseInt(pick[1]));
