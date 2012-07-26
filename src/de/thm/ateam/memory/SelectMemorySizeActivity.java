@@ -36,7 +36,10 @@ public class SelectMemorySizeActivity extends Activity implements OnClickListene
 		ArrayList<String> tmp = new ArrayList<String>();
 		tmp.add("2x2");
 		tmp.add("4x4");
+		tmp.add("4x6");
+		tmp.add("4x8");
 		tmp.add("6x6");
+		tmp.add("6x8");
 		tmp.add("8x8");
 		return tmp;
 	}
@@ -73,8 +76,7 @@ public class SelectMemorySizeActivity extends Activity implements OnClickListene
     ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, getList());
 		spin.setAdapter(adapter);
 		
-		// Because of some Mathematics we can use col/2 -1
-		spin.setSelection(PlayerList.getInstance().col/2 - 1);
+		spin.setSelection(find(PlayerList.getInstance().row, PlayerList.getInstance().col));
 		
 		Button but = new Button(this);
 		but.setText("Save");
@@ -99,7 +101,11 @@ public class SelectMemorySizeActivity extends Activity implements OnClickListene
 	  case 6:
 	  	// When button clicked pick up the selected item position
 	  	Spinner tmp = (Spinner)findViewById(5);
-	  	int pos = tmp.getSelectedItemPosition();
+	  	String value = (String)tmp.getSelectedItem();
+	  	
+	  	int row, col;
+	  	col = Integer.parseInt(value.split("x")[0]);
+	  	row = Integer.parseInt(value.split("x")[1]);
 	  	
 	  	// Load config file to store the changes
 	  	Properties configFile = new Properties();
@@ -109,13 +115,12 @@ public class SelectMemorySizeActivity extends Activity implements OnClickListene
 		    e.printStackTrace();
 	    }
 
-			// Because of some Mathematics we can use (pos + 1) * 2
-			configFile.setProperty("row", String.valueOf((pos+1) * 2));
-			configFile.setProperty("col", String.valueOf((pos+1) * 2));
+			configFile.setProperty("row", String.valueOf(row));
+			configFile.setProperty("col", String.valueOf(col));
 			
 			// Also set row and col for the global PlayerList used for the Memory field dimensions
-			PlayerList.getInstance().row = (pos+1) * 2;
-			PlayerList.getInstance().col = (pos+1) * 2;
+			PlayerList.getInstance().row = row;
+			PlayerList.getInstance().col = col;
 			
 			try {
 	      configFile.store(new FileOutputStream(new File(getFilesDir() + "config.properties")), null);
@@ -128,4 +133,21 @@ public class SelectMemorySizeActivity extends Activity implements OnClickListene
   		break;
 	  }
   }
+	
+	/**
+	 * Function to get the position of a dimensions for the spinner
+	 * 
+	 * @param int row
+	 * @param int col
+	 * @return int
+	 */
+	private int find(int row, int col) {
+		ArrayList<String> tmp = getList();
+		for(int i = 0; i < tmp.size(); i++) {
+			if(tmp.get(i).equals(String.valueOf(row) + "x" + String.valueOf(col))) {
+				return i;
+			}
+		}
+		return 0;
+	}
 }
