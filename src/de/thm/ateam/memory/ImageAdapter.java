@@ -76,13 +76,13 @@ public class ImageAdapter extends BaseAdapter {
 	
 	public void buildField(String fieldString, int size){
 	  ImageView[] imageViewNew = new ImageView[size];
-	  
+	  int colsize = PlayerList.getInstance().col;
 	  String[] pairs = fieldString.split("Ende");
 	  for(int i = 0; i < pairs.length; i++){
 	    String pair[] = pairs[i].split(";");
 	    for(int j = 0; j < pair.length; j++){
 	      String values[] = pair[j].split(",");
-	      imageViewNew[Integer.parseInt(values[1])* 4 + Integer.parseInt(values[0])] = listImageView.get(j);
+	      imageViewNew[Integer.parseInt(values[1])* colsize + Integer.parseInt(values[0])] = listImageView.get(j);
 	    }
 	    //jetzt die ersten zwei Element aus imageView entfernen, damit die Schleife weiter funktioniert
 	    listImageView.remove(0);
