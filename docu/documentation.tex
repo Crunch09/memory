@@ -91,14 +91,18 @@ Wie in \autoref{fig:memorydesign} zu sehen ist entsteht das Framework vÃ¶llig un
 
 \subsection{Engine und Datenbank}
 Die Engine umfasst die Typisierung der Spieler und Datenbankschnittstellen.
-\subsubsection{Spieler}
-Der Spieler liegt als Klasse vor, mit allen Informationen, wie Nickname, Siege, Niederlagen, Unentschieden, getroffene Züge, sowie allgemein getätigte Züge und eine ID. Die ID entspricht der ID des entsprechenden Datensatzes in der Datenbank. Diese ID wird nach dem Speichern in der Datenbank im jeweiligen Objekt gespeichert.
 \subsubsection{Nachladen eines Kartendecks}
-Das Nachladen eines Kartendecks wird über eine SD Karte organisiert. Das neue Deck wird in einer Zip auf dieser SD Karte gespeichert. Diese Zip Datei kann unter Settings->Load Deck ausgewählt werden und dann wird es automatisch entpackt, in die Datenbank geschrieben und damit ist das Nachladen des Decks abgeschlossen.\\
-Wichtig: Die Zip Datei muss im root-Verzeichnis der SD Karte zu finden sein. Ausserdem ist es wichtig, dass die Namensgebung der einzelnen JPG Dateien richtig gesetzt sind. Die Rückseite muss den Namen 0.jpg haben. Alle weiteren sind frei wählbar.
-\subsubsection{Datenbank}
+Beim Nachladen eines Kartendecks wird eine Zip File mit JPG Dateien erwartet. Diese Zip File muss eine JPG Datei mir Namen {\em 0.jpg} enthalten. Die Zip File wird aus der SD Karte geladen, dazu ist es zwingend notwendig, dass diese sich im root-Verzeichnis befindet.
+Die Zip File wird von der Applikation geladen und entpackt. Während dem Entpacken werden die Informationen und einzelnen Bilder in einem deck Objekt gespeichert. Dabei kam es zu verschiedenen Problemen, einfachste Reader haben die jeweiligen Daten nicht aus dem Stream lesen können, somit wurde sich auf einen einfach InputStream geeinigt. Das ausgelesene Byte Array wurde anschliesend über eine BitmapFactory zu einem Bitmap Objekt dekodiert.\\
+Wenn das Objekt vollständig erzeugt wurde, speichert es automatisch alle Daten in der Datenbank. Dabei kam es zu mehreren Problemen. Die Tabelle für ein Deck musste um eine weitere Tabelle in einer 1->n Beziehung ergänzt werden, nur so können alle Bilder mit Verweis auf das jeweilige Deck gespeichert werden.\\
+Beim Laden der einzelnen Bilddaten kam es wegen den Streams wiedermal zu dem Problem, das ImageReader und ähnliche nicht wirkten, ein einfacher InputStream löst erneut das Problem.
+
+\subsubsection{Allgemeines Datenbankdesign}
 Die Datenbank umfasst 3 Tabellen. Diese Tabellen beinhalten die Informationen jedes einzelnen Spielers. Es wird der Nickname, die Siege, Niederlagen, sowie Unentschieden, getroffene Kartenpaare und die allgemeine durchgeführte Züge. Die jeweilige ID des Spielers entspricht dem jeweiligen Datensatz in der Datenbank.\\
 Neben dem Spieler werden auch zusätzliche Kartendecks gespeichert. Da zu jedem Kartendeck es eine Rückseite vorhanden sein muss und 32 Vorderseiten, handelt es sich um eine 1 -> n Beziehung. In der Datenbank werden zu jedem Kartendeck der Name gespeichert, dieser wird aus dem Dateinamen entnommen. Zusätzlich wird direkt die Rückseite in der Kartendeck Tabelle gespeichert, da die Rückseite nur einmal vorkommt und nicht noch aus der Kartentabelle gefiltert werden muss. Die Kartentabelle enthält die ID des jeweiligen Kartendecks als Referenz und einen Blob in dem die JPG Vorderseitenbilder als Byte Feld gespeichert wird.
+
+Grösstes Problem während der Entwicklung des Datenbank Layouts waren immer wieder kleine Anpassungen durch ständige Weiterentwicklung der Software.
+
 \subsection{Statistik}
 crunch
 \subsection{Memory}

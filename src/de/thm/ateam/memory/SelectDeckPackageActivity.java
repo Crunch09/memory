@@ -8,6 +8,7 @@
 package de.thm.ateam.memory;
 
 import java.io.File;
+import java.io.IOException;
 
 import java.util.ArrayList;
 
@@ -82,12 +83,11 @@ public class SelectDeckPackageActivity extends ListActivity {
 		Log.i(TAG, selectedFile.getAbsolutePath());
 		
 		try {
-			new Deck(new ZipFile(selectedFile, ZipFile.OPEN_READ), this);
-		} catch (Exception e) {
-			e.printStackTrace();
-		
+			Deck.newDeck(new ZipFile(selectedFile, ZipFile.OPEN_READ), this);
+		} catch (IOException e) {
+			Log.i(TAG, "import failed");
 		} finally {
-			this.finish();
+		this.finish();
 		}
 	}
 	

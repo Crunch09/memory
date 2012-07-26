@@ -30,13 +30,15 @@ import de.thm.ateam.memory.engine.MemoryDeckDAO;
  */
 public class Deck {
 	
-	private final String TAG = "Deck.class";
+	protected final String TAG = "Deck.class";
 
-	private String name;
-	private long ID;
-	private Bitmap backSide = null;
-	private ArrayList<Bitmap> frontSide = null;
-	private MemoryDeckDAO dao;
+	protected String name;
+	protected long ID;
+	protected Bitmap backSide = null;
+	protected ArrayList<Bitmap> frontSide = null;
+	protected MemoryDeckDAO dao;
+	
+	protected Deck() {}
 	
 	/**
 	 * Constructor to build object and loads the specified deck by DECK_ID out of DB
@@ -93,42 +95,13 @@ public class Deck {
 	}
 	
 	/**
-	 * Creates deck object and loads name and images from zip file.
+	 * Creates new deck in DB with pictures from zip file and name
 	 * 
 	 * @param zip Zip file where loading from
 	 * @param ctx Context
-	 * @throws IOException Raises, if StreamReader becomes inconsistent state
 	 */
-	public Deck(ZipFile zip, Context ctx) throws IOException {
-		Enumeration<? extends ZipEntry> e = zip.entries();
-		frontSide = new ArrayList<Bitmap>();
-
-		while(e.hasMoreElements()) {
-			ZipEntry entry = e.nextElement();
-			InputStream f = zip.getInputStream(entry);
-			byte[] b = new byte[(int)f.available()];
-			f.read(b,0,b.length);
-			Bitmap bm = BitmapFactory.decodeByteArray(b, 0, b.length);
-			
-			if (entry.getName().equals("0.jpg"))
-				backSide = bm;
-				
-			else
-				frontSide.add(bm);
-			
-			Log.i(TAG,entry.getName());
-		}
-		
-		String[] tmp = zip.getName().split("/");
-		
-		this.name = tmp[tmp.length-1].substring(0, tmp[tmp.length-1].length() - 4);
-		dao = new MemoryDeckDAO(ctx);
-		if (dao.storeDeck(this))
-			Log.i(TAG, "stored");
-		else
-			Log.i(TAG, "not stored");
-		
-		zip.close();
+	public static void newDeck(ZipFile zip, Context ctx) {		
+		new Thread(new ImportDeck(ctx, zip)).start();
 	}
 	
 	/**
