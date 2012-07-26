@@ -1,6 +1,7 @@
 package de.thm.ateam.memory;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import de.thm.ateam.memory.engine.MemoryDeckDAO;
 import de.thm.ateam.memory.engine.type.Deck;
@@ -82,6 +83,7 @@ public class Theme {
 				bitmapList = deck.getFrontSide();
 			}
 		}
+		Collections.shuffle(bitmapList);
 	}
 
 	/**
