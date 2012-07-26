@@ -70,6 +70,11 @@ public class ImportDeck extends Deck implements Runnable {
 		
 		String[] tmp = z.getName().split("/");
 		
+		if (backSide == null || frontSide == null || frontSide.size() < 32) {
+			Toast.makeText(c, "not enough images", Toast.LENGTH_LONG);
+			return;
+		}	
+		
 		this.name = tmp[tmp.length-1].substring(0, tmp[tmp.length-1].length() - 4);
 		dao = new MemoryDeckDAO(c);
 		if (dao.storeDeck(this))

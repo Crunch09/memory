@@ -17,6 +17,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 
 import de.thm.ateam.memory.engine.interfaces.DeckDAO;
 
@@ -30,6 +31,7 @@ import de.thm.ateam.memory.engine.type.SQLite;
  */
 public class MemoryDeckDAO extends DeckDB implements DeckDAO {
 	
+	private static final String TAG = "MDD";
 	private SQLite sql;
 	
 	public MemoryDeckDAO(Context ctx) {
@@ -66,7 +68,7 @@ public class MemoryDeckDAO extends DeckDB implements DeckDAO {
 	 * @see de.thm.ateam.memory.engine.interfaces.DeckDAO#storeDeck(de.thm.ateam.memory.engine.type.Deck)
 	 */
 	public boolean storeDeck(Deck d) {
-		long r;
+		long r = 0L;
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
         SQLiteDatabase db = sql.getWritableDatabase();
 		ContentValues cv = new ContentValues();
@@ -74,9 +76,13 @@ public class MemoryDeckDAO extends DeckDB implements DeckDAO {
 		d.getBackSide().compress(Bitmap.CompressFormat.JPEG, 100, out);
 		cv.put(BACK_CARD, out.toByteArray());
 		
-		r = db.insert(TABLE_NAME, null, cv);
+		try {
+			r = db.insert(TABLE_NAME, null, cv);
+		} catch (Exception e) {
+			Log.i(TAG, "not stored, name is unique, name exists already");
+		}
 		
-		if (r < 0)
+		if (r <= 0)
 			return false;
 		
 		for (Bitmap b : d.getFrontSide()) {
@@ -126,6 +132,7 @@ public class MemoryDeckDAO extends DeckDB implements DeckDAO {
 			c.close();
 			cc.close();
 			db.close();
+			
 			return null;
 		}
 		
@@ -165,7 +172,6 @@ public class MemoryDeckDAO extends DeckDB implements DeckDAO {
 		SQLiteDatabase db = sql.getReadableDatabase();
 		String []projection = new String[] { CARD_ID, CARD_DECK_ID, CARD_BLOB };
 		Cursor c = db.query(CARD_TABLE_NAME, projection, CARD_DECK_ID, new String[] {String.valueOf(Deck_ID)}, null, null, CARD_ID);
-		
 		Bitmap []b = new Bitmap[c.getCount()];
 		int i = 0;
 		
