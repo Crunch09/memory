@@ -30,6 +30,11 @@ import de.thm.ateam.memory.game.GameActivity;
 import de.thm.ateam.memory.game.PlayerList;
 import de.thm.ateam.memory.network.MyAlertDialog.MyAlertDialogListener;
 
+/**
+ * 
+ * its the activity of the "Chat"-WaitingRoom
+ *
+ */
 public class WaitingRoomActivity extends FragmentActivity implements MyAlertDialogListener{
   private final String TAG = this.getClass().getSimpleName();
 
@@ -50,12 +55,18 @@ public class WaitingRoomActivity extends FragmentActivity implements MyAlertDial
   public void onDestroy(){
     super.onDestroy();
     if(serverAddress.equals("127.0.0.1")){
+      /* it's the client on the server who should 
+       * only be able to do this
+      */ 
       stopService(new Intent(getApplicationContext(),HostService.class));
     }
   }
 
   private class WaitForChatMessages extends AsyncTask<Void, String, Integer>{
-
+    /**
+     * wait for incoming chat messages until GameHasStarted 
+     * 
+     */
     @Override
     protected Integer doInBackground(Void... arg0) {
       InetAddress adr = null;
@@ -88,13 +99,6 @@ public class WaitingRoomActivity extends FragmentActivity implements MyAlertDial
         MyAlertDialog alertDialog = new MyAlertDialog(R.string.could_not_connect_to_server);
         alertDialog.show(fm, "dialog");
         e.printStackTrace();
-        //finish();
-        /*try {
-          currentPlayer.sock.close();
-        } catch (IOException e1) {
-          Log.e(TAG, "Socket could not be closed.");
-        }
-        Log.e(TAG,"Port 6666 could not be used ");*/
       } 
       return 0;
     }
@@ -106,9 +110,9 @@ public class WaitingRoomActivity extends FragmentActivity implements MyAlertDial
       for(String message : messages){
         if(message.startsWith("[start]")){
           gameHasStarted = true;
-          //TODO: send stop message to all clients
           findViewById(R.id.send_btn).setClickable(false);
           if(serverAddress.equals("127.0.0.1")){
+            /* start Button is only available on the client on serverside */
             findViewById(R.id.start_game_btn).setClickable(false);
           }
           findViewById(R.id.chat_edit).setEnabled(false);
@@ -118,15 +122,7 @@ public class WaitingRoomActivity extends FragmentActivity implements MyAlertDial
           dialog.setCancelable(false);
           dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
           dialog.show();
-//          try {
-//            out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(currentPlayer.sock.getOutputStream())), true);
-//          } catch (IOException e) {
-//            Log.e(TAG, "could not connect to server or reader threw io-exception");
-//            MyAlertDialog alertDialog = new MyAlertDialog(R.string.could_not_connect_to_server);
-//            alertDialog.show(fm, "dialog");
-//          }
-//          out.println("[stop]");
-//          out.close();
+
           if(wfc.cancel(true)){
             Log.i(TAG, "Server is no longer waiting for clients");
           }else{
@@ -139,7 +135,7 @@ public class WaitingRoomActivity extends FragmentActivity implements MyAlertDial
               Intent i = new Intent(WaitingRoomActivity.this, GameActivity.class);
               i.putExtra("networkgame", true);
               
-              //its the starting player
+              //its the hosting player
               if(serverAddress.equals("127.0.0.1")){
                 i.putExtra("host", true);
               }else{
@@ -156,7 +152,7 @@ public class WaitingRoomActivity extends FragmentActivity implements MyAlertDial
             Log.i(TAG, "Server could not be stopped.");
           }
         }else{
-          //append a message to the chat
+          //append a message to the chat if it is not a command
           if(!message.startsWith("[")){
             chatWindow.append(message + "\n");
           }
@@ -178,8 +174,8 @@ public class WaitingRoomActivity extends FragmentActivity implements MyAlertDial
     Bundle b = getIntent().getExtras();
     resumed = false;
     gameHasStarted = false;
+    // check if this is client or host
     if(b != null){
-      //client
       serverAddress = b.getString("serverAddress");
       setContentView(R.layout.client);
     }else{
@@ -194,7 +190,7 @@ public class WaitingRoomActivity extends FragmentActivity implements MyAlertDial
     start_game_btn = (Button) findViewById(R.id.start_game_btn);
     server_ip = (TextView) findViewById(R.id.server_ip);
 
-    //prüfen ob device in einem wlan ist
+    // check if device is in a wifi
     if(serverAddress.equals("127.0.0.1")){
       WifiManager myWifiManager = (WifiManager) getSystemService(WIFI_SERVICE);
       WifiInfo myWifiInfo = myWifiManager.getConnectionInfo();
@@ -215,8 +211,8 @@ public class WaitingRoomActivity extends FragmentActivity implements MyAlertDial
     switch(target.getId()){
     case R.id.start_game_btn:
       Log.i(TAG, "Game about to begin...");
-      // set game availability to false
-        out.println("[system]Game about to begin!");
+      // let the other players know that a game was started
+      out.println("[system]Game about to begin!");
       break;
     case R.id.send_btn:
         out.println(currentPlayer.nick +": "+ text.getText());
@@ -231,6 +227,10 @@ public class WaitingRoomActivity extends FragmentActivity implements MyAlertDial
 
   }
   
+  /**
+   * a game was finished and this activity is restarted, so set everthing
+   * up for a round of chatting :)
+   */
   @Override
   protected void onResume(){
     super.onResume();
@@ -250,6 +250,7 @@ public class WaitingRoomActivity extends FragmentActivity implements MyAlertDial
   
   protected void onPause(){
     super.onPause();
+    /* now we know the activity is not started the first time ... */
     resumed = true;
   }
 }

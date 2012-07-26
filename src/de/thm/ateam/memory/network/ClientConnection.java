@@ -7,10 +7,14 @@ import java.net.Socket;
 
 import android.util.Log;
 
-
+/**
+ * 
+ * Used to handle a connection between a client and a server
+ *
+ */
 public class ClientConnection implements Runnable {
   
-  private static final String TAG = ClientConnection.class.getSimpleName();
+  private final String TAG = this.getClass().getSimpleName();
   
   public Socket sock = null;
 
@@ -18,6 +22,9 @@ public class ClientConnection implements Runnable {
     this.sock = s;
   }
 
+  /**
+   * waits for incoming messages from a specific socket
+   */
   public void run() {
     try {
         BufferedReader in = new BufferedReader(
@@ -28,13 +35,11 @@ public class ClientConnection implements Runnable {
 
         while ((inputLine = in.readLine()) != null) {
           Log.i(TAG,"received Message from a client");
+          /* let a Response-Thread handle the answer */
           Thread t = new Thread(new Response(inputLine, sock));
           t.start();
         }
         Log.i(TAG, "Server is not waiting anymore");
-        
-        //in.close();
-        //sock.close();
 
     } catch (IOException e) {
         Log.e(TAG, "IOException");

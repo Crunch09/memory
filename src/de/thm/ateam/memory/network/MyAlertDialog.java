@@ -7,6 +7,11 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import de.thm.ateam.memory.R;
 
+/**
+ * 
+ * AlertDialog which can be shown if there occured an error
+ *
+ */
 public class MyAlertDialog extends DialogFragment {
 
   private int messageId;

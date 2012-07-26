@@ -32,6 +32,12 @@ import de.thm.ateam.memory.game.Game;
 import de.thm.ateam.memory.game.MemoryAttributes;
 import de.thm.ateam.memory.game.PlayerList;
 
+/**
+ * 
+ * Singleton class which is used to create the View of a Network-Game
+ * and handle different operations on it, like flipping cards
+ *
+ */
 public class NetworkMemory extends Game{
 
 	Context ctx;
@@ -74,7 +80,9 @@ public class NetworkMemory extends Game{
 	}
 
 
-
+	/**
+	 * initialize some important instance variables
+	 */
 	public void newGame(){
 		ROW_COUNT = attr.getRows();
 		COL_COUNT = attr.getColumns();
@@ -90,14 +98,21 @@ public class NetworkMemory extends Game{
 			e.printStackTrace();
 		}
 
-
-		//infoView.setText(PlayerList.getInstance().currentPlayer.nick);
 	}
 
+	/**
+	 * creates a string from the Field which was created by the host to share it
+	 * with all the clients. The format of this String is
+	 * xCoordCard1FromPair1,yCoordCard1FromPair1;
+	 * xCoordCard2FromPair1,yCoordCard2FromPair1EndexCoordFromCard1OfPair2...
+	 * @return a string indicating the field positions of each pair
+	 */
 	public String createField(){
 		ROW_COUNT = attr.getRows();
 		COL_COUNT = attr.getColumns();
+		/* create Field */
 		imageAdapter = new ImageAdapter(ctx, ROW_COUNT, COL_COUNT);
+		/* shuffle Field */
 		imageAdapter.shuffleImages();
 		String field = "";
 		for(Card[]c : imageAdapter.getPositions()){
@@ -117,7 +132,7 @@ public class NetworkMemory extends Game{
 		theme = imageAdapter.getTheme();
 
 		if(host){
-			//host player hat am Anfang das Token
+			// at the beginnig of a round the host player starts
 			currentPlayer.hasToken = true;
 
 		}
@@ -267,6 +282,7 @@ public class NetworkMemory extends Game{
 
 	class MemoryClickListener implements OnItemClickListener {
 		public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+			/* player is not allowed to make a move if he hasn't got the token */
 			if(!currentPlayer.hasToken){
 				return;
 			}
@@ -275,7 +291,7 @@ public class NetworkMemory extends Game{
 				Log.i(TAG,"allready deleted: "+position); //should not happen, but it does.
 				return;
 			}
-			
+
 			numberOfPicks++;
 			if(numberOfPicks > 2){
 				return;
@@ -290,49 +306,35 @@ public class NetworkMemory extends Game{
 				if(card == -1){
 					out.println("[flip]"+ position);
 					card = position;
-					/* Increase the number of turns */
-					currentPlayer.turn();
-					//Toast.makeText(ctx,"select " +position+ " first move", Toast.LENGTH_SHORT).show();
+
 				}else{ 
+
 					if(card != position) {
 						numberOfPicks++;
 						out.println("[flip]"+ position);
 
 
 						if(imageAdapter.getItemId(card) == imageAdapter.getItemId(position)){
-							
+
 							deleted.add(card);
 							deleted.add(position);
-							
+
 							out.println("[delete]"+ position +","+ card); 
 							card = -1;
-							/*left -= 2;
-              if(left<=0){
-                //Memory.this.getWinner();
-                numberOfPicks = 0;
-                String victoryMsg = "";
-                out.println("[finish]");
-              }*/
+
 
 
 						}else{
+							/* player didn't hit a pair */
 							currentPlayer.hasToken = false;
-							//Toast.makeText(ctx,"card "+ " select " +position+ "miss, next player", Toast.LENGTH_SHORT).show();
 							out.println("[reset]"+ position +","+ card);
 							card = -1;
-							//Token verschicken
 
 							out.println("[token]");
-							//current = turn();
-							//infoView.setText(current.nick);
 						}
 					}
 				}
 			}
-
 		}
 	}
-
-
-
 }
