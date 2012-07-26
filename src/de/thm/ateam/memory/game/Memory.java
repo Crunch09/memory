@@ -1,5 +1,6 @@
 package de.thm.ateam.memory.game;
 
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -42,6 +43,13 @@ public class Memory extends Game{
 	private static Object lock = new Object(); //synchronous actions suck.
 
 	private Activity envActivity;
+	/*
+	 * This is the variable that cancels any chances on race Conditions
+	 * inside ImageView.
+	 * I do know that ImageView is not ThreadSafe, at least not in the way
+	 * we access it ...
+	 */
+	private ArrayList<Integer> deleted; // variable is only accessed by ClickListener
 
 
 
@@ -68,6 +76,7 @@ public class Memory extends Game{
 		left = ROW_COUNT * COL_COUNT;
 		current = turn();
 		infoView.setText(current.nick + " pairs: 0");
+		deleted  = new ArrayList<Integer>();
 	}
 
 
@@ -119,9 +128,10 @@ public class Memory extends Game{
 	 * @param position
 	 */
 	public void flip(int position) {
+		Log.i(TAG, "fliped "+ position);
 		ImageView clicked = (ImageView) imageAdapter.getItem(position);
 		clicked.setImageBitmap(theme.getPicture(clicked.getId()));
-
+		clicked.setEnabled(false); //disable the card for this turn
 	}
 
 	/**
@@ -146,6 +156,11 @@ public class Memory extends Game{
 	 * 
 	 */
 	public void reset(int pos, int pos2) {
+		ImageView clicked = (ImageView)imageAdapter.getItem(pos);
+		clicked.setEnabled(false);
+		clicked= (ImageView)imageAdapter.getItem(pos2);
+		clicked.setEnabled(false);
+		
 		ResetTask task = new ResetTask(pos, pos2);
 		Timer t = new Timer(false);
 		t.schedule(task, 1000);
@@ -160,7 +175,15 @@ public class Memory extends Game{
 	 * 
 	 */
 	public void delete(int pos, int pos2) {
-
+		
+		ImageView clicked = (ImageView)imageAdapter.getItem(pos);
+		ImageView clicked2= (ImageView)imageAdapter.getItem(pos2);
+		
+		clicked.setClickable(false);
+		clicked.setEnabled(false);
+		clicked2.setClickable(false);
+		clicked2.setEnabled(false);
+		
 		DeleteTask task = new DeleteTask(pos, pos2);
 		Timer t = new Timer(false);
 		t.schedule(task, 1000);
@@ -193,6 +216,7 @@ public class Memory extends Game{
 			this.pos = pos;
 			this.pos2 = pos2;
 		}
+		
 
 		@Override
 		public void run(){
@@ -216,8 +240,12 @@ public class Memory extends Game{
 		public void doJob(Message msg){
 			ImageView clicked = (ImageView) imageAdapter.getItem(msg.getData().getInt("pos"));
 			clicked.setImageBitmap(theme.getBackSide());
-			clicked = (ImageView) imageAdapter.getItem(msg.getData().getInt("pos2"));
-			clicked.setImageBitmap(theme.getBackSide());
+			clicked.setEnabled(true);
+			
+			ImageView clicked2 = (ImageView) imageAdapter.getItem(msg.getData().getInt("pos2"));
+			clicked2.setImageBitmap(theme.getBackSide());
+			clicked2.setEnabled(true);
+			
 			numberOfPicks = 0;
 		}
 	}
@@ -234,25 +262,34 @@ public class Memory extends Game{
 			ImageView clicked = (ImageView) imageAdapter.getItem(msg.getData().getInt("pos"));
 			clicked.setImageBitmap(null);
 
-			clicked = (ImageView) imageAdapter.getItem(msg.getData().getInt("pos2"));
-			clicked.setImageBitmap(null);
+			ImageView clicked2 = (ImageView) imageAdapter.getItem(msg.getData().getInt("pos2"));
+			clicked2.setImageBitmap(null);
+			
 			numberOfPicks = 0; 
 		}
 	}
 
 	class MemoryClickListener implements OnItemClickListener {
 		public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+			/*
+			 * This is unfortunately required because ImageView isnt working nice with
+			 * multiple Threads and a ClickListener. Thats why we use 'deleted' inside the Listener
+			 * to help out if ImageView passes unwanted ClickEvents to us.
+			 */
+			if(deleted.contains(position)){
+				Log.i(TAG, "allready deleted: "+ position); //This is right where ImageView failed to handle Thread Actions
+				return;
+			}
 			numberOfPicks++;
 			if(numberOfPicks > 2){
 				return;
 			}
-
+			
 			/*
 			 * simple recognition of hits or misses,
 			 * must be overridden by a round-based player system
 			 */
 			synchronized (lock) { //just to avoid unwanted behavior
-
 				if(card == -1){
 					flip(position);
 					card = position;
@@ -263,8 +300,10 @@ public class Memory extends Game{
 					if(card != position) {
 						flip(position);
 						if(imageAdapter.getItemId(card) == imageAdapter.getItemId(position)){
-							((ImageView) imageAdapter.getItem(card)).setEnabled(false);
-							((ImageView) imageAdapter.getItem(position)).setEnabled(false);
+							
+							deleted.add(card); //ignore their Clicks for future calls
+							deleted.add(position); 
+							
 							delete(position, card); 
 							//Toast.makeText(ctx,"card "+ " select " +position+ " hit, next player", Toast.LENGTH_SHORT).show();
 							card = -1;
@@ -300,9 +339,6 @@ public class Memory extends Game{
 
 
 						}else{
-							
-							
-							
 							//Toast.makeText(ctx,"card "+ " select " +position+ "miss, next player", Toast.LENGTH_SHORT).show();
 							reset(position, card);
 							card = -1;
