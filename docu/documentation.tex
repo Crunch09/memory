@@ -22,7 +22,7 @@
 \begin{document}
 \title{Memory - Dokumentation}
 \author{A - Team\\Technische Hochschule Mittelhessen}
-\renewcommand{\today}{11. September 2009}
+\renewcommand{\today}{26. Juli 2012}
 \maketitle
 
 \tableofcontents
@@ -78,16 +78,41 @@ Kann
 
 \section {Architektur}
 Wir haben uns selbst als Ziel gesetzt, dass wir in 2 Richtungen entwickeln: Das Spiel Memory als sehr spezifische Implementierung und ein "'Framework"', das alle typischen Funktionen für ein rundenbasiertes Spiel mitbringt. So konnten wir mit entsprechenden Oberklassen (Game.java) und abgeleiteten Klassen (z.B. Memory.java) garantieren, dass am Ende beide Zweige zusammen führen.
-Zum Framework gehört Game.java als Oberklasse aller implementierbaren rundenbasierten Spiele, eine Engine die im Wesentlichen Datenbankzugriffe kapselt, ein einfaches Menüsystem, das leicht konfigurier- und erweiterbar ist und einen statistischen Teil der mit der Datenbank zusammen arbeitet. Wir haben dann als Konkrete Implementierung für Memory die Klasse Memory.java von Game erben lassen und entsprechend für Memory angepasst. Ebenso wird die Netzwerkimplementierung eine von Game abgeleitete Klasse sein, natürlich noch mit einigen spezifischen Anpassungen zur Kommunikation der Geräte.
-
-\subsection{Design}
+Zum Framework gehört Game.java als Oberklasse aller implementierbaren rundenbasierten Spiele, eine Engine die im Wesentlichen Datenbankzugriffe kapselt, ein einfaches Menüsystem, das leicht konfigurier- und erweiterbar ist und einen statistischen Teil der mit der Datenbank zusammen arbeitet. Wir haben dann als Konkrete Implementierung für Memory die Klasse Memory.java von Game erben lassen und entsprechend für Memory angepasst. Ebenso wird die Netzwerkimplementierung eine von Game abgeleitete Klasse sein, natürlich noch mit einigen spezifischen Anpassungen zur Kommunikation der Geräte.\\\subsection{Design}
 Wie in \autoref{fig:memorydesign} zu sehen ist entsteht das Framework völlig unabhängig vom zu implementierenden Spiel.
 \begin{figure}[!h]
 \centering
 \includegraphics[scale=0.4]{pics/memorydesign.png}
 \caption{Konzept}
 \label{fig:memorydesign}
-\end{figure}
+\end{figure}\\
+Auf Grund einiger zeitlicher Probleme ist das Projekt dann doch etwas mehr ineinander Verwachsen als gedacht, jedoch hat der Grundgedanke der Unabhängigkeit dabei geholfen unser Projekt zu strukturieren und damit schnell zu implementieren. Gerade was die Datenbanken und das Spielinterface (die Menüführung) Angeht ist das Spiel durch die gezielte Verwendung von ListViews und die verschachtelten Menüs sehr leicht Anpassbar geworden und bietet in seiner grundsätzlichen Ausprägung auch genügend Funktionalität mit um einfache Spiele zu unterstützen. Die Memory-Erweiterungen beginnen im UI hauptsächlich bei den Settings: \autoref{fig:Activities}
+\\
+\begin{figure}[!h]
+\centering
+\includegraphics[scale=0.5]{pics/Activities.png}
+\caption{Activity Diagramm}
+\label{fig:Activities}
+\end{figure}\\
+In der Implementierung der Spieler-Typen macht die Frameworkausrichtung und die Benutzung von Oberklassen und Ableitungen etwas anschaulich: \autoref{fig:UMLPlayer}
+\\
+\begin{figure}[!h]
+\centering
+\includegraphics[scale=0.5]{pics/UMLPlayer.png}
+\caption{UML Player Klassen}
+\label{fig:UMLPlayer}
+\end{figure}\\
+Player ist hier eine Oberklasse, sie ist Teil des Frameworks. NetworkPlayer ist eine Ableitung, wobei hier noch nicht ganz klar ist ob sie Teil des Frameworks wird. Die Attribute könnten, sofern man denn einheitliche Netzwerkoperationen vorgibt, gut wiederverwendet werden. Die PlayerList ist ein reiner Datenlieferant der in der Regel beim Start der Applikation mit Daten befüllt wird. Das Objekt ist in der App einzigartig und wurde leider in der aktuellen Version etwas missbraucht für eher spezifische Eigenschaften der Memory-Implementierung. Dies wird allerdings im Code klarer und spielt hier keine große Rolle. Wichtig zu merken ist: Player werden in einem PlayerList Objekt gehalten. Dabei unterscheidet man noch in 2 Listen: Players, das sind alle aus der Datenbank gelesenen Spieler, und Session, das sind die zu einer Sitzung (lokales Spiel) gehörenden Spieler. Hintergrund war hier die Auftrennung für den Round Robin Algorithmus den wir beiderseits in Game.java als auch in Player.java realisiert haben. Dabei benötigt Game.java auch nur die Spielerliste der gerade teilnehmenden Spieler also nur Session. Die Spieler die in eine Session kommen werden in der SelectMultipleUserActivity ausgewählt.\\
+Das Spiel und dessen Rundenprinzip ist in Game.java bzw. Memory.java realisiert. Essenziell ist dabei natürlich wie mit den Usereingaben umgegangen wird. In unserem Fall muss ein \emph{OnItemClickListener} implementiert werden. Wie, wann und wo dieser definiert und implementiert ist interessiert das Framework nicht. Es etwartet lediglich in der GameActivity, dass man dort an Stelle des traditionellen \emph{setContentView(int)} Aufrufs mit der Methode \emph{assemleLayout()} von Game.java ein View-Objekt erhält. Diese View ist dann Basis der Spielanzeige und ist frei konfigurierbar.
+\\
+\begin{figure}[!h]
+\centering
+\includegraphics[scale=0.5]{pics/UML.png}
+\caption{UML Game}
+\label{fig:UML}
+\end{figure}\\
+Memory.java ereitert Game.java und überschreibt dabei z.B. die Methode \emph{assembleLayout()}. Die GameAttributes sind lediglich dazu gedacht mehr Flexibilität in die Architektur zu bringen, da unter Umständen dort für Initialisierungen etc. wesentlich mehr Attribute gebraucht werden könnten als wir sie bei Memory brauchen. Diese Attribute sollten, wenn man sie denn als Übergabe-Container verwendet in der gesamten Applikation zugreifbar gemacht werden. Im Falle von Memory werden die GameAttributes meistens an den Stellen erzeugt wo man sie auch tatsächlich benötigt. \\
+Netzwerk und Kommunikation sollten in der GameActivity Klasse abgehandelt werden und bei bedarf über Methoden in die Game-Logik hereingereicht werden (z.B. Spielerwechsel mit \emph{turn()}). Die Netzwerk Implementierung ist auf Grund der knappen Zeit sehr spezifisch geworden, hier muss auf jeden Fall noch daran gearbeitet werden Protokolle zu erstellen auf deren Basis eine einheitliche Netzwerk-Implementierung mehrerer Spiele möglich ist. Das Thema Netzwerk wird noch genauer behandelt.
 
 \subsection{Engine und Datenbank}
 Die Engine umfasst die Typisierung der Spieler und Datenbankschnittstellen.
