@@ -50,6 +50,15 @@ public class SelectUserActivity extends ListActivity {
 		registerForContextMenu(getListView());
 	}
 
+	/**
+	 * 
+	 * Creates the contextmenu
+	 * 
+	 * @param ContextMenu menu
+	 * @param View v
+	 * @param ContextMenuInfo
+	 * 
+	 */
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
@@ -57,6 +66,14 @@ public class SelectUserActivity extends ListActivity {
 		inflater.inflate(R.menu.contextdelete, menu);
 	}
 
+	/**
+	 * 
+	 * When user clicks on an contextmenuitem this function will be called
+	 * 
+	 * @return boolean
+	 * @param MenuItem item
+	 * 
+	 */
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();

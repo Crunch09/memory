@@ -36,12 +36,11 @@ public class CreateUserActivity extends Activity {
 	 */
 	public void onButtonClick(View target) {
 		String nick = ((EditText) findViewById(R.id.editText)).getText().toString();
-		/*
-		 * Create User add it to DB and PlayerList
-		 */
+		// Create User add it to DB and PlayerList
 		Player newPlayer = new Player(nick);
 
 		MemoryPlayerDAO playerDAO = MemoryPlayerDAO.getInstance(this);
+		// Only when user types something in the textfield the name will append to the db
 		if (!nick.equals("") && playerDAO.storePlayer(newPlayer))
 			PlayerList.getInstance().players.add(newPlayer);
 		finish();

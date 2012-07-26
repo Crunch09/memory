@@ -60,7 +60,7 @@ public class Theme {
 	 * Default constructor initialize the default theme if ID < 0
 	 * otherwise it will load the deck from db
 	 * 
-	 * @param ctx
+	 * @param Context ctx
 	 * @param long ID
 	 * 
 	 */
@@ -99,7 +99,7 @@ public class Theme {
 	 * Function to return the bitmap at the position i 
 	 * otherwise the backside
 	 * 
-	 * @param i
+	 * @param int i
 	 * @return Bitmap
 	 */
 	public Bitmap getPicture(int i) {
