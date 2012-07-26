@@ -178,14 +178,14 @@ public class MemoryDeckDAO extends DeckDB implements DeckDAO {
 	/* (non-Javadoc)
 	 * @see de.thm.ateam.memory.engine.interfaces.DeckDAO#deleteDeck(long)
 	 */
-	public boolean deleteDeck(long ID) {
+	public boolean deleteDeck(long id) {
 		SQLiteDatabase db = sql.getWritableDatabase();
-		int r = db.delete(TABLE_NAME, ID + "=?", new String[] { String.valueOf(ID) });
+		int r = db.delete(TABLE_NAME, ID + "=?", new String[] { String.valueOf(id) });
 		
 		if (r <= 0)
 			return false;
 		
-		db.delete(CARD_TABLE_NAME, CARD_DECK_ID + "=?", new String[] { String.valueOf(ID) });
+		db.delete(CARD_TABLE_NAME, CARD_DECK_ID + "=?", new String[] { String.valueOf(id) });
 		if (r <= 0)
 			return false;
 		

@@ -65,6 +65,9 @@
     <activity 
       android:name=".SelectMemorySizeActivity" >
     </activity>
+    <activity 
+      android:name=".SelectRemoveDeckActivity" >
+    </activity>
 	</application>
 
 </manifest>

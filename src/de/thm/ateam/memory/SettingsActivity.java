@@ -59,9 +59,8 @@ public class SettingsActivity extends ListActivity {
 			startActivity(intent);
 			break;
 		case 2:
-			//TODO Remove Deck
-			//intent = new Intent(this, SelectDeckPackageActivity.class);
-			//startActivity(intent);
+			intent = new Intent(this, SelectRemoveDeckActivity.class);
+			startActivity(intent);
 			break;
 		case 3:
 			intent = new Intent(this, SelectMemorySizeActivity.class);

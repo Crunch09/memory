@@ -35,11 +35,8 @@ public class SelectMemorySizeActivity extends Activity implements OnClickListene
 	static public ArrayList<String> getList() {
 		ArrayList<String> tmp = new ArrayList<String>();
 		tmp.add("2x2");
-		tmp.add("3x3");
 		tmp.add("4x4");
-		tmp.add("5x5");
 		tmp.add("6x6");
-		tmp.add("7x7");
 		tmp.add("8x8");
 		return tmp;
 	}
@@ -76,7 +73,7 @@ public class SelectMemorySizeActivity extends Activity implements OnClickListene
     ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, getList());
 		spin.setAdapter(adapter);
 		
-		spin.setSelection(PlayerList.getInstance().col-2);
+		spin.setSelection(PlayerList.getInstance().col/2 - 1);
 		
 		Button but = new Button(this);
 		but.setText("Save");
@@ -109,11 +106,11 @@ public class SelectMemorySizeActivity extends Activity implements OnClickListene
 		    e.printStackTrace();
 	    }
 			
-			configFile.setProperty("row", String.valueOf(pos + 2));
-			configFile.setProperty("col", String.valueOf(pos + 2));
+			configFile.setProperty("row", String.valueOf((pos+1) * 2));
+			configFile.setProperty("col", String.valueOf((pos+1) * 2));
 			
-			PlayerList.getInstance().row = pos + 2;
-			PlayerList.getInstance().col = pos + 2;
+			PlayerList.getInstance().row = (pos+1) * 2;
+			PlayerList.getInstance().col = (pos+1) * 2;
 			
 			try {
 	      configFile.store(new FileOutputStream(new File(getFilesDir() + "config.properties")), null);

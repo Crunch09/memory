@@ -225,11 +225,9 @@ public class Memory extends Game{
 		public void doJob(Message msg){
 			ImageView clicked = (ImageView) imageAdapter.getItem(msg.getData().getInt("pos"));
 			clicked.setImageBitmap(null);
-			clicked.setEnabled(false);
 
 			clicked = (ImageView) imageAdapter.getItem(msg.getData().getInt("pos2"));
 			clicked.setImageBitmap(null);
-			clicked.setEnabled(false);
 			numberOfPicks = 0; 
 		}
 	}
@@ -257,6 +255,8 @@ public class Memory extends Game{
 					if(card != position) {
 						flip(position);
 						if(imageAdapter.getItemId(card) == imageAdapter.getItemId(position)){
+							((ImageView) imageAdapter.getItem(card)).setEnabled(false);
+							((ImageView) imageAdapter.getItem(position)).setEnabled(false);
 							delete(position, card); 
 							//Toast.makeText(ctx,"card "+ " select " +position+ " hit, next player", Toast.LENGTH_SHORT).show();
 							card = -1;
@@ -292,16 +292,19 @@ public class Memory extends Game{
 
 
 						}else{
+							
+							
+							
 							//Toast.makeText(ctx,"card "+ " select " +position+ "miss, next player", Toast.LENGTH_SHORT).show();
 							reset(position, card);
 							card = -1;
 							current = turn();
-							infoView.setText(current.nick);
 						}
 					} else {
 						numberOfPicks--;
 					}
 				}
+				infoView.setText(current.nick + " pairs:" + current.roundHits);
 			}
 
 		}
