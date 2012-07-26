@@ -10,4 +10,23 @@
     <string name="demo">Demo</string>
     <string name="value">Value</string>
     <string name="selectDeckPackage">Select zip File to import new Deck</string>
+    <string name="host">Host a game</string>
+    <string name="client">Join a game of a friend</string>
+    <string name="could_not_connect_to_server">Could not connect to Server</string>
+    <string name="loading">Loading the Game</string>
+    <string name="send">Send</string>
+    <string name="start_game">Start the game!</string>
+    <string name="could_not_notify_about_game_start">Could not start the game</string>
+    <string name="message_could_not_be_send">Message could not be send</string>
+    <string name="sorry">Sorry!</string>
+    <string name="ok">OK</string>
+    <string name="next_player">Next player</string>
+    <string name="set_afk">AFK</string>
+    <string name="afk_count_full">You\'re the only player not afk right now</string>
+    <string name="return_from_afk">Touch anywhere, to return from afk</string>
+    <string name="submit_ip">Connect to this IP</string>
+    <string name="initialize">Initialize</string>
+    <string name="your_turn">It\'s your turn!</string>
+    <string name="no_longer_your_turn">It\'s no longer your turn</string>
+    <string name="connection_lost">Lost network connection</string>
 </resources>

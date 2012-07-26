@@ -2,7 +2,7 @@ package de.thm.ateam.memory.game;
 
 import java.util.ArrayList;
 
-import de.thm.ateam.memory.engine.type.Player;
+import de.thm.ateam.memory.engine.type.*;
 
 public class PlayerList {
 
@@ -11,7 +11,7 @@ public class PlayerList {
 	private static PlayerList instance = null;
 	public ArrayList<Player> players = null; //all the players 
 	public ArrayList<Player> session = null; //just the ones selected for a match
-	public Player multiPlayer = null;
+	public NetworkPlayer currentPlayer = null;
 	
 	public int deckNum;
 	public int row;

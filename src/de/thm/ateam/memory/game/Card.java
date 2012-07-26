@@ -1,10 +1,9 @@
 package de.thm.ateam.memory.game;
 
-import android.widget.Button;
 
 /**
  * 
- * unused, was experimental for usage with buttons
+ *  was experimental for usage with buttons
  *
  */
 
@@ -14,12 +13,17 @@ public class Card{
 	
 	public int x;
 	public int y;
-	public Button button;
+	public int id;
 	
-	public Card(Button button, int x,int y) {
+	public Card(int id, int x,int y) {
 		this.x = x;
 		this.y=y;
-		this.button=button;
+		this.id = id;
+	}
+	
+	@Override
+	public String toString(){
+	  return x +","+y;
 	}
 	
 }

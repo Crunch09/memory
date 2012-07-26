@@ -1,24 +1,25 @@
 package de.thm.ateam.memory;
 
 
-import de.thm.ateam.memory.engine.type.Player;
-import de.thm.ateam.memory.game.PlayerList;
 
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ContextMenu.ContextMenuInfo;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
-import android.widget.AdapterView.AdapterContextMenuInfo;
+import de.thm.ateam.memory.engine.type.NetworkPlayer;
+import de.thm.ateam.memory.engine.type.Player;
+import de.thm.ateam.memory.game.PlayerList;
+import de.thm.ateam.memory.network.ChooseClientOrHostActivity;
 
 /**
  * 
@@ -28,9 +29,8 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 
 public class SelectUserActivity extends ListActivity {
 
-	
+	private BaseAdapter ba;
 	private final String TAG = this.getClass().getSimpleName();
-	BaseAdapter ba; // Y U NO Private? Who wants to see you outside, a female BaseAdapter, are you cheating on me?
 
 	/**
 	 * 
@@ -43,7 +43,7 @@ public class SelectUserActivity extends ListActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.selectuser);
-		PlayerList.getInstance().multiPlayer = null; // just to make sure no bull is selected
+		PlayerList.getInstance().currentPlayer = null; // just to make sure no bull is selected
 		//PlayerList.getInstance().session.clear(); // muy importante, well not anymore
 		ba = new ArrayAdapter<Player>(this, android.R.layout.simple_list_item_1, PlayerList.getInstance().players); 
 		setListAdapter(ba);
@@ -80,28 +80,7 @@ public class SelectUserActivity extends ListActivity {
 		switch (item.getItemId()) {
 			case R.id.delete_user:
 				Player selected = (Player)getListAdapter().getItem(info.position);
-				/*
-				 * MemoryPlayerDAO.getInstance(this).removePlayer(selected);
-				 * 
-				 * The force is weak in this one. 
-				 * - ListView / adapter not updated
-				 * - players not updated
-				 * - session not updated
-				 * - it does delete the player from db
-				 * - no exceptions catched
-				 */
-				if(!selected.remove(ba))Log.i(TAG, "Could not delete " + selected.nick + "!");
-				/*
-				 * The force is strong in this one. 
-				 * - deletes item in players
-				 * - deletes item in session
-				 * - calls MemoryPlayerDAO.getInstance(this).removePlayer(selected)
-				 * - deletes item in db
-				 * - catches and handles an exception
-				 * - notifies adapter
-				 * - closes your mouth. Joking, go ahead and try the older version without this, it's not working ;) . 
-				 * 
-				 */
+				if(!selected.remove(ba))Log.i(TAG , "Could not delete " + selected.nick + " !");
 				return true;
 			default:
 				return super.onContextItemSelected(item);
@@ -177,11 +156,9 @@ public class SelectUserActivity extends ListActivity {
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
-		PlayerList.getInstance().multiPlayer = (Player)l.getAdapter().getItem(position);
-		Toast.makeText(this, "edit the intent in onListItemClick", Toast.LENGTH_SHORT).show();
-		finish(); //TODO remove finish ...
-		//Intent intent = new Intent(getApplicationContext(), MenuActivity.class);
-		//startActivity(intent);
-		//TODO add network activity class 
+		PlayerList.getInstance().currentPlayer = new NetworkPlayer((Player)l.getAdapter().getItem(position));//(NetworkPlayer)l.getAdapter().getItem(position);
+		Log.i(TAG,"Setting currentPlayer: "+PlayerList.getInstance().currentPlayer.nick);
+		Intent i = new Intent(this, ChooseClientOrHostActivity.class);
+		startActivity(i);
 	}
 }
