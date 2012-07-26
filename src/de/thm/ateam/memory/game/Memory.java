@@ -67,7 +67,7 @@ public class Memory extends Game{
 		COL_COUNT = attr.getColumns();
 		left = ROW_COUNT * COL_COUNT;
 		current = turn();
-		infoView.setText(current.nick);
+		infoView.setText(current.nick + " pairs: 0");
 	}
 
 
@@ -261,6 +261,7 @@ public class Memory extends Game{
 							//Toast.makeText(ctx,"card "+ " select " +position+ " hit, next player", Toast.LENGTH_SHORT).show();
 							card = -1;
 							current.hit();
+							
 							left -= 2;
 							if(left<=0){
 								Memory.this.getWinner();
@@ -304,7 +305,7 @@ public class Memory extends Game{
 						numberOfPicks--;
 					}
 				}
-				infoView.setText(current.nick + " pairs:" + current.roundHits);
+				infoView.setText(current.nick + " pairs: " + current.roundHits);
 			}
 
 		}
