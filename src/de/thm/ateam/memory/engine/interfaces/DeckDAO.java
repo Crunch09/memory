@@ -66,4 +66,11 @@ public interface DeckDAO {
 	 */
 	Bitmap[] getCard(long Deck_ID);
 	
+	/**
+	 * Deletes deck with specified ID out of DB.
+	 * 
+	 * @param ID The ID from Deck which shell deleted.
+	 * @return boolean Returns true, if successfully delete, otherwise false
+	 */
+	boolean deleteDeck(long ID);
 }
