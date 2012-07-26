@@ -26,6 +26,7 @@ public class MyAlertDialog extends DialogFragment {
     .setIcon(android.R.drawable.ic_dialog_alert)
     .setTitle(R.string.sorry)
     .setMessage(messageId)
+    .setCancelable(false)
     .setPositiveButton(R.string.ok,
         new DialogInterface.OnClickListener() {
       public void onClick(DialogInterface dialog, int whichButton) {

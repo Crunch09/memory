@@ -63,6 +63,8 @@ public class WaitingRoomActivity extends FragmentActivity implements MyAlertDial
         adr = InetAddress.getByName(serverAddress);
       } catch (UnknownHostException e) {
         Log.i(TAG, "Could not find Server");
+        MyAlertDialog alertDialog = new MyAlertDialog(R.string.could_not_connect_to_server);
+        alertDialog.show(fm, "dialog");
       }
       try {
         Log.i(TAG, "now waiting for chat messages");
@@ -154,7 +156,9 @@ public class WaitingRoomActivity extends FragmentActivity implements MyAlertDial
           }
         }else{
           //append a message to the chat
-          chatWindow.append(message + "\n");
+          if(!message.startsWith("[")){
+            chatWindow.append(message + "\n");
+          }
         }
       }
 
@@ -190,18 +194,20 @@ public class WaitingRoomActivity extends FragmentActivity implements MyAlertDial
     server_ip = (TextView) findViewById(R.id.server_ip);
 
     //prüfen ob device in einem wlan ist
-    /*if(myWifiInfo.getNetworkId() == -1 || ipAddress == 0){
-      showAlertDialog();
-    }else{*/
     if(serverAddress.equals("127.0.0.1")){
       WifiManager myWifiManager = (WifiManager) getSystemService(WIFI_SERVICE);
       WifiInfo myWifiInfo = myWifiManager.getConnectionInfo();
       int ipAddress = myWifiInfo.getIpAddress();
+      if(myWifiInfo.getNetworkId() == -1 || ipAddress == 0){
+        MyAlertDialog alertDialog = new MyAlertDialog(R.string.could_not_connect_to_server);
+        alertDialog.show(fm, "dialog");
+      }else{
       server_ip.setText("Your WiFi address is " + android.text.format.Formatter.formatIpAddress(ipAddress));
-      //}
+      }
     }
     wfc = new WaitForChatMessages();
     wfc.execute();
+    
   }
 
   public void onButtonClick(View target){

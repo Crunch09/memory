@@ -12,27 +12,33 @@ import java.util.Collections;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.widget.Toast;
 import de.thm.ateam.memory.ImageAdapter;
 import de.thm.ateam.memory.R;
-import de.thm.ateam.memory.engine.type.*;
+import de.thm.ateam.memory.engine.type.NetworkPlayer;
+import de.thm.ateam.memory.engine.type.Player;
+import de.thm.ateam.memory.network.MyAlertDialog;
+import de.thm.ateam.memory.network.MyAlertDialog.MyAlertDialogListener;
 import de.thm.ateam.memory.network.NetworkMemory;
 
-public class GameActivity extends Activity{
-	
+public class GameActivity extends FragmentActivity implements MyAlertDialogListener{
+
 
 
   Game game = null;
-	private final int ROWS = 2;
-	private final int COLUMNS = 4;
-	
-	
-	private static final String TAG = GameActivity.class.getSimpleName();
+  private final int ROWS = 2;
+  private final int COLUMNS = 4;
+
+
+  private static final String TAG = GameActivity.class.getSimpleName();
 
   NetworkPlayer currentPlayer = null;
   int numberOfClicks = 0;
   PrintWriter out = null;
+  boolean hasReceivedFinishMessage = false;
 
   private class ReadingTask extends AsyncTask<Void, String, Integer>{
 
@@ -53,6 +59,9 @@ public class GameActivity extends Activity{
         Log.i(TAG, "Client waiting loop has ended");
       } catch (IOException e) {
         Log.e(TAG, "ERROR: while creating the Reader.");
+        MyAlertDialog alertDialog = new MyAlertDialog(R.string.connection_lost);
+        FragmentManager fm = getSupportFragmentManager();
+        alertDialog.show(fm, "dialog");
       }
 
       return 0;
@@ -88,6 +97,20 @@ public class GameActivity extends Activity{
           NetworkMemory.getInstance(GameActivity.this, null).delete(
               Integer.parseInt(pick[0]), 
               Integer.parseInt(pick[1]));
+          NetworkMemory.getInstance(GameActivity.this, null).left -= 2;
+          if(NetworkMemory.getInstance(GameActivity.this, null).left <= 0 && currentPlayer.hasToken){
+            try {
+              out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(currentPlayer.sock.getOutputStream())), true);
+            } catch (IOException e) {
+              Log.e(TAG, "couldn't open outputStream");
+              MyAlertDialog alertDialog = new MyAlertDialog(R.string.could_not_connect_to_server);
+              FragmentManager fm = getSupportFragmentManager();
+              alertDialog.show(fm, "dialog");
+              
+            }
+            currentPlayer.hasToken = false;
+            finish();
+          }
         }else if(message.startsWith("[reset]")){
           String[] pick = message.substring(7).split(",");
           NetworkMemory.getInstance(GameActivity.this, null).reset(
@@ -101,6 +124,7 @@ public class GameActivity extends Activity{
             Toast.makeText(GameActivity.this, winner + " has won!", Toast.LENGTH_SHORT).show();
           }
           setResult(Activity.RESULT_OK, getIntent().putExtra("msg", "foo"));
+          hasReceivedFinishMessage = true;
           finish();
         }else if(message.startsWith("[currentPlayer]")){
           String username = message.substring(15);
@@ -121,8 +145,8 @@ public class GameActivity extends Activity{
 
 
 
-  
-  
+
+
   /*@Override
   public void onResume(){
     super.onResume();
@@ -130,37 +154,37 @@ public class GameActivity extends Activity{
     out.println("[resume]");
   }*/
 
-	
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		
-		Bundle b = getIntent().getExtras();
-		//setContentView(R.layout.test); // i hate xml files, so fuck them.
-		if(b == null){
-		  // it's a local game
-  		ArrayList<Player> players = PlayerList.getInstance().session; // just a reference
-  		
-  		Collections.shuffle(PlayerList.getInstance().session); // we want a different order each time
-  		
-  		/*
-  		 * this is where the gameactivity initializes its specific game, e.g. a descendant from "Game.java",
-  		 * the method assembleLayout() creates a grid view holding the specific cards.
-  		 * 
-  		 * This is also the spot where the Game should be merged into the rest of the Application.
-  		 * assembleLayout() does not need any kind of XML File, which makes it very versatile in its use.
-  		 * 
-  		 */
-  		game = new Memory(this,new MemoryAttributes(players, ROWS, COLUMNS));
-  		setContentView(game.assembleLayout());
-		}else{
-		  currentPlayer = PlayerList.getInstance().currentPlayer;
-		  new ReadingTask().execute();
-		  //setContentView(R.layout.game_host);
-		  // it's a network game
-		  boolean host = b.getBoolean("host");
+
+  @Override
+  public void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+
+    Bundle b = getIntent().getExtras();
+    //setContentView(R.layout.test); // i hate xml files, so fuck them.
+    if(b == null){
+      // it's a local game
+      ArrayList<Player> players = PlayerList.getInstance().session; // just a reference
+
+      Collections.shuffle(PlayerList.getInstance().session); // we want a different order each time
+
+      /*
+       * this is where the gameactivity initializes its specific game, e.g. a descendant from "Game.java",
+       * the method assembleLayout() creates a grid view holding the specific cards.
+       * 
+       * This is also the spot where the Game should be merged into the rest of the Application.
+       * assembleLayout() does not need any kind of XML File, which makes it very versatile in its use.
+       * 
+       */
+      game = new Memory(this,new MemoryAttributes(players, ROWS, COLUMNS));
+      setContentView(game.assembleLayout());
+    }else{
+      currentPlayer = PlayerList.getInstance().currentPlayer;
+      new ReadingTask().execute();
+      //setContentView(R.layout.game_host);
+      // it's a network game
+      //boolean host = b.getBoolean("host");
       game = NetworkMemory.getInstance(this, new MemoryAttributes(ROWS, COLUMNS));
-		  if(host){
+      /*if(host){
 		    //setContentView(netMem.assembleLayout());
 		    String field =  ((NetworkMemory)game).createField();
 		    try {
@@ -169,30 +193,77 @@ public class GameActivity extends Activity{
           Log.e(TAG, "couldn't open outputStream");
           e.printStackTrace();
         }
-        
+
         Log.i(TAG, "Send field string");
         //host player hat am Anfang das Token
         currentPlayer.hasToken = true;
         out.println("[field]"+ field);
-		  }
-		}
+		  }*/
+    }
 
-		
-		setContentView(game.assembleLayout());
-	}
-	
-	/**
-	 * 
-	 * Function to clear the Pictures
-	 * 
-	 */
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
-		game.onDestroy();
-	}
-	/*
-	 * if we decide to do some eventhandling for network usage (messages to be more specific) we should do that here.
-	 * A descendant of a Game will have to handle that specific request. 
-	 */
+
+    //setContentView(game.assembleLayout());
+  }
+
+  @Override
+  public void onResume(){
+    super.onResume();
+    Bundle b = getIntent().getExtras();
+    if(b != null){
+      //it's a multiplayer game
+
+      boolean host = b.getBoolean("host");
+      game = NetworkMemory.getInstance(this, new MemoryAttributes(ROWS, COLUMNS));
+      if(host){
+        //setContentView(netMem.assembleLayout());
+        
+        String field =  ((NetworkMemory)game).createField();
+        try {
+          out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(currentPlayer.sock.getOutputStream())), true);
+        } catch (IOException e) {
+          Log.e(TAG, "couldn't open outputStream");
+          e.printStackTrace();
+        }
+
+        Log.i(TAG, "Send field string");
+        //host player hat am Anfang das Token
+        currentPlayer.hasToken = true;
+        out.println("[field]"+ field);
+        out.println("[currentPlayer]"+ currentPlayer.nick);
+      }
+    }
+  }
+
+  /**
+   * 
+   * Function to clear the Pictures
+   * 
+   */
+  @Override
+  public void onDestroy() {
+    super.onDestroy();
+    game.onDestroy();
+  }
+  
+  @Override
+  public void onStop(){
+    super.onStop();
+    Bundle b = getIntent().getExtras();
+    if(b != null && !hasReceivedFinishMessage && !b.containsKey("msg")){
+      try {
+        out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(currentPlayer.sock.getOutputStream())), true);
+      } catch (IOException e) {
+        Log.e(TAG, "couldn't open outputStream");
+        MyAlertDialog alertDialog = new MyAlertDialog(R.string.connection_lost);
+        FragmentManager fm = getSupportFragmentManager();
+        alertDialog.show(fm, "dialog");
+      }
+      out.println("[finish]");
+    }
+  }
+
+  public void onFinishAlertDialog() {
+    finish();
+    
+  }
 }

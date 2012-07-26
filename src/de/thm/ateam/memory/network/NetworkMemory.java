@@ -39,7 +39,7 @@ public class NetworkMemory extends Game{
   private static NetworkMemory instance = null;
   private int ROW_COUNT = 0;
   private int COL_COUNT = 0;
-  private int left; //how many cards are left
+  public int left; //how many cards are left
   private int card = -1; //should better be an object of card
   private int numberOfPicks = 0;
   boolean host;
@@ -293,13 +293,13 @@ public class NetworkMemory extends Game{
             if(imageAdapter.getItemId(card) == imageAdapter.getItemId(position)){
               out.println("[delete]"+ position +","+ card); 
               card = -1;
-              left -= 2;
+              /*left -= 2;
               if(left<=0){
                 //Memory.this.getWinner();
                 numberOfPicks = 0;
                 String victoryMsg = "";
                 out.println("[finish]");
-              }
+              }*/
 
 
             }else{

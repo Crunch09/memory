@@ -99,6 +99,9 @@ public class Response implements Runnable{
       } catch (IOException e) {
         Log.e(TAG, "IOException");
       }
+    }else if(incMessage.startsWith("[removePlayer")){
+      NetworkPlayer p = HostService.findPlayerBySocket(incSocket);
+      HostService.clients.remove(p);
     }else{
       /* here are the messages for all clients */
       NetworkPlayer playerWhoSentThisMessage = HostService.findPlayerBySocket(this.incSocket);

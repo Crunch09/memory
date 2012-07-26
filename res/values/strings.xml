@@ -28,4 +28,5 @@
     <string name="initialize">Initialize</string>
     <string name="your_turn">It\'s your turn!</string>
     <string name="no_longer_your_turn">It\'s no longer your turn</string>
+    <string name="connection_lost">Lost network connection</string>
 </resources>
