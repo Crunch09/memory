@@ -66,11 +66,13 @@ public class SettingsActivity extends ListActivity {
 		case 3:
 			intent = new Intent(this, SelectMemorySizeActivity.class);
 			startActivity(intent);
+			break;
 		case 4:
 		  String url = "http://homepages.thm.de/~fthm89/memory/index.html";
 		  intent = new Intent(Intent.ACTION_VIEW);
 		  intent.setData(Uri.parse(url));
 		  startActivity(intent);
+		  break;
 		default:
 			break;
 		}
