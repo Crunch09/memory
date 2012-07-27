@@ -98,6 +98,8 @@ public class GameActivity extends FragmentActivity implements MyAlertDialogListe
           /** update game field, set it as content view */
           int host_rows = Integer.parseInt(message.substring(7, 8));
           int host_columns = Integer.parseInt(message.substring(8,9));
+          PlayerList.getInstance().col = host_columns;
+          PlayerList.getInstance().row = host_rows;
           game = NetworkMemory.getInstance(GameActivity.this, new MemoryAttributes(host_rows, host_columns));
           NetworkMemory.getInstance(GameActivity.this, null).imageAdapter = new ImageAdapter(GameActivity.this, host_rows, host_columns);
           NetworkMemory.getInstance(GameActivity.this, null).imageAdapter.buildField(message.substring(9), host_rows * host_columns, host_columns);
