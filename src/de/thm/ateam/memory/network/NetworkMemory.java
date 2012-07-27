@@ -91,6 +91,7 @@ public class NetworkMemory extends Game{
 		host = envActivity.getIntent().getExtras().getBoolean("host");
 		resHandler = new UpdateCardsHandler();
 		delHandler = new DeleteCardsHandler();
+		deleted = new ArrayList<Integer>();
 		try {
 			out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(currentPlayer.sock.getOutputStream())), true);
 		} catch (IOException e) {
