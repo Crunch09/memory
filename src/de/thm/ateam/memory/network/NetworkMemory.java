@@ -333,6 +333,8 @@ public class NetworkMemory extends Game{
 
 							out.println("[token]");
 						}
+					} else {
+						numberOfPicks--;
 					}
 				}
 			}
