@@ -116,7 +116,7 @@ public class NetworkMemory extends Game{
 		/* shuffle Field */
 		imageAdapter.shuffleImages();
 		String field = "";
-		for(Card[]c : imageAdapter.getPositions()){
+		for(Card[]c : imageAdapter.getPositions(COL_COUNT)){
 			field += c[0] +";"+ c[1] +"Ende";
 		}
 		return field;

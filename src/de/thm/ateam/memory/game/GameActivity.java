@@ -96,10 +96,12 @@ public class GameActivity extends FragmentActivity implements MyAlertDialogListe
         }else if(message.startsWith("[field]")){
           Log.i(TAG, "received field");
           /** update game field, set it as content view */
-          NetworkMemory.getInstance(GameActivity.this, null).imageAdapter = new ImageAdapter(GameActivity.this, ROWS, COLUMNS);
-          NetworkMemory.getInstance(GameActivity.this, null).imageAdapter.buildField(message.substring(7), ROWS * COLUMNS);
+          int host_rows = Integer.parseInt(message.substring(7, 8));
+          int host_columns = Integer.parseInt(message.substring(8,9));
+          NetworkMemory.getInstance(GameActivity.this, null).imageAdapter = new ImageAdapter(GameActivity.this, host_rows, host_columns);
+          NetworkMemory.getInstance(GameActivity.this, null).imageAdapter.buildField(message.substring(9), host_rows * host_columns, host_columns);
           String field = "";
-          for(Card[]c : NetworkMemory.getInstance(GameActivity.this, null).imageAdapter.getPositions()){
+          for(Card[]c : NetworkMemory.getInstance(GameActivity.this, null).imageAdapter.getPositions(host_columns)){
             field += c[0] +";"+ c[1] +"Ende";
           }
           setContentView(NetworkMemory.getInstance(GameActivity.this, null).assembleLayout());
@@ -224,7 +226,7 @@ public class GameActivity extends FragmentActivity implements MyAlertDialogListe
         Log.i(TAG, "Send field string");
         /* hostPlayer holds the token on start */
         currentPlayer.hasToken = true;
-        out.println("[field]"+ field);
+        out.println("[field]"+ ROWS +""+ COLUMNS + "" + field);
         out.println("[currentPlayer]"+ currentPlayer.nick);
       }
     }

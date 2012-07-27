@@ -74,9 +74,9 @@ public class ImageAdapter extends BaseAdapter {
 	}
 	
 	
-	public void buildField(String fieldString, int size){
+	public void buildField(String fieldString, int size, int column){
 	  ImageView[] imageViewNew = new ImageView[size];
-	  int colsize = PlayerList.getInstance().col;
+	  int colsize = column;
 	  String[] pairs = fieldString.split("Ende");
 	  for(int i = 0; i < pairs.length; i++){
 	    String pair[] = pairs[i].split(";");
@@ -93,8 +93,8 @@ public class ImageAdapter extends BaseAdapter {
 	}
 	
 	
-	public Card[][] getPositions(){
-	  int colsize = PlayerList.getInstance().col;
+	public Card[][] getPositions(int column){
+	  int colsize = column;
 	  Card[][] cards = new Card[listImageView.size()/2][2];
 	  for(int j = 0; j < listImageView.size(); j++){
 	    for(int i = 0; i < listImageView.size(); i++){
