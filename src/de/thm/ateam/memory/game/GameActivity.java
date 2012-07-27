@@ -98,6 +98,7 @@ public class GameActivity extends FragmentActivity implements MyAlertDialogListe
           /** update game field, set it as content view */
           int host_rows = Integer.parseInt(message.substring(7, 8));
           int host_columns = Integer.parseInt(message.substring(8,9));
+          game = NetworkMemory.getInstance(GameActivity.this, new MemoryAttributes(host_rows, host_columns));
           NetworkMemory.getInstance(GameActivity.this, null).imageAdapter = new ImageAdapter(GameActivity.this, host_rows, host_columns);
           NetworkMemory.getInstance(GameActivity.this, null).imageAdapter.buildField(message.substring(9), host_rows * host_columns, host_columns);
           String field = "";
@@ -199,7 +200,7 @@ public class GameActivity extends FragmentActivity implements MyAlertDialogListe
       /* it's a network game */
       currentPlayer = PlayerList.getInstance().currentPlayer;
       new ReadingTask().execute();
-      game = NetworkMemory.getInstance(this, new MemoryAttributes(ROWS, COLUMNS));
+      //game = NetworkMemory.getInstance(this, new MemoryAttributes(ROWS, COLUMNS));
     }
 
   }
@@ -212,9 +213,10 @@ public class GameActivity extends FragmentActivity implements MyAlertDialogListe
       //it's a multiplayer game
 
       boolean host = b.getBoolean("host");
-      game = NetworkMemory.getInstance(this, new MemoryAttributes(ROWS, COLUMNS));
+      
       /* only the host player should go here */
       if(host){
+        game = NetworkMemory.getInstance(this, new MemoryAttributes(ROWS, COLUMNS));
         String field =  ((NetworkMemory)game).createField();
         try {
           out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(currentPlayer.sock.getOutputStream())), true);
