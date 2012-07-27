@@ -91,6 +91,7 @@ public class NetworkMemory extends Game{
 		host = envActivity.getIntent().getExtras().getBoolean("host");
 		resHandler = new UpdateCardsHandler();
 		delHandler = new DeleteCardsHandler();
+		deleted = new ArrayList<Integer>();
 		try {
 			out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(currentPlayer.sock.getOutputStream())), true);
 		} catch (IOException e) {
@@ -115,7 +116,7 @@ public class NetworkMemory extends Game{
 		/* shuffle Field */
 		imageAdapter.shuffleImages();
 		String field = "";
-		for(Card[]c : imageAdapter.getPositions()){
+		for(Card[]c : imageAdapter.getPositions(COL_COUNT)){
 			field += c[0] +";"+ c[1] +"Ende";
 		}
 		return field;
@@ -332,6 +333,8 @@ public class NetworkMemory extends Game{
 
 							out.println("[token]");
 						}
+					} else {
+						numberOfPicks--;
 					}
 				}
 			}

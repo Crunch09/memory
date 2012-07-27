@@ -110,12 +110,7 @@ public class Memory extends Game{
 		linLay.addView(infoView);
 		linLay.addView(mainView);
 		
-		Card[][] c = imageAdapter.getPositions();
-		for(int i = 0; i < c.length; i++){
-		  Log.i("positions", "X: "+ c[i][0].x +", Y: "+ c[i][0].y);
-		  Log.i("positions", "X: "+ c[i][1].x +", Y: "+ c[i][1].y);
-		  Log.i("position", "------------------------------------");
-		}
+		
 		return linLay;
 	}
 

@@ -35,7 +35,6 @@ public class ChartFragment extends FragmentActivity{
     fragments.add(Fragment.instantiate(this, HitProbabilityChart.class.getName()));
     fragments.add(Fragment.instantiate(this, WinningProbabilityChart.class.getName()));
     this.mPagerAdapter  = new MyPagerAdapter(super.getSupportFragmentManager(), fragments);
-    //this.mPagerAdapter = new AwesomePagerAdapter();
     ViewPager pager = (ViewPager)this.findViewById(R.id.viewpager);
     pager.setAdapter(this.mPagerAdapter);
     TitlePageIndicator titleIndicator = (TitlePageIndicator)findViewById(R.id.indicator);

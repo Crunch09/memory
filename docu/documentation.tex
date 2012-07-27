@@ -123,13 +123,23 @@ Wenn das Objekt vollständig erzeugt wurde, speichert es automatisch alle Daten 
 Beim Laden der einzelnen Bilddaten kam es wegen den Streams wiedermal zu dem Problem, das ImageReader und ähnliche nicht wirkten, ein einfacher InputStream löst erneut das Problem.
 
 \subsubsection{Allgemeines Datenbankdesign}
-Die Datenbank umfasst 3 Tabellen. Diese Tabellen beinhalten die Informationen jedes einzelnen Spielers. Es wird der Nickname, die Siege, Niederlagen, sowie Unentschieden, getroffene Kartenpaare und die allgemeine durchgeführte Züge. Die jeweilige ID des Spielers entspricht dem jeweiligen Datensatz in der Datenbank.\\
+Die Datenbank umfasst 3 Tabellen. Diese Tabellen beinhalten die Informationen jedes einzelnen Spielers. Es wird der Nickname, die Siege, Niederlagen, sowie Unentschieden, getroffene Kartenpaare und die allgemein durchgeführten Züge gespeichert. Die jeweilige ID des Spielers entspricht dem jeweiligen Datensatz in der Datenbank.\\
 Neben dem Spieler werden auch zusätzliche Kartendecks gespeichert. Da zu jedem Kartendeck es eine Rückseite vorhanden sein muss und 32 Vorderseiten, handelt es sich um eine 1 -$>$ n Beziehung. In der Datenbank werden zu jedem Kartendeck der Name gespeichert, dieser wird aus dem Dateinamen entnommen. Zusätzlich wird direkt die Rückseite in der Kartendeck Tabelle gespeichert, da die Rückseite nur einmal vorkommt und nicht noch aus der Kartentabelle gefiltert werden muss. Die Kartentabelle enthält die ID des jeweiligen Kartendecks als Referenz und einen Blob in dem die JPG Vorderseitenbilder als Byte Feld gespeichert wird.
 
 Grösstes Problem während der Entwicklung des Datenbank Layouts waren immer wieder kleine Anpassungen durch ständige Weiterentwicklung der Software.
 
 \subsection{Statistik}
-crunch
+Die Statistik wird mit Hilfe des Frameworks \textbf{\href{http://www.achartengine.org/}{Achartengine}} graphisch dargestellt. Dabei empfahl es sich für die Statistikanzeige der \"Treffer-Wahrscheinlichkeit\" ein Balkendiagramm mit jeweils zwei Balken pro Spieler zu verwenden. Um den Zahlenbereich der y-Achse passend zu wählen muss dafür der Spieler mit der höchsten Spielanzahl überhaupt aus der Datebank geholt werden und dieser Wert als Standardhöhe der y-Achse festgelegt werden.
+Auch für die zweite Statistik, die \"Sieg-Wahrscheinlichkeit\" wurde ein Balkendiagramm der Achartengine verwendet, diesmal jedoch nur jeweils ein Balken. 
+\subsubsection{Fragments}
+Um den Wechsel zwischen den verschiedenen Statistiken ansprechender zu gestalten wurden statt Activities \textbf{Fragments} benutzt. Vereinfacht gesagt sind Fragments kleine Activities, die innerhalb einer Activity bestehen können und von der \textbf{\href{http://developer.android.com/tools/extras/support-library.html}{Support-Library}} bereitgestellt werden.
+Um den Vorteil der Fragments noch besser herausstellen zu können wurde die externe Library \textbf{\href{http://viewpagerindicator.com/}{ViewPagerIndicator}} eingebunden. Mittels Paging  kann so durch die Statistiken navigiert werden, wie in \autoref{fig:stats} zu sehen ist.
+\begin{figure}[!h]
+\centering
+\includegraphics[scale=0.7]{pics/stats.png}
+\caption{Statistiken}
+\label{fig:stats}
+\end{figure}
 \subsection{Memory}
 Aufrgund des Aufbaues eines Memoryspieles bietet es sich an ein GridView zu verwenden. Zur Visualisierung der verschiedenen Karten in dem GridView haben wir uns für die ImageViews entschieden, weil sie einfach zu verstehen sind. \\
 
@@ -144,7 +154,7 @@ Das Memory lädt die ImageViews erstmal mit den Rückseiten in das GridView, wei
 	
 Für den Fall das die die selbe Position haben, wird der Zähler wieder runtergezählt, für den Fall, dass die ids identisch sind, werden die ImageViews disabled und das Bild auf null gesetzt, sodass der Anwender sieht, dass das Bild weg ist. Ansonsten werden die Bilder wieder zurückgesetzt. \\
 
-Hier entstand das Problem, dass die Bilder sofort verschwanden und der User nicht sehen konnte was den unter der 2. Karte liegt. Aus diesem Grund haben wir Threads erstellt, die eine gewisse Zeit warten und dann erst gegebene Aktionen durchführen, wie zum Beispiel das Reseten oder das Deleten zweier Karten. \\
+Hier entstand das Problem, dass die Bilder sofort verschwanden und der User nicht sehen konnte was den unter der 2. Karte liegt. Aus diesem Grund haben wir Threads erstellt, die eine gewisse Zeit warten und dann erst gegebene Aktionen durchführen, wie zum Beispiel das Zurücksetzen oder das Löschen zweier Karten. \\
 
 Dies führte dann aber zu dem Problem, dass der User klicken konnte während die Karten, die vorher angeklickt wurden, noch zu sehen waren und somit einige Eigenarten hervorhohlen konnten. Desswegen haben wir für diesen Zeitraum die ImageView disabled damit dies nicht passiert.\\
 
@@ -160,7 +170,13 @@ Diese wird beim Start ausgelesen, wenn nicht da oder unvollständig werden die D
 Beim laden des Memorys sind wir über den Fehler gestoßen, dass wir out of memory gegangen sind. Dies konnten wir beheben, indem wir in der Activity in der onDestroy methode die geladenen  Bitmaps wieder recyclen. \\
 
 \subsection{Netzwerk}
-crunch
+\subsubsection{Server}
+Wenn der Anwender der Applikation ein neues Netzwerkspiel startet, beginnt ein Service damit auf eingehende Verbindungen zu warten. Dieser Service (\textbf{HostService.java}) stellt den Server in einem Netzwerkspiel dar und übernimmt dafür typische Aufgaben wie das Verwalten der Client-Liste oder das Reagieren auf eingehende Nachrichten. Für jeden Client, der sich am Server anmeldet wird ein eigener Connection-Thread erstellt, der auf Nachrichten des entsprechenden Clients wartet (\textbf{ClientConnection.java}). Trifft eine Nachricht über die Socket-Verbindung ein wird ein neuer Thread einer Response-Klasse erstellt, welche auf die eingegange Nachricht reagiert.
+\subsubsection{Warteraum}
+In der Warteraum-Activity befinden sich die Clients, nachdem sie sich mit dem Server verbunden haben. Der Server erkannt durch Überprüfung der Verbindungs-Sockets welcher Client auf dem selben Device wie der Host läuft. Dieser Host-Client hat auch als einziger die Möglichkeit das Spiel zu starten.
+\subsubsection{Kommunikation}
+Die Kommunikation zwischen den einzelnen Clients und mit dem Server wird über entsprechend kodierte Nachrichten realisiert. Bei bestimmten Ereignissen, z.B. dem Aufdecken einer Karte schickt der betroffene Client über seinen Outputstream eine Nachricht an den Server, die dieser über die oben beschriebenen Mechanismen aufnimmt, verarbeitet und an alle oder auch einzelne Clients weiterleitet.
+Jeder Client wartet in einem AsyncTask auf eingehende Nachrichten. Ein Grund dafür ist, dass bei einem eingehenden Befehl so gut auf UI-Elemente zugegriffen werden kann. Wichtig ist, dass der AsyncTask der Warteraum-Activity beendet ist, wenn das Spiel im Gang ist, da nun eingehende Nachrichten keine ChatNachrichten sind, sondern Befehle, die im AsyncTask der GameActivity benötigt werden. 
 
 \subsection*{Benutzerdokumentation}
 
