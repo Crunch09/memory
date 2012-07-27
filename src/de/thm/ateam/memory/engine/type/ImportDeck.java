@@ -63,7 +63,7 @@ public class ImportDeck extends Deck implements Runnable {
 				
 				Log.i(TAG,entry.getName());
 			} catch (IOException e1) {
-				Toast.makeText(c, "import failed", Toast.LENGTH_SHORT);
+				Toast.makeText(c, "import failed", Toast.LENGTH_SHORT).show();
 				return;
 			}
 		}
@@ -71,16 +71,18 @@ public class ImportDeck extends Deck implements Runnable {
 		String[] tmp = z.getName().split("/");
 		
 		if (backSide == null || frontSide == null || frontSide.size() < 32) {
-			Toast.makeText(c, "not enough images", Toast.LENGTH_LONG);
+			Toast.makeText(c, "not enough images", Toast.LENGTH_LONG).show();
 			return;
 		}	
 		
 		this.name = tmp[tmp.length-1].substring(0, tmp[tmp.length-1].length() - 4);
 		dao = new MemoryDeckDAO(c);
+
 		if (dao.storeDeck(this))
-			Log.i(TAG, "stored");
+			Toast.makeText(c, "stored", Toast.LENGTH_SHORT).show();
+		
 		else
-			Log.i(TAG, "not stored");
+			Toast.makeText(c, "not stored", Toast.LENGTH_SHORT).show();
 		
 		try {
 			z.close();
