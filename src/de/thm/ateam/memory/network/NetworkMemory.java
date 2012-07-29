@@ -40,7 +40,8 @@ import de.thm.ateam.memory.game.PlayerList;
  */
 public class NetworkMemory extends Game{
 
-	Context ctx;
+
+  Context ctx;
 	private MemoryAttributes attr;
 	private Activity envActivity;
 	private static NetworkMemory instance = null;
@@ -64,7 +65,9 @@ public class NetworkMemory extends Game{
 
 	public ArrayList<Integer> deleted; // just to avoid any race condition caused errors
 
-
+	public void setAttr(MemoryAttributes attr) {
+    this.attr = attr;
+  }
 
 	private NetworkMemory(Context ctx, MemoryAttributes attr) {
 		super(ctx, attr);
@@ -133,7 +136,7 @@ public class NetworkMemory extends Game{
 		theme = imageAdapter.getTheme();
 
 		if(host){
-			// at the beginnig of a round the host player starts
+			// at the beginning of a round the host player starts
 			currentPlayer.hasToken = true;
 
 		}

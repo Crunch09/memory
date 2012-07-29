@@ -35,8 +35,8 @@ public class GameActivity extends FragmentActivity implements MyAlertDialogListe
 
 
   Game game = null;
-  private final int ROWS = PlayerList.getInstance().row;
-  private final int COLUMNS = PlayerList.getInstance().col;
+  private int ROWS = PlayerList.getInstance().row;
+  private int COLUMNS = PlayerList.getInstance().col;
 
 
   private static final String TAG = GameActivity.class.getSimpleName();
@@ -100,7 +100,8 @@ public class GameActivity extends FragmentActivity implements MyAlertDialogListe
           int host_columns = Integer.parseInt(message.substring(8,9));
           PlayerList.getInstance().col = host_columns;
           PlayerList.getInstance().row = host_rows;
-          game = NetworkMemory.getInstance(GameActivity.this, new MemoryAttributes(host_rows, host_columns));
+          game = NetworkMemory.getInstance(GameActivity.this, null);
+          ((NetworkMemory)game).setAttr(new MemoryAttributes(host_rows, host_columns));
           NetworkMemory.getInstance(GameActivity.this, null).imageAdapter = new ImageAdapter(GameActivity.this, host_rows, host_columns);
           NetworkMemory.getInstance(GameActivity.this, null).imageAdapter.buildField(message.substring(9), host_rows * host_columns, host_columns);
           String field = "";
@@ -124,7 +125,7 @@ public class GameActivity extends FragmentActivity implements MyAlertDialogListe
               Integer.parseInt(pick[0]), 
               Integer.parseInt(pick[1]));
           NetworkMemory.getInstance(GameActivity.this, null).left -= 2;
-          /* check if the game is now finished */
+          /* check if the game is now finished and check hasToken to make sure only one player fulfill this condition */
           if(NetworkMemory.getInstance(GameActivity.this, null).left <= 0 && currentPlayer.hasToken){
             try {
               out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(currentPlayer.sock.getOutputStream())), true);
@@ -218,7 +219,10 @@ public class GameActivity extends FragmentActivity implements MyAlertDialogListe
       
       /* only the host player should go here */
       if(host){
+        ROWS = PlayerList.getInstance().row;
+        COLUMNS = PlayerList.getInstance().col;
         game = NetworkMemory.getInstance(this, new MemoryAttributes(ROWS, COLUMNS));
+        ((NetworkMemory)game).setAttr(new MemoryAttributes(ROWS, COLUMNS));
         String field =  ((NetworkMemory)game).createField();
         try {
           out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(currentPlayer.sock.getOutputStream())), true);
