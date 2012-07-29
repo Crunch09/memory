@@ -141,33 +141,24 @@ Um den Vorteil der Fragments noch besser herausstellen zu können wurde die exte
 \label{fig:stats}
 \end{figure}
 \subsection{Memory}
-Aufrgund des Aufbaues eines Memoryspieles bietet es sich an ein GridView zu verwenden. Zur Visualisierung der verschiedenen Karten in dem GridView haben wir uns für die ImageViews entschieden, weil sie einfach zu verstehen sind. \\
-
+Aufrgund des Aufbaues eines Memoryspieles bietet es sich an ein GridView zu verwenden. Zur Visualisierung der verschiedenen Karten in dem GridView haben wir uns für die ImageViews entschieden, weil sie einfach zu verstehen sind. 
 Die Bilder werden in der Klasse ``Theme`` aufbewart, welche diese aus der Datenbank liest, wenn es nicht das Default Theme ist. Dieses wird anhand von drawable Ressourcen geladen. Jedes Theme besteht aus einer Liste der Vorderseiten und einer Rückseite. \\
-
 Das Memory lädt die ImageViews erstmal mit den Rückseiten in das GridView, weil man ja nicht sehen soll welche Karte sich darunter versteckt. Welches Bild sich wirklich unter dem Bild versteckt wird als id gespeichert. Wenn der User nun das erste Mal auf ein Bild klickt wird ein Zähler erhöht, um zu sehen ob das zweite Bilder gerade geklickt wird. Beim zweiten klick auf ein Bild  muss überprüft werden, ob es sich bei dem zweiten Bild
 
 \begin{itemize}
 	\item Um die selbe Position handelt 
 	\item Ob sie die selbe id haben
 \end{itemize}
-	
-Für den Fall das die die selbe Position haben, wird der Zähler wieder runtergezählt, für den Fall, dass die ids identisch sind, werden die ImageViews disabled und das Bild auf null gesetzt, sodass der Anwender sieht, dass das Bild weg ist. Ansonsten werden die Bilder wieder zurückgesetzt. \\
-
+	Für den Fall das die die selbe Position haben, wird der Zähler wieder runtergezählt, für den Fall, dass die ids identisch sind, werden die ImageViews disabled und das Bild auf null gesetzt, sodass der Anwender sieht, dass das Bild weg ist. Ansonsten werden die Bilder wieder zurückgesetzt. \\
 Hier entstand das Problem, dass die Bilder sofort verschwanden und der User nicht sehen konnte was den unter der 2. Karte liegt. Aus diesem Grund haben wir Threads erstellt, die eine gewisse Zeit warten und dann erst gegebene Aktionen durchführen, wie zum Beispiel das Zurücksetzen oder das Löschen zweier Karten. \\
-
 Dies führte dann aber zu dem Problem, dass der User klicken konnte während die Karten, die vorher angeklickt wurden, noch zu sehen waren und somit einige Eigenarten hervorhohlen konnten. Desswegen haben wir für diesen Zeitraum die ImageView disabled damit dies nicht passiert.\\
-
 Unser Memoryspiel ist in der Lage auf viele zeilen/reihen 
 Kombinationen zu reagieren. Aufgrund der Feldgröße 8x8 sollte ein 
-Theme 32 Karten + Rückseite haben haben.  \\
+Theme 32 Karten + Rückseite haben haben. \\
 %Damit der Fall nicht auftritt, wo der User ein Theme importieren will mit weniger als 32 %Vorderseiten und der Rückseite, wird beim importieren überprüft, ob dies zutrifft, wenn nicht, %dann wird das Deck nicht importiert.
-
-Um nun standartwerte benutzen/setzen zu können benutzen wir die Properties Klasse, welche einiges an Arbeit abnimmt. Die Konfigurationsdatei wird in dem lokalen Speicherbereich der Applikation gesichert. Um diesen herauszufinden benutzen wir die Funktion "getFilesDir()". \\
-
+Um nun standartwerte benutzen/setzen zu können benutzen wir die Properties Klasse, welche einiges an Arbeit abnimmt. Die Konfigurationsdatei wird in dem lokalen Speicherbereich der Applikation gesichert. Um diesen herauszufinden benutzen wir die Funktion "getFilesDir()".\\
 Diese wird beim Start ausgelesen, wenn nicht da oder unvollständig werden die Defaultwerte eingetragen, und bei den Settings gesetzt und auch geladen. \\
-
-Beim laden des Memorys sind wir über den Fehler gestoßen, dass wir out of memory gegangen sind. Dies konnten wir beheben, indem wir in der Activity in der onDestroy methode die geladenen  Bitmaps wieder recyclen. \\
+Beim laden des Memorys sind wir über den Fehler gestoßen, dass wir out of memory gegangen sind. Dies konnten wir beheben, indem wir in der Activity in der onDestroy methode die geladenen  Bitmaps wieder recyclen.
 
 \subsection{Netzwerk}
 \subsubsection{Server}
@@ -185,5 +176,10 @@ Die Benutzerdokumentation wird per {\em Help} in der App bereitgestellt.
 \subsection*{API Dokumentation}
 
 Die Code Dokumentation ist per JavaDoc im Quelltext abgewickelt.
+
+\subsection*{Repository}
+
+http://github.com/Crunch09/memory \\
+git://github.com/Crunch09/memory.git
 
 \end{document}
