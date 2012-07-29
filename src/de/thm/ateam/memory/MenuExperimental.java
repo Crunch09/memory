@@ -39,7 +39,7 @@ public class MenuExperimental extends ListActivity {
 	private Vector<RowData> data;
 	RowData rd;
 	public final String TAG = this.getClass().getSimpleName();
-	
+
 	/*
 	 * Later on these finals will be used to determine the row an therefore the action selected.
 	 * If you think of changing the order down in "Title", "Detail" or "Imgid", remember to change them also
@@ -54,13 +54,13 @@ public class MenuExperimental extends ListActivity {
 		"Local Game",
 		"Network Game",	
 		"Statistics",
-		"Settings"};
+	"Settings"};
 
 	static final String[] detail = new String[] {
 		"Compete against up to 7 of your friends",
 		"Host or join a Match",
 		"Compare your performance with other players",
-		"Change game setup and appearance"};
+	"Change game setup and appearance"};
 
 	private Integer[] imgid = {android.R.drawable.ic_media_play,
 			android.R.drawable.ic_menu_share,
@@ -72,64 +72,63 @@ public class MenuExperimental extends ListActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 		
-		
 		// Loads config file in a thread
-    Runnable r = new Runnable() {
-	    public void run() {
-	      
-	  		Properties configFile = new Properties();
-	  		File file = null;
-	  		try {
-	  			file = new File(getFilesDir() + "config.properties");
-	  			// if file not exist create one because fileinputstream(File) needs an file
-	  			if(!file.exists()) {
-	  				file.createNewFile();
-	  			}
-	  	    configFile.load(new FileInputStream(file));
-	      } catch (IOException e) {
-	  	    e.printStackTrace();
-	      }
-	  	
-	  		String tmp = configFile.getProperty("deck");
-	  		String tmp2 = configFile.getProperty("row");
-	  		String tmp3 = configFile.getProperty("col");
-	  		
-	  		// If any of the config propertys are null than it will store/set the defaults
-	  		if(tmp == null || tmp2 == null || tmp3 == null) {
-	  			configFile.setProperty("deck", "-1");
-	  			configFile.setProperty("row", "4");
-	  			configFile.setProperty("col", "4");
-	  			
-	  			PlayerList.getInstance().deckNum = Integer.parseInt("-1");
-	  			PlayerList.getInstance().row = Integer.parseInt("4");
-	  			PlayerList.getInstance().col = Integer.parseInt("4");
-	  			
-	  			try {
-	  				// Save to config file
-	  	      configFile.store(new FileOutputStream(file), null);
-	        } catch (Exception e) {
-	  	      e.printStackTrace();
-	        }
-	  		} else {
-	  			PlayerList.getInstance().deckNum = Integer.parseInt(tmp);
-	  			PlayerList.getInstance().row = Integer.parseInt(tmp2);
-	  			PlayerList.getInstance().col = Integer.parseInt(tmp3);
-	  		}
-	    }
-    };
-    Thread t = new Thread(r);
-    t.start();
-		
-    // if currentPlayer has socket open close it
+		new Thread().start();
+		Runnable r = new Runnable() {
+			public void run() {
+
+				Properties configFile = new Properties();
+				File file = null;
+				try {
+					file = new File(getFilesDir() + "config.properties");
+					// if file not exist create one because fileinputstream(File) needs an file
+					if(!file.exists()) {
+						file.createNewFile();
+					}
+					configFile.load(new FileInputStream(file));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+
+				String tmp = configFile.getProperty("deck");
+				String tmp2 = configFile.getProperty("row");
+				String tmp3 = configFile.getProperty("col");
+
+				// If any of the config propertys are null than it will store/set the defaults
+				if(tmp == null || tmp2 == null || tmp3 == null) {
+					configFile.setProperty("deck", "-1");
+					configFile.setProperty("row", "4");
+					configFile.setProperty("col", "4");
+
+					PlayerList.getInstance().deckNum = Integer.parseInt("-1");
+					PlayerList.getInstance().row = Integer.parseInt("4");
+					PlayerList.getInstance().col = Integer.parseInt("4");
+
+					try {
+						// Save to config file
+						configFile.store(new FileOutputStream(file), null);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				} else {
+					PlayerList.getInstance().deckNum = Integer.parseInt(tmp);
+					PlayerList.getInstance().row = Integer.parseInt(tmp2);
+					PlayerList.getInstance().col = Integer.parseInt(tmp3);
+				}
+			}
+		};
+		new Thread(r).start();
+
+		// if currentPlayer has socket open close it
 		if(PlayerList.getInstance().currentPlayer != null && PlayerList.getInstance().currentPlayer.sock != null){
-		  try {
-        PlayerList.getInstance().currentPlayer.sock.close();
-        PlayerList.getInstance().currentPlayer.sock = null;
-      } catch (IOException e) {
-        Log.e(TAG, "could not close socket");
-        e.printStackTrace();
-      }
-		  
+			try {
+				PlayerList.getInstance().currentPlayer.sock.close();
+				PlayerList.getInstance().currentPlayer.sock = null;
+			} catch (IOException e) {
+				Log.e(TAG, "could not close socket");
+				e.printStackTrace();
+			}
+
 		}
 
 		mInflater = (LayoutInflater) getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
@@ -145,11 +144,11 @@ public class MenuExperimental extends ListActivity {
 		CustomAdapter adapter = new CustomAdapter(this, R.layout.list, R.id.title, data);
 		setListAdapter(adapter);
 		getListView().setTextFilterEnabled(true);
-		
+
 		PlayerList.getInstance().players = (ArrayList<Player>)MemoryPlayerDAO.getInstance(this).getAllPlayers();
-		
+
 	}
-	
+
 	/**
 	 * 
 	 * Function called when user click an item
@@ -162,40 +161,40 @@ public class MenuExperimental extends ListActivity {
 	 */
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
-		
+
 		Intent intent;
-		
+
 		switch (position) {
 		case LocalGame:
 			// starts a LocalGame
 			intent = new Intent(getApplicationContext(), SelectMultipleUserActivity.class);
 			startActivity(intent);
 			break;
-		
+
 		case NetworkGame:
 			// starts a NetworkGame
 			intent = new Intent(getApplicationContext(),SelectUserActivity.class);
 			startActivity(intent);
 			break;
-		
+
 		case Stats:
 			// List the Stats of all users
 			intent = new Intent(getApplicationContext(),ChartFragment.class);
 			startActivity(intent);
 			break;
-		
+
 		case Settings:
 			// Settings menu to change some things
 			intent = new Intent(this, SettingsActivity.class);
 			startActivity(intent);
 			break;
-		
+
 		default:
 			Log.i("GOD","only I know what went wrong :-P");
 			break;
 		}
 	}
-	
+
 	/**
 	 * 
 	 * Common thing to use little helper objects in these cases.
@@ -207,13 +206,13 @@ public class MenuExperimental extends ListActivity {
 		protected int myId;
 		protected String myTitle;
 		protected String myDetail;
-		
+
 		RowData(int id,String title,String detail){
 			myId=id;
 			myTitle = title;
 			myDetail = detail;
 		}
-		
+
 		@Override
 		public String toString() {
 			return myId+" "+myTitle+" "+myDetail;
@@ -249,7 +248,7 @@ public class MenuExperimental extends ListActivity {
 			imageView.setImageResource(imgid[rowData.myId]);
 			return convertView;
 		}
-		
+
 		private class ViewHolder {
 			private View mRow;
 			private TextView title = null;
