@@ -97,6 +97,7 @@ public class MemoryDeckDAO extends DeckDB implements DeckDAO {
 			db.insert(CARD_TABLE_NAME, null, cv);
 		}
 		
+		
 		d.setID(r);
 		db.close();
 		
@@ -192,9 +193,8 @@ public class MemoryDeckDAO extends DeckDB implements DeckDAO {
 			return false;
 		
 		db.delete(CARD_TABLE_NAME, CARD_DECK_ID + "=?", new String[] { String.valueOf(id) });
-		if (r <= 0)
-			return false;
-		
+		if (r <= 0) return false;
+		db.close();
 		return true;
 	}
 

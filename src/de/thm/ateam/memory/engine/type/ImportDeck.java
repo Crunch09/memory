@@ -15,11 +15,14 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 import de.thm.ateam.memory.engine.MemoryDeckDAO;
+import de.thm.ateam.memory.game.GameActivity;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Handler;
 import android.os.Looper;
+import android.os.Message;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -29,12 +32,17 @@ import android.widget.Toast;
  */
 public class ImportDeck extends Deck implements Runnable {
 
+	private final String TAG = this.getClass().getSimpleName();
+	
 	private ZipFile z;
 	private Context c;
+	private Handler handler;
 	
-	public ImportDeck(Context ctx, ZipFile zip) {
+	
+	public ImportDeck(Context ctx, ZipFile zip, Handler handler) {
 		this.z = zip;
 		this.c = ctx;
+		this.handler = handler;
 	}
 	
 	/* (non-Javadoc)
@@ -44,10 +52,11 @@ public class ImportDeck extends Deck implements Runnable {
 		Looper.prepare();
 		Enumeration<? extends ZipEntry> e = z.entries();
 		frontSide = new ArrayList<Bitmap>();
-
+		InputStream f = null;
+		
 		while(e.hasMoreElements()) {
 			ZipEntry entry = e.nextElement();
-			InputStream f;
+//			InputStream f;
 			try {
 				f = z.getInputStream(entry);
 			
@@ -63,7 +72,7 @@ public class ImportDeck extends Deck implements Runnable {
 				
 				Log.i(TAG,entry.getName());
 			} catch (IOException e1) {
-				Toast.makeText(c, "import failed", Toast.LENGTH_SHORT).show();
+				handler.sendEmptyMessage(-1);
 				return;
 			}
 		}
@@ -71,22 +80,25 @@ public class ImportDeck extends Deck implements Runnable {
 		String[] tmp = z.getName().split("/");
 		
 		if (backSide == null || frontSide == null || frontSide.size() < 32) {
-			Toast.makeText(c, "not enough images", Toast.LENGTH_LONG).show();
+			handler.sendEmptyMessage(-2);
+			Log.i(TAG, "not enough images");
 			return;
 		}	
 		
 		this.name = tmp[tmp.length-1].substring(0, tmp[tmp.length-1].length() - 4);
 		dao = new MemoryDeckDAO(c);
 
-		if (dao.storeDeck(this))
-			Toast.makeText(c, "stored", Toast.LENGTH_SHORT).show();
-		
-		else
-			Toast.makeText(c, "not stored", Toast.LENGTH_SHORT).show();
-		
-		try {
+		if (dao.storeDeck(this)){
+			handler.sendEmptyMessage(0);
+			Log.i(TAG, "stored");
+		}else{
+			handler.sendEmptyMessage(-1);
+			Log.i(TAG, "not stored");
+		}try {
 			z.close();
+			f.close();
 		} catch (IOException e1) {
+			Log.e(TAG, "",e1);
 		}
 	}
 

@@ -20,6 +20,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
+import android.os.Handler;
 import android.util.Log;
 
 import de.thm.ateam.memory.engine.MemoryDeckDAO;
@@ -100,8 +101,8 @@ public class Deck {
 	 * @param zip Zip file where loading from
 	 * @param ctx Context
 	 */
-	public static void newDeck(ZipFile zip, Context ctx) {		
-		new Thread(new ImportDeck(ctx, zip)).start();
+	public static void newDeck(ZipFile zip, Context ctx, Handler handler) {		
+		new Thread(new ImportDeck(ctx, zip, handler)).start();
 	}
 	
 	/**
