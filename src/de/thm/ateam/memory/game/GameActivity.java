@@ -20,6 +20,7 @@ import de.thm.ateam.memory.ImageAdapter;
 import de.thm.ateam.memory.R;
 import de.thm.ateam.memory.engine.type.NetworkPlayer;
 import de.thm.ateam.memory.engine.type.Player;
+import de.thm.ateam.memory.network.HostService;
 import de.thm.ateam.memory.network.MyAlertDialog;
 import de.thm.ateam.memory.network.MyAlertDialog.MyAlertDialogListener;
 import de.thm.ateam.memory.network.NetworkMemory;
@@ -224,6 +225,7 @@ public class GameActivity extends FragmentActivity implements MyAlertDialogListe
         game = NetworkMemory.getInstance(this, new MemoryAttributes(ROWS, COLUMNS));
         ((NetworkMemory)game).setAttr(new MemoryAttributes(ROWS, COLUMNS));
         String field =  ((NetworkMemory)game).createField();
+        HostService.current = 0;
         try {
           out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(currentPlayer.sock.getOutputStream())), true);
         } catch (IOException e) {
