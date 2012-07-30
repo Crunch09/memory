@@ -54,7 +54,7 @@ public class Response implements Runnable{
 				for(NetworkPlayer player : HostService.clients){
 					if(player.sock != null){
 						out = new PrintWriter(player.sock.getOutputStream(), true);
-						if(player.sock.getLocalAddress().equals(nextPlayer.sock.getLocalAddress())){
+						if(player.sock.getRemoteSocketAddress().toString().equals(nextPlayer.sock.getRemoteSocketAddress().toString())){
 							Log.i(TAG, "Server sends out new token");
 							out.println("[token]");
 						}else{
@@ -111,14 +111,14 @@ public class Response implements Runnable{
 						Log.i(TAG, "Sending join message to a client");
 						String playerName = incMessage.substring(6, incMessage.length());
 						// set nickname of this player in the client list
-						if(player.sock.getLocalAddress().equals(incSocket.getLocalAddress())){
+						if(player.sock.getRemoteSocketAddress().toString().equals(incSocket.getRemoteSocketAddress().toString())){
 							player.nick = playerName;
 						}
 						out.println(playerName + " joined the Game");
 					}else if(incMessage.startsWith("[delete]")){
 						Log.i(TAG, "a pair was found");
 						// increase round hits of the message's sender
-						if(playerWhoSentThisMessage != null && playerWhoSentThisMessage.sock.getLocalAddress().equals(player.sock.getLocalAddress())){
+						if(playerWhoSentThisMessage != null && playerWhoSentThisMessage.sock.getRemoteSocketAddress().toString().equals(player.sock.getRemoteSocketAddress().toString())){
 							playerWhoSentThisMessage.roundHits += 1;
 						}
 						out.println(incMessage);

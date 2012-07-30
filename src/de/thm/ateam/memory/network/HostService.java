@@ -51,7 +51,7 @@ public class HostService extends Service{
   public static NetworkPlayer findPlayerBySocket(Socket sock){
     if(clients.size() == 0) return null;
     for(NetworkPlayer p : clients){
-      if(p.sock != null && p.sock.getLocalAddress().equals(sock.getLocalAddress())){
+      if(p.sock != null && p.sock.getRemoteSocketAddress().toString().equals(sock.getRemoteSocketAddress().toString())){
         return p;
       }
     }
