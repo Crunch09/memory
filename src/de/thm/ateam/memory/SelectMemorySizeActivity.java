@@ -36,7 +36,10 @@ public class SelectMemorySizeActivity extends Activity implements OnClickListene
 		ArrayList<String> tmp = new ArrayList<String>();
 		tmp.add("2x2");
 		tmp.add("4x4");
+		tmp.add("4x6");
+		tmp.add("4x8");
 		tmp.add("6x6");
+		tmp.add("6x8");
 		tmp.add("8x8");
 		return tmp;
 	}
@@ -141,7 +144,7 @@ public class SelectMemorySizeActivity extends Activity implements OnClickListene
 	private int find(int row, int col) {
 		ArrayList<String> tmp = getList();
 		for(int i = 0; i < tmp.size(); i++) {
-			if(tmp.get(i).equals(String.valueOf(row) + "x" + String.valueOf(col))) {
+			if(tmp.get(i).equals(String.valueOf(col) + "x" + String.valueOf(row))) {
 				return i;
 			}
 		}

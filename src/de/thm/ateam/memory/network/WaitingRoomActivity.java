@@ -60,6 +60,9 @@ public class WaitingRoomActivity extends FragmentActivity implements MyAlertDial
       */ 
       stopService(new Intent(getApplicationContext(),HostService.class));
     }
+    if(wfc != null) {
+    	wfc.cancel(true);
+    }
   }
 
   private class WaitForChatMessages extends AsyncTask<Void, String, Integer>{
