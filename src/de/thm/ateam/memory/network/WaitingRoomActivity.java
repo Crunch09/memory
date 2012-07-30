@@ -19,6 +19,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -188,6 +189,7 @@ public class WaitingRoomActivity extends FragmentActivity implements MyAlertDial
     currentPlayer = PlayerList.getInstance().currentPlayer;
     fm = getSupportFragmentManager();
     chatWindow = (TextView) findViewById(R.id.chat);
+    chatWindow.setMovementMethod(new ScrollingMovementMethod());
     text = (EditText) findViewById(R.id.chat_edit);
     send_btn = (Button) findViewById(R.id.send_btn);
     start_game_btn = (Button) findViewById(R.id.start_game_btn);
@@ -227,7 +229,6 @@ public class WaitingRoomActivity extends FragmentActivity implements MyAlertDial
 
   public void onFinishAlertDialog() {
     finish();
-
   }
   
   /**

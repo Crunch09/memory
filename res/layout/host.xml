@@ -21,7 +21,8 @@
         android:id="@+id/chat"
         android:layout_width="match_parent"
         android:layout_height="0dip"
-        android:layout_weight="1.10" />
+        android:layout_weight="1.10"
+        android:scrollbars="vertical" />
 
     <LinearLayout
         android:layout_width="match_parent"
