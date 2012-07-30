@@ -136,10 +136,10 @@ public class SelectMultipleUserActivity extends ListActivity {
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
 		if(!PlayerList.getInstance().session.remove((Player)l.getAdapter().getItem(position))){
-			Toast.makeText(this, "Adding One", Toast.LENGTH_SHORT).show();
+			//Toast.makeText(this, "Adding One", Toast.LENGTH_SHORT).show();
 			PlayerList.getInstance().session.add((Player)l.getAdapter().getItem(position));
 		}else{
-			Toast.makeText(this, "Removin One", Toast.LENGTH_SHORT).show();
+			//Toast.makeText(this, "Removin One", Toast.LENGTH_SHORT).show();
 		}
 	}
 
@@ -162,9 +162,23 @@ public class SelectMultipleUserActivity extends ListActivity {
 			break;
 			// Start the game
 		case R.id.start:
-			if(PlayerList.getInstance().session.size()>1 && PlayerList.getInstance().session.size()<7){  // 2 - 6 Players
+			if(PlayerList.getInstance().session.size()>1 && PlayerList.getInstance().session.size()<=7){  // 2 - 6 Players
 				intent = new Intent(this, GameActivity.class);
 				startActivityForResult(intent, GAME_HAS_FINISHED);
+			}
+			if(PlayerList.getInstance().players.size()<2){
+				Toast.makeText(this, "You havent got enough Players yet!", Toast.LENGTH_SHORT).show();
+				intent = new Intent(this, CreateUserActivity.class);
+				startActivity(intent);
+				break;
+			}
+			if(PlayerList.getInstance().session.size() >=7){
+				Toast.makeText(this, "Too many Players selected!", Toast.LENGTH_SHORT).show();
+				break;
+			}
+			if(PlayerList.getInstance().session.size() <2){
+				Toast.makeText(this, "Add at least "+ (2 - (PlayerList.getInstance().session.size())) +" more Player to start the game!", Toast.LENGTH_SHORT).show();
+				break;
 			}
 			break;
 		}
@@ -177,9 +191,23 @@ public class SelectMultipleUserActivity extends ListActivity {
 	}
 	
 	public void start(View view){
-		if(PlayerList.getInstance().session.size()>1 && PlayerList.getInstance().session.size()<7){  // 2 - 6 Players
+		if(PlayerList.getInstance().session.size()>1 && PlayerList.getInstance().session.size()<=7){  // 2 - 6 Players
 			Intent intent = new Intent(this, GameActivity.class);
 			startActivityForResult(intent, GAME_HAS_FINISHED);
+		}
+		if(PlayerList.getInstance().players.size()<2){
+			Toast.makeText(this, "You havent got enough Players yet!", Toast.LENGTH_SHORT).show();
+			Intent intent = new Intent(this, CreateUserActivity.class);
+			startActivity(intent);
+			return;
+		}
+		if(PlayerList.getInstance().session.size() >=7){
+			Toast.makeText(this, "Too many Players selected!", Toast.LENGTH_SHORT).show();
+			return;
+		}
+		if(PlayerList.getInstance().session.size() <2){
+			Toast.makeText(this, "Add at least "+ (2 - (PlayerList.getInstance().session.size())) +" more Player to start the game!", Toast.LENGTH_SHORT).show();
+			return;
 		}
 	}
 
