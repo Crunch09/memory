@@ -83,8 +83,10 @@ public class WaitingRoomActivity extends FragmentActivity implements MyAlertDial
       }
       try {
         Log.i(TAG, "now waiting for chat messages");
-        currentPlayer.sock = new Socket(adr, 6666);
-        Log.i(TAG, "New Client has connected!");
+        if(currentPlayer.sock == null){
+          currentPlayer.sock = new Socket(adr, 6666);
+          Log.i(TAG, "New Client has connected!");
+        }
         bf = new BufferedReader(new InputStreamReader(currentPlayer.sock.getInputStream()));
         String inputLine;
         
