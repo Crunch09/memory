@@ -24,6 +24,8 @@ public class HostService extends Service{
   public static int current = 0;
   /** Clients can join the game or not */
   public static boolean gameAvailable = false;
+  private static ServerSocket servSock = null;
+  private static Socket clientSock = null;
 
   @Override
   public IBinder onBind(Intent arg0) {
@@ -58,8 +60,16 @@ public class HostService extends Service{
 
   @Override
   public void onDestroy(){
-    Log.i(TAG, "SERVICE WAS STOPPED!");
     super.onDestroy();
+    Log.i(TAG, "SERVICE WAS STOPPED!");
+    try {
+      servSock.close();
+      clientSock.shutdownInput();
+      clientSock.shutdownOutput();
+    } catch (IOException e) {
+      Log.e(TAG, "Socket could not be closed");
+      e.printStackTrace();
+    }
     stopSelf();
   }
 
@@ -67,12 +77,12 @@ public class HostService extends Service{
 
     public void run() {
       try {
-        ServerSocket servSock = new ServerSocket(6666);
+        servSock = new ServerSocket(6666);
 
         Log.i(TAG, "Server is waiting for clients...");
 
         while(true){
-          Socket clientSock = servSock.accept();
+          clientSock = servSock.accept();
           if(!gameAvailable){
             Log.i(TAG, "Client tried to connect, but Host doesn't accep connections anymore.");
           }else{

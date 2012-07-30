@@ -220,8 +220,10 @@ public class WaitingRoomActivity extends FragmentActivity implements MyAlertDial
       out.println("[system]Game about to begin!");
       break;
     case R.id.send_btn:
+    	if(!text.getText().toString().equals("")) {
         out.println(currentPlayer.nick +": "+ text.getText());
         text.setText("");
+    	}
       break;
     }
   }

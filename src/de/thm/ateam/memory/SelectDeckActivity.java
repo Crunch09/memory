@@ -40,10 +40,18 @@ public class SelectDeckActivity extends ListActivity {
 	  // if there aren't one than only Default will added to List else all names will append
 	  if(decks != null) {
 		  for(int i = 0; i < decks.length; i++) {
-		  	deckNames.add(decks[i][0]);
+		  	if(Integer.parseInt(decks[i][1]) == PlayerList.getInstance().deckNum) {
+			  	deckNames.add("> " + decks[i][0]);		  		
+		  	} else {
+			  	deckNames.add(decks[i][0]);
+		  	}
 		  }
 	  }
-	  deckNames.add("Default");
+	  if(PlayerList.getInstance().deckNum == -1) {
+	  	deckNames.add("> Default");
+	  } else {
+	  	deckNames.add("Default");
+	  }
 	  
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, deckNames);
 
