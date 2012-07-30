@@ -8,6 +8,7 @@
 %\renewcommand{\ttdefault}{cmss}
 
 \usepackage{lmodern}
+\usepackage{amssymb}
 \renewcommand{\familydefault}{\sfdefault}
 
 %\newcommand{\changefont}[3]{
@@ -54,28 +55,14 @@ Kann
 \item Spielkarten sollen per .zip File von der SD Karte des Geräts nachladbar sein. Bilder werden in einer Datenbank gespeichert. Das Spiel lädt die Bilder für das Spielfeld aus der Datenbank.
 \end{itemize}
 
-
-%Type your text in free-format; lines can be as long
-%or as short
-%as you wish.
-%      You can indent      or space out
-%        your input 
-%          text in 
-%            any way you like to highlight the structure
-%      of your manuscript and make it easier to edit.
-%LaTeX fills lines and adjusts spacing between words to produce an
-%aesthetically pleasing result.
-
-%Completely blank lines in the input file break your text into
-%paragraphs.
-%To change the font for a single character, word, or set of words, 
-%enclose the word and the font changing command within braces, 
-%{\em like this}.
-%A font changing command not enclosed in braces, like the change to \bf 
-%bold here, keeps that change in effect until the end of the document or
-%until countermanded by another font switch, like this change back to 
-%\rm roman.
-
+\section{Installation}
+Memory benutzt den \textbf{\href{https://github.com/JakeWharton/Android-ViewPagerIndicator}{ViewPagerIndicator}} von Jake Wharton. Um Memory kompilieren zu können muss deshalb es deshalb \href{https://github.com/JakeWharton/Android-ViewPagerIndicator/tarball/master}{heruntergeladen} werden.
+\begin{itemize}
+\item Gehen Sie nun in \textbf{Eclipse}, wählen File${\longrightarrow}$New${\longrightarrow}$Project${\longrightarrow}$Android Project from existing Code...${\longrightarrow}$ und wählen nun den \textbf{library} Ordner in dem eben heruntergeladenen ViewPagerIndicator-Verzeichnis aus.
+\item Nachdem Sie die library Ihrem Workspace hinzugefügt haben, rechtsklicken Sie auf das Projekt und wählen Android Tools${\longrightarrow}$->Add Support Library aus und folgen den Instruktionen
+\item Rechtsklicken Sie erneut auf das library-Projekt, wählen Properties${\longrightarrow}$Android aus und vergewissern sich, dass \textbf{is Library} ausgewählt ist. Gehen Sie nun in das Java Compiler-Menü und setzen das Java Compliance Level auf 1.6, da das Projekt nicht mit 1.7 zu laufen scheint.
+\item Klicken Sie schließlich mit der rechten Maustaste auf das memory-Projekt, wählen Properties${\longrightarrow}$Android, klicken auf den \textbf{Add...} Button auf der rechten Seite und wählen das Library Projekt aus. Nun sollte das Projekt noch einmal bereinigt und neu kompiliert werden. Anschließend lässt dich die Applikation starten.
+\end{itemize}
 \section {Architektur}
 Wir haben uns selbst als Ziel gesetzt, dass wir in 2 Richtungen entwickeln: Das Spiel Memory als sehr spezifische Implementierung und ein "'Framework"', das alle typischen Funktionen für ein rundenbasiertes Spiel mitbringt. So konnten wir mit entsprechenden Oberklassen (Game.java) und abgeleiteten Klassen (z.B. Memory.java) garantieren, dass am Ende beide Zweige zusammen führen.
 Zum Framework gehört Game.java als Oberklasse aller implementierbaren rundenbasierten Spiele, eine Engine die im Wesentlichen Datenbankzugriffe kapselt, ein einfaches Menüsystem, das leicht konfigurier- und erweiterbar ist und einen statistischen Teil der mit der Datenbank zusammen arbeitet. Wir haben dann als Konkrete Implementierung für Memory die Klasse Memory.java von Game erben lassen und entsprechend für Memory angepasst. Ebenso wird die Netzwerkimplementierung eine von Game abgeleitete Klasse sein, natürlich noch mit einigen spezifischen Anpassungen zur Kommunikation der Geräte.\\\subsection{Design}
@@ -161,14 +148,17 @@ Diese wird beim Start ausgelesen, wenn nicht da oder unvollständig werden die D
 Beim laden des Memorys sind wir über den Fehler gestoßen, dass wir out of memory gegangen sind. Dies konnten wir beheben, indem wir in der Activity in der onDestroy methode die geladenen  Bitmaps wieder recyclen.
 
 \subsection{Netzwerk}
-\subsubsection{Server}
-Wenn der Anwender der Applikation ein neues Netzwerkspiel startet, beginnt ein Service damit auf eingehende Verbindungen zu warten. Dieser Service (\textbf{HostService.java}) stellt den Server in einem Netzwerkspiel dar und übernimmt dafür typische Aufgaben wie das Verwalten der Client-Liste oder das Reagieren auf eingehende Nachrichten. Für jeden Client, der sich am Server anmeldet wird ein eigener Connection-Thread erstellt, der auf Nachrichten des entsprechenden Clients wartet (\textbf{ClientConnection.java}). Trifft eine Nachricht über die Socket-Verbindung ein wird ein neuer Thread einer Response-Klasse erstellt, welche auf die eingegange Nachricht reagiert.
-\subsubsection{Warteraum}
-In der Warteraum-Activity befinden sich die Clients, nachdem sie sich mit dem Server verbunden haben. Der Server erkannt durch Überprüfung der Verbindungs-Sockets welcher Client auf dem selben Device wie der Host läuft. Dieser Host-Client hat auch als einziger die Möglichkeit das Spiel zu starten.
-\subsubsection{Kommunikation}
-Die Kommunikation zwischen den einzelnen Clients und mit dem Server wird über entsprechend kodierte Nachrichten realisiert. Bei bestimmten Ereignissen, z.B. dem Aufdecken einer Karte schickt der betroffene Client über seinen Outputstream eine Nachricht an den Server, die dieser über die oben beschriebenen Mechanismen aufnimmt, verarbeitet und an alle oder auch einzelne Clients weiterleitet.
-Jeder Client wartet in einem AsyncTask auf eingehende Nachrichten. Ein Grund dafür ist, dass bei einem eingehenden Befehl so gut auf UI-Elemente zugegriffen werden kann. Wichtig ist, dass der AsyncTask der Warteraum-Activity beendet ist, wenn das Spiel im Gang ist, da nun eingehende Nachrichten keine ChatNachrichten sind, sondern Befehle, die im AsyncTask der GameActivity benötigt werden. 
 
+\subsubsection{Server}
+Wenn der Anwender der Applikation ein neues Netzwerkspiel startet, beginnt ein Service damit auf eingehende Verbindungen zu warten. Dieser Service (\textbf{HostService.java}) stellt den Server in einem Netzwerkspiel dar und übernimmt dafür typische Aufgaben wie das Verwalten der Client-Liste oder das Reagieren auf eingehende Nachrichten. Für jeden Client, der sich am Server anmeldet wird ein eigener Connection-Thread erstellt, der auf Nachrichten des entsprechenden Clients wartet (\textbf{ClientConnection.java}). Trifft eine Nachricht über die Socket-Verbindung ein wird ein neuer Thread einer Response-Klasse erstellt, welcher auf die eingegange Nachricht reagiert.
+\subsubsection{Warteraum}
+In der Warteraum-Activity befinden sich die Clients, nachdem sie sich mit dem Server verbunden haben. Der Server erkennt durch Überprüfung der Verbindungs-Sockets welcher Client auf dem selben Device wie der Host läuft. Dieser Host-Client hat auch als einziger die Möglichkeit das Spiel zu starten.
+\subsubsection{Kommunikation}
+Die Kommunikation zwischen den einzelnen Clients und dem Server wird über entsprechend kodierte Nachrichten realisiert. Bei bestimmten Ereignissen, z.B. dem Aufdecken einer Karte schickt der betroffene Client über seinen Outputstream eine Nachricht an den Server, die dieser über die oben beschriebenen Mechanismen aufnimmt, verarbeitet und an alle oder auch einzelne Clients weiterleitet.
+Jeder Client wartet in einem AsyncTask auf eingehende Nachrichten. Ein Grund dafür ist, dass bei einem eingehenden Befehl so gut auf UI-Elemente zugegriffen werden kann. Wichtig ist, dass der AsyncTask der Warteraum-Activity beendet ist, wenn das Spiel im Gang ist, da nun eingehende Nachrichten keine ChatNachrichten sind, sondern Befehle, die im AsyncTask der GameActivity benötigt werden.
+\subsubsection{Im Spiel}
+Beim Laden des Spiels selbst wird die Spielfeldgröße zunächst auf die gewählte Spielfeldgröße des Hosts gesetzt. Anschließend wird auf dem Smartphone des Hosts die Verteilung der Karten berechnet und an alle Clients in einem String kodiert verschickt, so dass die Paarverteilung auf allen Smartphones gleich ist. Die Karten selbst können auf den teilnehmenden Smartphones unterschiedlich sein. Verlässt ein Spieler das Spiel vorzeitig durch Betätigen des "Zurück-Buttons" wird das Spiel bei allen Spielern beendet. Wird ein Spiel ordnungsgemäß beendet verschickt der Spieler, der mit seinem Zug die letzten Karten entfernt hatte, an alle Spieler eine Nachricht über die Beendigung des Spiels, so dass diese auch die GameActivity beenden, einen möglichen Sieger einblenden und anschließend wieder zur WaitingRoomActivity zurückkehren.
+Nun kann auch der Chat wieder benutzt werden, weitere Spieler können hinzukommen und der Hostspieler kann jederzeit eine neue Runde starten.
 \subsection*{Benutzerdokumentation}
 
 Die Benutzerdokumentation wird per {\em Help} in der App bereitgestellt. 
