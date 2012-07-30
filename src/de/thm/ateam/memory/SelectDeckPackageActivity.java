@@ -133,7 +133,7 @@ public class SelectDeckPackageActivity extends ListActivity {
 	@Override 
 	protected void onDestroy() {
 		super.onDestroy();
-		if(dialog.isShowing())dialog.cancel();
+		//if(dialog.isShowing())dialog.cancel();
 	}
 
 }

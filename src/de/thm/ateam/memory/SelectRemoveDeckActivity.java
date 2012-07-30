@@ -96,7 +96,6 @@ public class SelectRemoveDeckActivity extends ListActivity {
 	@Override 
 	protected void onDestroy() { // just to avoid strange behavior with the progress dialog
 		super.onDestroy();
-		if(dialog.isShowing())dialog.cancel();
 	}
 
 }
