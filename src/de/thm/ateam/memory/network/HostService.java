@@ -39,7 +39,6 @@ public class HostService extends Service{
     gameAvailable = true;
     Thread t = new Thread(new ServerTask());
     t.start();
-
     return START_NOT_STICKY;
   }
 
